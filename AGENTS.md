@@ -23,7 +23,7 @@ pre-feasibility study. Correctness and honest numbers matter more than features.
 5. Never edit `.env`, `AGENTS.md`, `docs/specs/` or `tools/`.
 6. Dependencies: standard library, numpy, pandas, pvlib, requests, jsonschema, pytest. Nothing else unless the spec
    allows it.
-7. Text in code, comments and docs: ASCII only. No em dash, no en dash, no " -- ".
+7. Text in code, comments and docs: ASCII only. No em dash, no en dash, no double hyphen used as a dash.
 8. Keep functions small and typed. Short docstrings that say units.
 
 ## Running commands
