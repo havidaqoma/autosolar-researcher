@@ -1,0 +1,17 @@
+# secrets: never commit
+.env
+.env.*
+*.key
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# raw Muse Code session logs (large); the measured usage summary is kept in ledger/build_usage.jsonl
+build_logs/
+
+# study outputs: only gallery runs are committed (added later with an explicit rule)
+runs/
+local/
