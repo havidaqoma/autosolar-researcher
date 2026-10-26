@@ -17,6 +17,14 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
 - Muse Code's own instructions cost about 27,000 input tokens per call; most of them are cached on later calls of
   the same run (measured probe: 113,732 of 143,055 input tokens cached).
 
+- SAM 3.1 on Sentinel-2 crops (10 m pixels, 2 images, Tuesday 27 Oct): 0 objects for 18 of 19 concept prompts
+  (building, roof, house, open field, water, solar panel, forest, beach, road, cloud, island, town, coral reef,
+  sea). The one hit, "sea" on the island crop, is a single box covering 98% of the image. A synthetic control
+  (prompt "red square" on 3 red, 2 yellow, 1 blue squares) returned exactly the 3 red squares, so the request
+  and the parsing are right. Measured in `docs/smoke/sam_smoke.json`; 20 SAM calls, USD 0.05 computed.
+- OpenAerialMap has no open drone or aerial images over Karimunjawa, Sumba, Kepulauan Seribu, Bawean or Selayar
+  (API search, 0 results each; the same query returns 6 for Jakarta and 1,084 for all of Indonesia).
+
 ## Questions for review
 
-- None yet.
+- SAM 3.1 role (plan card B): it does not see buildings or land classes at 10 m. Decision for Havid.
