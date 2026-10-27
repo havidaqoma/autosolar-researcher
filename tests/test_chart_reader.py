@@ -135,10 +135,69 @@ def test_series_values_modes():
     m = block_mask()
     x_axis = AxisFit(slope=1.0, intercept=0.0, used=(0, 1), dropped=(), max_resid=0.0)
     y_axis = AxisFit(slope=-10.0, intercept=100.0, used=(0, 1), dropped=(), max_resid=0.0)
-    assert series_values(m, [2.5, 0.2], x_axis, y_axis) == [pytest.approx(70.0), None]
+    assert series_values(m, [2.5, -4.0], x_axis, y_axis) == [pytest.approx(70.0), None]
     assert series_values(m, [4.9], x_axis, y_axis, mode="centre") == [pytest.approx(45.0)]
     with pytest.raises(ValueError):
         series_values(m, [2.0], x_axis, y_axis, mode="bottom")
+
+
+# ---------- revision T03c: edge columns and box local rasters ----------
+
+def edge_mask():
+    m = np.zeros((20, 20), bool)
+    m[8:20, 5:15] = True      # filled area, columns 5..14, top row 8
+    m[19, 4] = True           # one pixel anti aliasing sliver left of the area
+    return m
+
+
+IDENT_X = AxisFit(slope=1.0, intercept=0.0, used=(0, 1), dropped=(), max_resid=0.0)
+ROW_Y = AxisFit(slope=-1.0, intercept=20.0, used=(0, 1), dropped=(), max_resid=0.0)   # value = 20 - row
+
+
+def test_edge_column_skips_sliver_and_uses_nearest_usable():
+    m = edge_mask()
+    # c0 = 3 is empty; column 4 is a 1 px sliver (below 0.25 * 12); column 5 is the nearest usable one
+    assert series_values(m, [3.2], IDENT_X, ROW_Y) == [pytest.approx(12.0)]
+    # c0 = 17 is empty; column 14 (3 to the left) is usable
+    assert series_values(m, [17.5], IDENT_X, ROW_Y) == [pytest.approx(12.0)]
+    # c0 = 18: the window 15..21 holds no True pixel
+    assert series_values(m, [18.0], IDENT_X, ROW_Y) == [None]
+    # c0 = 4 is not empty (the sliver itself), so it is used as is
+    assert series_values(m, [4.0], IDENT_X, ROW_Y) == [pytest.approx(1.0)]
+
+
+def test_edge_column_tie_takes_left_and_window_limit():
+    m = np.zeros((20, 20), bool)
+    m[3:20, 2] = True
+    m[7:20, 6] = True
+    assert series_values(m, [4.0], IDENT_X, ROW_Y) == [pytest.approx(17.0)]       # left column 2, top row 3
+    m2 = np.zeros((20, 20), bool)
+    m2[3:20, 10] = True
+    assert series_values(m2, [6.0], IDENT_X, ROW_Y) == [None]                     # 4 columns away: outside
+    assert series_values(m2, [7.0], IDENT_X, ROW_Y) == [pytest.approx(17.0)]      # 3 columns away: inside
+
+
+def test_edge_column_centre_mode():
+    m = np.zeros((20, 20), bool)
+    m[4:7, 8] = True       # line rows 4..6, centre 5.5
+    assert series_values(m, [9.5], IDENT_X, ROW_Y, mode="centre") == [pytest.approx(14.5)]
+
+
+def test_parse_stretches_box_local_raster():
+    # Real SAM 3.1 output for tests/fixtures/wide_rect.png (1600 x 500): a red rectangle covering columns
+    # 100..1499 and rows 100..399. SAM sent a 1024 x 218 raster for a 1398 x 298 box.
+    text = (FIX / "sam_wide_rect.txt").read_text(encoding="ascii")
+    objs = parse_sam_masks(text, (1600, 500))
+    assert len(objs) == 1
+    o = objs[0]
+    assert o.mask.shape == (500, 1600) and o.mask.dtype == bool
+    assert o.box_px == (101, 101, 1499, 399)
+    truth = np.zeros((500, 1600), bool)
+    truth[100:400, 100:1500] = True
+    iou = np.logical_and(o.mask, truth).sum() / np.logical_or(o.mask, truth).sum()
+    assert iou >= 0.98
+    assert not o.mask[:, :101].any() and not o.mask[:, 1499:].any()
+    assert not o.mask[:101, :].any() and not o.mask[399:, :].any()
 
 
 # ---------- parse_label_answer ----------

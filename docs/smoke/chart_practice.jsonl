@@ -1,0 +1,7 @@
+{"unix": 1793071826, "image": "runs/chart_validation/area1.png", "tag": "area1", "prompt": "blue area", "n_objects": 1, "objects": [{"id": "0", "box_px": [86.0, 361.0, 985.0, 502.0], "px": 87751, "confidence": 0.8709677457809448}]}
+{"unix": 1793071828, "image": "runs/chart_validation/area1.png", "tag": "area1", "prompt": "green area", "n_objects": 1, "objects": [{"id": "0", "box_px": [86.0, 280.0, 985.0, 394.0], "px": 36495, "confidence": 0.921951174736023}]}
+{"unix": 1793071831, "image": "runs/chart_validation/line6.png", "tag": "line6", "prompt": "blue line", "n_objects": 1, "objects": [{"id": "0", "box_px": [77.0, 321.0, 967.0, 439.0], "px": 4527, "confidence": 0.9452055096626282}]}
+{"unix": 1793071887, "image": "runs/sam_fig/hiron_fig8_native.png", "tag": "fig8", "prompt": "purple area", "n_objects": 1, "objects": [{"id": "0", "box_px": [166.0, 309.0, 1364.0, 573.0], "px": 110916, "confidence": 0.859649121761322}]}
+{"unix": 1793071894, "image": "runs/sam_fig/hiron_fig8_native.png", "tag": "fig8", "prompt": "yellow area", "n_objects": 1, "objects": [{"id": "0", "box_px": [166.0, 90.0, 1364.0, 486.0], "px": 107462, "confidence": 0.9298245906829834}]}
+{"unix": 1793071901, "image": "runs/sam_fig/hiron_fig8_native.png", "tag": "fig8", "prompt": "green checkered area", "n_objects": 1, "objects": [{"id": "0", "box_px": [182.0, 259.0, 1363.0, 516.0], "px": 25724, "confidence": 0.9139785170555115}]}
+{"unix": 1793071905, "image": "runs/sam_fig/hiron_fig8_native.png", "tag": "fig8", "prompt": "checkered area", "n_objects": 0, "objects": []}

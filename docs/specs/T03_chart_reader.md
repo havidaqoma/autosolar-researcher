@@ -44,11 +44,16 @@ from autosolar.chart_reader import (ChartReadError, ObjectMask, AxisFit, ChartSp
     `finish(meta_sam_parser.CompletedOutcome())`.
   - Any diagnostic with severity `"error"`: raise `ChartReadError` with its code and message.
   - One `ObjectMask` per `SegmentationMaskRecord`, in record order. Decode with
-    `meta_sam_parser.decode_mask_to_raster` (bytes, one byte per pixel, row major, nonzero = inside) and place
-    the raster into a full image array of shape `(image_wh[1], image_wh[0])` at the record's `bounds`
-    (`left`, `top`). The raster must be exactly `mask.height x mask.width`, and the bounds must lie inside the
-    image; otherwise raise `ChartReadError`. `box_px` = the record's bounds. `confidence` = the record's
-    confidence. Box records without a mask are ignored. Text records are ignored.
+    `meta_sam_parser.decode_mask_to_raster` (bytes, one byte per pixel, row major, nonzero = inside). The
+    decoded length must be exactly `mask.height * mask.width`, the bounds must lie inside the image and have
+    `bw = right - left >= 1` and `bh = bottom - top >= 1`; otherwise raise `ChartReadError`.
+  - Revision T03c: the raster is box local and SAM sends it smaller than the box when the box is large
+    (measured: a 1398 x 298 box came with a 1024 x 218 raster). Map it onto the box, never place it at its own
+    size. Pixel `(row r, col c)` of the full image with `top <= r < bottom` and `left <= c < right` takes raster
+    cell `(floor((r - top + 0.5) * mask.height / bh), floor((c - left + 0.5) * mask.width / bw))` (nearest
+    neighbour). When the raster has the box size this is the identity. Pixels outside the box are False.
+  - The full image array has shape `(image_wh[1], image_wh[0])`. `box_px` = the record's bounds.
+    `confidence` = the record's confidence. Box records without a mask are ignored. Text records are ignored.
 - `parse_tick_label(text: str | None, kind: str) -> float | None`
   - `kind == "number"`: after `str.strip()`, accept `-?digits` with optional thousands commas in groups of 3
     and an optional decimal part (`"1400"`, `"1,400"`, `"-2.5"`, `"0"`). Return the float. Anything else
@@ -72,9 +77,15 @@ from autosolar.chart_reader import (ChartReadError, ObjectMask, AxisFit, ChartSp
 - `top_edge_px(mask, col) -> float | None` and `line_centre_px(mask, col) -> float | None`: as defined in
   Coordinates. `None` when the column is outside the mask array or has no True pixel.
 - `series_values(mask, x_values, x_axis, y_axis, *, mode="top") -> list[float | None]`
-  - For each x: `col = floor(x_axis.px(x) + 1e-6)`; `mode == "top"` uses `top_edge_px`, `mode == "centre"` uses
+  - For each x: `c0 = floor(x_axis.px(x) + 1e-6)`; `mode == "top"` uses `top_edge_px`, `mode == "centre"` uses
     `line_centre_px`; the value is `y_axis.value(pixel)`, or `None` when the pixel is `None`. Other modes:
     `ValueError`.
+  - Revision T03c, edge columns: when column `c0` is inside the array and has at least one True pixel, use it
+    (no change). Otherwise (empty, for example the axis line covers it, or outside the array) look at the
+    window `c0 - 3 .. c0 + 3` clipped to the array. Let `n(c)` be the number of True pixels in column `c` and
+    `n_max` the largest `n(c)` in the window. A column is usable when `n(c) >= 1` and `n(c) >= 0.25 * n_max`
+    (this skips one pixel anti aliasing slivers at the edge of a filled area). Use the usable column nearest to
+    `c0`; on a tie use the one on the left. No usable column: `None`.
 - `parse_label_answer(text: str, n: int) -> list[str | None]`
   - The answer of the label reading model. Take the substring from the first `[` to the last `]` and parse it as
     JSON. It must be a list of objects with keys `crop` (int, 1 based) and `text` (str or null). Return a list of
