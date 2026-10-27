@@ -132,3 +132,32 @@ from autosolar.chart_reader import (ChartReadError, ObjectMask, AxisFit, ChartSp
 
 `uv run pytest` passes (all tests, including T01 and T02), no test touches the network, and `AGENTS.md` rules
 hold.
+
+## Library facts (checked by the orchestrator with meta-sam-parser 0.1.0, after attempt 1)
+
+Your sandbox cannot run Python, so these facts were measured for you. Use them directly. Do not guess the API
+with `getattr`, `hasattr`, duck typing or a regex fallback parser: delete `_manual_masks`, `_split_data`,
+`_try_decode`, `_rec_*`, `_mask_size`, `_is_mask_record`, `_looks_like_diags`, `_diag_parts`, `_split_finish`,
+`_BOX_RE`, `_BOX_SIMPLE_RE` and `_MASK_RE`. Attempt 1 failed 2 tests because that guessing code never reached the
+library's records.
+
+```python
+import meta_sam_parser as m
+p = m.image_segmentation_format().create_parser()
+p.push(text, emit=False)
+fin = p.finish(m.CompletedOutcome())      # ParserFinish, fields: events, result
+res = fin.result                          # ImageSegmentationResult, fields: media, revision, records,
+                                          #   diagnostics (tuple), raw_output, outcome
+for d in res.diagnostics:                 # SegmentationDiagnostic: severity ("warning" or "error"), code,
+    ...                                   #   message, line, raw
+for rec in res.records:                   # SegmentationBoxRecord or SegmentationMaskRecord
+    isinstance(rec, m.SegmentationMaskRecord)
+    # SegmentationMaskRecord fields: kind ("mask"), order, object_id (str), identity, revision,
+    #   mask (SegmentationMask: encoding, payload, width, height), bounds (SegmentationMaskBounds: left, top,
+    #   right, bottom; right and bottom excluded), frame, confidence (float or None)
+    raster = m.decode_mask_to_raster(rec.mask)   # bytes, len == mask.width * mask.height, row major
+```
+
+Measured on `tests/fixtures/sam_control_squares.txt`: records are Box, Mask, Box, Mask, Box, Mask; diagnostics
+is empty; the second record has object_id "0", bounds (60, 80, 241, 261), mask encoding "lossless", width 181,
+height 181, confidence None, raster length 32761. An empty text gives no records and no diagnostics.
