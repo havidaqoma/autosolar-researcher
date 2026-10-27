@@ -183,6 +183,13 @@ def line_centre_px(mask: np.ndarray, col: int) -> float | None:
     return float(np.mean(rows)) + 0.5
 
 
+def _sample_px(mask: np.ndarray, col: int, mode: str) -> float | None:
+    """Sample one column. Input in px, output in px."""
+    if mode == "top":
+        return top_edge_px(mask, col)
+    return line_centre_px(mask, col)
+
+
 def series_values(
     mask: np.ndarray,
     x_values: list[float] | tuple[float, ...],
@@ -195,13 +202,23 @@ def series_values(
     if mode not in ("top", "centre"):
         raise ValueError("unknown mode: " + str(mode))
     out: list[float | None] = []
+    w_px = int(mask.shape[1]) if mask.ndim == 2 else 0
     for x in x_values:
-        col_px = math.floor(x_axis.px(float(x)) + 1e-6)
-        pix: float | None
-        if mode == "top":
-            pix = top_edge_px(mask, col_px)
+        c0 = math.floor(x_axis.px(float(x)) + 1e-6)
+        pix: float | None = None
+        if 0 <= c0 < w_px and bool(mask[:, c0].any()):
+            pix = _sample_px(mask, c0, mode)
         else:
-            pix = line_centre_px(mask, col_px)
+            lo = max(0, c0 - 3)
+            hi = min(w_px - 1, c0 + 3)
+            if lo <= hi and w_px > 0:
+                counts = {c: int(mask[:, c].sum()) for c in range(lo, hi + 1)}
+                n_max = max(counts.values())
+                if n_max >= 1:
+                    usable = [c for c, n in counts.items() if n >= 1 and n >= 0.25 * n_max]
+                    if usable:
+                        best = min(usable, key=lambda c: (abs(c - c0), c))
+                        pix = _sample_px(mask, best, mode)
         out.append(None if pix is None else y_axis.value(pix))
     return out
 
@@ -472,10 +489,12 @@ def parse_sam_masks(text: str, image_wh: tuple[int, int]) -> list[ObjectMask]:
     for rec in res.records:
         if not isinstance(rec, meta_sam_parser.SegmentationMaskRecord):
             continue
-        left = float(rec.bounds.left)
-        top = float(rec.bounds.top)
-        right = float(rec.bounds.right)
-        bottom = float(rec.bounds.bottom)
+        left = int(rec.bounds.left)
+        top = int(rec.bounds.top)
+        right = int(rec.bounds.right)
+        bottom = int(rec.bounds.bottom)
+        bw_px = right - left
+        bh_px = bottom - top
         mw_px = int(rec.mask.width)
         mh_px = int(rec.mask.height)
         raster = meta_sam_parser.decode_mask_to_raster(rec.mask)
@@ -484,11 +503,21 @@ def parse_sam_masks(text: str, image_wh: tuple[int, int]) -> list[ObjectMask]:
             raise ChartReadError("mask raster size mismatch")
         if left < 0 or top < 0 or right > w_px or bottom > h_px:
             raise ChartReadError("mask bounds outside image")
-        if left + mw_px > w_px or top + mh_px > h_px:
-            raise ChartReadError("mask raster outside image")
+        if bw_px < 1 or bh_px < 1:
+            raise ChartReadError("mask bounds are empty")
         cells = np.frombuffer(buf, dtype=np.uint8).reshape(mh_px, mw_px) != 0
         full = np.zeros((h_px, w_px), dtype=bool)
-        full[int(top): int(top) + mh_px, int(left): int(left) + mw_px] = cells
+        rows = np.arange(top, bottom)
+        cols = np.arange(left, right)
+        r_idx = np.floor((rows - top + 0.5) * mh_px / bh_px).astype(int)
+        c_idx = np.floor((cols - left + 0.5) * mw_px / bw_px).astype(int)
+        r_idx = np.clip(r_idx, 0, mh_px - 1)
+        c_idx = np.clip(c_idx, 0, mw_px - 1)
+        full[top:bottom, left:right] = cells[r_idx[:, None], c_idx[None, :]]
+        left = float(left)
+        top = float(top)
+        right = float(right)
+        bottom = float(bottom)
         conf = rec.confidence
         masks.append(
             ObjectMask(
