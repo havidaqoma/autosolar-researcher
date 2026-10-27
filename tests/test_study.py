@@ -409,7 +409,7 @@ def test_markdown(run):
     pos = [md.index(h + "\n") for h in HEADINGS]
     assert pos == sorted(pos)
     f = run["out"].report["facts"]["best_lcoe_usd_per_kwh"]
-    assert "- best lcoe usd per kwh: " + f["text"] + " USD/kWh (computed)\n" in md
+    assert ("- Least cost design: cost of electricity (LCOE): " + f["text"] + " USD/kWh (computed)\n") in md
     assert "| Case | Year | GHI kWh/m2/yr (measured) | Yield kWh/kWp/yr (computed) | PR (computed) | G3 passed |\n" \
            "|---|---|---|---|---|---|\n" in md
     assert scan_report_numbers(md, run["out"].report) == []
