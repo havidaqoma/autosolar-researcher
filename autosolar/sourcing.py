@@ -20,12 +20,17 @@ SEARCH_ESTIMATE_USD = 0.10
 GLIMMER_URL = "http://127.0.0.1:8093/v1/chat/completions"
 CHECKED_PREFIX = "S3 checked: "
 
+MAX_SEARCH_TRIES = 2
+NO_RETRY_PREFIXES = ("judge says not supported", "judge gave no verdict", "no source found")
+
 SEARCH_INSTRUCTIONS = (
     "You find one published number for an energy model input. Use web search. Prefer reports from IRENA, IEA, "
-    "NREL, ADB, World Bank, IESR, government sources or peer-reviewed papers, published in 2021 or later.\n"
+    "NREL, ADB, World Bank, IESR, government sources or peer-reviewed papers, published in 2021 or later. Prefer "
+    "open access sources.\n"
     "Return only one JSON object, no prose, no code fence, with keys:\n"
     '  "value": the number as written in the source (number),\n'
-    '  "unit": the unit as written in the source (string),\n'
+    '  "unit": the unit as written in the source, including what it is per (for example USD/kWh/yr or IDR/L), '
+    'never a bare currency (string),\n'
     '  "currency_year": the year the money is expressed in, or null (integer or null),\n'
     '  "url": the page or PDF where the number appears (string),\n'
     '  "doi": the DOI if the source has one, else null,\n'
@@ -189,11 +194,30 @@ def parse_answer(text: str) -> dict | None:
     return None
 
 
-def search_claim(client, run_id: str, target: Target) -> tuple[Claim | None, str, float]:
+def retry_feedback(reasons: list[str], url: str) -> str | None:
+    """Decide if another search is fair. Output is feedback or None."""
+    if not reasons:
+        return None
+    for r in reasons:
+        for p in NO_RETRY_PREFIXES:
+            if r.startswith(p):
+                return None
+        if "outside band" in r:
+            return None
+    base = "A previous answer could not be used: " + ascii_text("; ".join(reasons))[:300] + "."
+    if isinstance(url, str) and url != "":
+        base = base + " Do not use " + ascii_text(url) + "."
+    return base + " Find a different source."
+
+
+def search_claim(client, run_id: str, target: Target, feedback: str = "") -> tuple[Claim | None, str, float]:
     """Search one value. Returns claim or reason plus cost in USD."""
+    user_content = "Input: " + target.input + " (" + target.target_unit + "). Find: " + target.search_brief + "."
+    if feedback != "":
+        user_content = user_content + " " + feedback
     messages = [
         {"role": "system", "content": SEARCH_INSTRUCTIONS},
-        {"role": "user", "content": "Input: " + target.input + " (" + target.target_unit + "). Find: " + target.search_brief + "."},
+        {"role": "user", "content": user_content},
     ]
     try:
         result = client.respond(
@@ -304,35 +328,9 @@ def source_inputs(
     new_raw = copy.deepcopy(base_raw)
     new_values = new_raw["values"]
     rows: list[SourcingRow] = []
-    for target in targets:
-        claim, reason, cost = search_claim(client, run_id, target)
-        if claim is None:
-            entry = new_values[target.input]
-            rows.append(
-                SourcingRow(
-                    target.input,
-                    "assumed",
-                    entry["label"],
-                    entry["value"],
-                    entry["unit"],
-                    None,
-                    "",
-                    None,
-                    "",
-                    "",
-                    None,
-                    None,
-                    None,
-                    "not run",
-                    "",
-                    None,
-                    judge_name,
-                    [reason],
-                    float(cost),
-                )
-            )
-            continue
-        check = check_citation(
+
+    def _check(claim):
+        return check_citation(
             claim,
             http_get=http_get,
             judge_fn=judge_fn,
@@ -342,21 +340,59 @@ def source_inputs(
             band_hi=target.band_hi,
             fx_idr_per_usd=fx_idr_per_usd,
         )
-        final_url = check.final_url or claim.url
-        if check.status == "checked":
-            canon = parse_unit(claim.unit)
-            rounded = float(format(check.value_converted, ".6g"))
-            label = "paper" if check.doi_ok is True else "docs"
-            note = CHECKED_PREFIX + ascii_text(claim.title or "untitled") + "; " + str(check.final_url)
-            if check.is_pdf:
-                note = note + "; page " + str(check.page)
-            note = note + "; quote " + str(check.quote_kind)
-            note = note + "; as written " + format(claim.value, "g") + " " + ascii_text(claim.unit)
-            if claim.currency_year is not None:
-                note = note + "; currency year " + str(claim.currency_year)
-            if canon.startswith("IDR/"):
-                note = note + "; fx " + format(fx_idr_per_usd, "g") + " IDR per USD assumed"
-            note = note + "; support judged by " + judge_name
+
+    def _checked_row(claim, check, cost):
+        canon = parse_unit(claim.unit)
+        rounded = float(format(check.value_converted, ".6g"))
+        label = "paper" if check.doi_ok is True else "docs"
+        note = CHECKED_PREFIX + ascii_text(claim.title or "untitled") + "; " + str(check.final_url)
+        if check.is_pdf:
+            note = note + "; page " + str(check.page)
+        note = note + "; quote " + str(check.quote_kind)
+        note = note + "; as written " + format(claim.value, "g") + " " + ascii_text(claim.unit)
+        if claim.currency_year is not None:
+            note = note + "; currency year " + str(claim.currency_year)
+        if canon.startswith("IDR/"):
+            note = note + "; fx " + format(fx_idr_per_usd, "g") + " IDR per USD assumed"
+        note = note + "; support judged by " + judge_name
+        return rounded, label, note, check.final_url or claim.url
+
+    def _assumed_no_claim_row(reason, cost):
+        entry = new_values[target.input]
+        rows.append(
+            SourcingRow(
+                target.input,
+                "assumed",
+                entry["label"],
+                entry["value"],
+                entry["unit"],
+                None,
+                "",
+                None,
+                "",
+                "",
+                None,
+                None,
+                None,
+                "not run",
+                "",
+                None,
+                judge_name,
+                [reason],
+                float(cost),
+            )
+        )
+
+    for target in targets:
+        claim_1, reason_1, cost_1 = search_claim(client, run_id, target)
+        if claim_1 is None:
+            reasons_1 = [reason_1]
+            check_1 = None
+        else:
+            check_1 = _check(claim_1)
+            reasons_1 = list(check_1.reasons)
+        if claim_1 is not None and check_1.status == "checked":
+            rounded, label, note, final_url = _checked_row(claim_1, check_1, cost_1)
             new_values[target.input] = {"value": rounded, "unit": target.target_unit, "label": label, "note": note}
             rows.append(
                 SourcingRow(
@@ -365,47 +401,163 @@ def source_inputs(
                     label,
                     rounded,
                     target.target_unit,
-                    claim.value,
-                    claim.unit,
-                    claim.currency_year,
-                    ascii_text(claim.title),
+                    claim_1.value,
+                    claim_1.unit,
+                    claim_1.currency_year,
+                    ascii_text(claim_1.title),
                     final_url,
-                    claim.doi,
-                    check.doi_ok,
-                    check.page,
-                    check.quote_kind,
-                    ascii_text(claim.quote),
-                    check.supports,
+                    claim_1.doi,
+                    check_1.doi_ok,
+                    check_1.page,
+                    check_1.quote_kind,
+                    ascii_text(claim_1.quote),
+                    check_1.supports,
                     judge_name,
                     [],
-                    float(cost),
+                    float(cost_1),
+                )
+            )
+            continue
+        fb = retry_feedback(reasons_1, claim_1.url if claim_1 is not None else "")
+        if fb is None:
+            if claim_1 is None:
+                _assumed_no_claim_row(reason_1, cost_1)
+            else:
+                entry = new_values[target.input]
+                rows.append(
+                    SourcingRow(
+                        target.input,
+                        "assumed",
+                        entry["label"],
+                        entry["value"],
+                        entry["unit"],
+                        claim_1.value,
+                        claim_1.unit,
+                        claim_1.currency_year,
+                        ascii_text(claim_1.title),
+                        check_1.final_url or claim_1.url,
+                        claim_1.doi,
+                        check_1.doi_ok,
+                        check_1.page,
+                        check_1.quote_kind,
+                        ascii_text(claim_1.quote),
+                        check_1.supports,
+                        judge_name,
+                        list(check_1.reasons),
+                        float(cost_1),
+                    )
+                )
+            continue
+        claim_2, reason_2, cost_2 = search_claim(client, run_id, target, feedback=fb)
+        total_cost = float(cost_1) + float(cost_2)
+        if claim_2 is None:
+            reasons_2 = [reason_2]
+            check_2 = None
+        else:
+            check_2 = _check(claim_2)
+            reasons_2 = list(check_2.reasons)
+        if claim_2 is not None and check_2.status == "checked":
+            rounded, label, note, final_url = _checked_row(claim_2, check_2, total_cost)
+            note = note + "; found on search try 2"
+            new_values[target.input] = {"value": rounded, "unit": target.target_unit, "label": label, "note": note}
+            rows.append(
+                SourcingRow(
+                    target.input,
+                    "checked",
+                    label,
+                    rounded,
+                    target.target_unit,
+                    claim_2.value,
+                    claim_2.unit,
+                    claim_2.currency_year,
+                    ascii_text(claim_2.title),
+                    final_url,
+                    claim_2.doi,
+                    check_2.doi_ok,
+                    check_2.page,
+                    check_2.quote_kind,
+                    ascii_text(claim_2.quote),
+                    check_2.supports,
+                    judge_name,
+                    [],
+                    total_cost,
                 )
             )
         else:
             entry = new_values[target.input]
-            rows.append(
-                SourcingRow(
-                    target.input,
-                    "assumed",
-                    entry["label"],
-                    entry["value"],
-                    entry["unit"],
-                    claim.value,
-                    claim.unit,
-                    claim.currency_year,
-                    ascii_text(claim.title),
-                    final_url,
-                    claim.doi,
-                    check.doi_ok,
-                    check.page,
-                    check.quote_kind,
-                    ascii_text(claim.quote),
-                    check.supports,
-                    judge_name,
-                    list(check.reasons),
-                    float(cost),
+            prefixed = ["try 1: " + r for r in reasons_1] + ["try 2: " + r for r in reasons_2]
+            if claim_2 is not None:
+                rows.append(
+                    SourcingRow(
+                        target.input,
+                        "assumed",
+                        entry["label"],
+                        entry["value"],
+                        entry["unit"],
+                        claim_2.value,
+                        claim_2.unit,
+                        claim_2.currency_year,
+                        ascii_text(claim_2.title),
+                        check_2.final_url or claim_2.url,
+                        claim_2.doi,
+                        check_2.doi_ok,
+                        check_2.page,
+                        check_2.quote_kind,
+                        ascii_text(claim_2.quote),
+                        check_2.supports,
+                        judge_name,
+                        prefixed,
+                        total_cost,
+                    )
                 )
-            )
+            elif claim_1 is not None:
+                rows.append(
+                    SourcingRow(
+                        target.input,
+                        "assumed",
+                        entry["label"],
+                        entry["value"],
+                        entry["unit"],
+                        claim_1.value,
+                        claim_1.unit,
+                        claim_1.currency_year,
+                        ascii_text(claim_1.title),
+                        check_1.final_url or claim_1.url,
+                        claim_1.doi,
+                        check_1.doi_ok,
+                        check_1.page,
+                        check_1.quote_kind,
+                        ascii_text(claim_1.quote),
+                        check_1.supports,
+                        judge_name,
+                        prefixed,
+                        total_cost,
+                    )
+                )
+            else:
+                rows.append(
+                    SourcingRow(
+                        target.input,
+                        "assumed",
+                        entry["label"],
+                        entry["value"],
+                        entry["unit"],
+                        None,
+                        "",
+                        None,
+                        "",
+                        "",
+                        None,
+                        None,
+                        None,
+                        "not run",
+                        "",
+                        None,
+                        judge_name,
+                        prefixed,
+                        total_cost,
+                    )
+                )
     return new_raw, rows
 
 

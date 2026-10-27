@@ -10,8 +10,13 @@ import unicodedata
 
 import requests
 from pypdf import PdfReader
+from urllib.parse import urlparse
 
 USER_AGENT = "AutoSolarResearcher/0.1 (+https://github.com/havidaqoma/autosolar-researcher)"
+BLOCKED_STATUS = (401, 403, 429)
+MAX_MIRRORS = 4
+OPENALEX_WORK_URL = "https://api.openalex.org/works/doi:"
+EUROPE_PMC_XML_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest/{pmcid}/fullTextXML"
 MAX_SOURCE_BYTES = 25_000_000
 MIN_QUOTE_CHARS = 20
 CONTEXT_CHARS = 400
@@ -141,14 +146,132 @@ def pdf_pages(data: bytes) -> list[str]:
     """Read PDF bytes into normalised page texts."""
     try:
         reader = PdfReader(io.BytesIO(data))
-        out = []
-        for page in reader.pages:
-            out.append(normalise_text(page.extract_text() or ""))
-        return out
+        try:
+            pages_list = list(reader.pages)
+        except Exception as exc:
+            raise FetchError(
+                "pdf text extraction failed: " + type(exc).__name__
+            ) from exc
+    except FetchError:
+        raise
     except Exception as exc:
         raise FetchError(
             "pdf text extraction failed: " + type(exc).__name__
         ) from exc
+    if len(pages_list) == 0:
+        return []
+    out = []
+    last_exc: Exception | None = None
+    failed = 0
+    for page in pages_list:
+        try:
+            out.append(normalise_text(page.extract_text() or ""))
+        except Exception as exc:
+            out.append("")
+            last_exc = exc
+            failed += 1
+    if failed == len(pages_list):
+        raise FetchError(
+            "pdf text extraction failed: " + type(last_exc).__name__
+        ) from last_exc
+    return out
+
+
+def mirror_urls(url, doi, http_get, *, timeout_s: float = 30.0) -> list[str]:
+    """Find open copies of the same work. Output is URLs."""
+    found: list[str] = []
+    try:
+        host = urlparse(url).hostname or ""
+    except Exception:
+        host = ""
+    if isinstance(url, str) and host.lower() in (
+        "pmc.ncbi.nlm.nih.gov",
+        "www.ncbi.nlm.nih.gov",
+        "ncbi.nlm.nih.gov",
+        "europepmc.org",
+        "www.europepmc.org",
+    ):
+        try:
+            m = re.search(r"PMC[0-9]+", url)
+        except Exception:
+            m = None
+        if m is not None:
+            found.append(EUROPE_PMC_XML_URL.format(pmcid=m.group(0)))
+    doi_norm = None
+    if isinstance(doi, str):
+        s = doi.strip()
+        low = s.lower()
+        for prefix in (
+            "https://doi.org/",
+            "http://doi.org/",
+            "https://dx.doi.org/",
+            "doi:",
+        ):
+            if low.startswith(prefix):
+                s = s[len(prefix):]
+                break
+        if re.match(r"^10\.\d{4,9}/\S+$", s):
+            doi_norm = s
+    if doi_norm is not None:
+        try:
+            resp = http_get(
+                OPENALEX_WORK_URL + doi_norm,
+                headers={"User-Agent": USER_AGENT},
+                timeout=timeout_s,
+            )
+        except Exception:
+            resp = None
+        if resp is not None and resp.status_code == 200:
+            try:
+                body = json.loads(resp.content.decode("utf-8"))
+            except Exception:
+                body = None
+            if isinstance(body, dict):
+                ids = body.get("ids")
+                if isinstance(ids, dict):
+                    pmcid_raw = ids.get("pmcid")
+                    if isinstance(pmcid_raw, str):
+                        try:
+                            mm = re.search(r"PMC[0-9]+", pmcid_raw)
+                        except Exception:
+                            mm = None
+                        if mm is not None:
+                            found.append(
+                                EUROPE_PMC_XML_URL.format(pmcid=mm.group(0))
+                            )
+                locs = body.get("locations")
+                if locs is None:
+                    locs = []
+                if isinstance(locs, list):
+                    pdfs: list[str] = []
+                    landings: list[str] = []
+                    for entry in locs:
+                        if not isinstance(entry, dict):
+                            continue
+                        pu = entry.get("pdf_url")
+                        if isinstance(pu, str):
+                            pdfs.append(pu)
+                        lu = entry.get("landing_page_url")
+                        if isinstance(lu, str):
+                            landings.append(lu)
+                    found.extend(pdfs)
+                    found.extend(landings)
+    out: list[str] = []
+    seen: set[str] = set()
+    for cand in found:
+        if not isinstance(cand, str):
+            continue
+        if not (cand.startswith("http://") or cand.startswith("https://")):
+            continue
+        if cand == url:
+            continue
+        if cand in seen:
+            continue
+        seen.add(cand)
+        out.append(cand)
+        if len(out) >= MAX_MIRRORS:
+            break
+    return out
 
 
 def fetch_source(url, http_get, *, timeout_s: float = 30.0) -> Source:
@@ -472,16 +595,55 @@ def check_citation(claim, *, http_get, judge_fn, judge_name: str,
                 % (value_converted, target_unit, band_lo, band_hi)
             )
     source = None
+    mirror_match = None
     try:
         source = fetch_source(claim.url, http_get, timeout_s=timeout_s)
     except FetchError as exc:
-        reasons.append("fetch: " + str(exc))
+        fetch_reason = "fetch: " + str(exc)
+        reasons.append(fetch_reason)
         source = None
+        msg = str(exc)
+        code = None
+        if msg.startswith("HTTP "):
+            try:
+                code = int(msg[5:].strip().split()[0])
+            except Exception:
+                code = None
+        if code in BLOCKED_STATUS:
+            try:
+                mirrors = mirror_urls(claim.url, claim.doi, http_get, timeout_s=timeout_s)
+            except Exception:
+                mirrors = []
+            used = None
+            for m_url in mirrors:
+                try:
+                    cand = fetch_source(m_url, http_get, timeout_s=timeout_s)
+                except Exception:
+                    continue
+                mq = find_quote(claim.quote, cand.pages)
+                if mq.found:
+                    used = cand
+                    mirror_match = mq
+                    break
+            if used is not None:
+                try:
+                    reasons.remove(fetch_reason)
+                except ValueError:
+                    pass
+                source = used
+            else:
+                if len(mirrors) > 0:
+                    reasons.append(
+                        "mirror: no open copy with the quote (%d tried)" % len(mirrors)
+                    )
     match = None
     quote_kind = "not run"
     page_text = ""
     if source is not None:
-        match = find_quote(claim.quote, source.pages)
+        if mirror_match is not None:
+            match = mirror_match
+        else:
+            match = find_quote(claim.quote, source.pages)
         quote_kind = match.kind
         if not match.found:
             reasons.append("quote not found in source")
