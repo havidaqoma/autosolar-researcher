@@ -1,0 +1,28 @@
+{
+ "schema": "autosolar.sourcing_targets/1",
+ "note": "Inputs that stage S3 tries to source by web search. Bands are sanity limits (assumed): a value outside its band stays assumed. Descriptions are what the support judge checks the quote against, so they state the definition the model uses.",
+ "fx_idr_per_usd": {"value": 16500.0, "label": "assumed", "note": "IDR per USD, rounded market level; only used when a source states rupiah"},
+ "targets": [
+  {"input": "pv_capex_usd_per_kwp", "target_unit": "USD/kWp", "band_lo": 300.0, "band_hi": 4000.0,
+   "description": "installed capital cost of a solar PV plant per kWp (or per kW) in Indonesia or Southeast Asia",
+   "search_brief": "installed capital cost of a ground-mounted or mini-grid solar PV plant per kWp (or per kW DC) in Indonesia, or in Southeast Asia if no Indonesian figure exists"},
+  {"input": "pv_om_usd_per_kwp_yr", "target_unit": "USD/kWp/yr", "band_lo": 3.0, "band_hi": 60.0,
+   "description": "annual fixed operation and maintenance cost of a solar PV plant per kWp (or per kW)",
+   "search_brief": "annual fixed operation and maintenance cost of a utility-scale or mini-grid solar PV plant per kW per year, in Indonesia or Southeast Asia if available"},
+  {"input": "battery_capex_usd_per_kwh", "target_unit": "USD/kWh", "band_lo": 50.0, "band_hi": 1500.0,
+   "description": "installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy",
+   "search_brief": "installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy, for utility or mini-grid scale, in Indonesia or Southeast Asia if available"},
+  {"input": "battery_om_usd_per_kwh_yr", "target_unit": "USD/kWh/yr", "band_lo": 0.5, "band_hi": 30.0,
+   "description": "annual fixed operation and maintenance cost of a lithium-ion battery storage system per kWh of storage energy",
+   "search_brief": "annual fixed operation and maintenance cost of a lithium-ion battery energy storage system per kWh per year"},
+  {"input": "fuel_price_usd_per_l", "target_unit": "USD/L", "band_lo": 0.3, "band_hi": 2.5,
+   "description": "price per litre of industrial (non-subsidised) diesel fuel in Indonesia",
+   "search_brief": "price of industrial (non-subsidised) diesel fuel (solar / biosolar B35 or B40, industri) in Indonesia per litre"},
+  {"input": "discount_rate_frac", "target_unit": "frac", "band_lo": 0.02, "band_hi": 0.25,
+   "description": "real (inflation-adjusted) discount rate for solar PV or renewable energy projects in Indonesia",
+   "search_brief": "real (inflation-adjusted) discount rate used to evaluate solar PV or renewable energy projects in Indonesia"},
+  {"input": "diesel_min_load_frac", "target_unit": "frac", "band_lo": 0.1, "band_hi": 0.6,
+   "description": "minimum load of a diesel generator set as a share of its rated power",
+   "search_brief": "recommended minimum load of a diesel generator set in a mini-grid or island power system, as a share of its rated power"}
+ ]
+}
