@@ -24,6 +24,7 @@ MAX_PROMPT_CONTEXT_CHARS = 3000
 MIN_TITLE_CHARS = 12
 MAX_PROMPT_TITLE_CHARS = 300
 MAX_PROMPT_URL_CHARS = 500
+JUDGE_VOTES = 3
 SUPPORT_INSTRUCTIONS = (
     "Decide if the quote and source context state the claimed value. "
     'Answer with one JSON object {"supports": true or false, "reason": "<one sentence>"}. '
@@ -111,6 +112,7 @@ class CitationCheck:
     judge_reason: str
     judge_name: str
     context: str
+    judge_calls: int = 0
 
 
 def normalise_text(text: str) -> str:
@@ -608,6 +610,24 @@ def support_verdict(judge_fn, claim: Claim, context: str, *, source_title=None, 
     return Verdict(None, "unparsed judge answer", raw[:2000])
 
 
+def support_votes(judge_fn, claim: Claim, context: str, *, source_title=None,
+                  source_url=None, votes: int = JUDGE_VOTES) -> tuple[Verdict, int]:
+    """Ask judge up to votes times. Output verdict and call count."""
+    if isinstance(votes, bool) or not isinstance(votes, int) or votes < 1:
+        raise ValueError("votes must be an int >= 1")
+    verdict: Verdict | None = None
+    made = 0
+    for _ in range(votes):
+        verdict = support_verdict(judge_fn, claim, context,
+                                  source_title=source_title,
+                                  source_url=source_url)
+        made += 1
+        if verdict.supports is not True:
+            break
+    assert verdict is not None
+    return (verdict, made)
+
+
 def check_citation(claim, *, http_get, judge_fn, judge_name: str,
                    target_unit: str, band_lo: float, band_hi: float,
                    fx_idr_per_usd: float | None = None,
@@ -703,6 +723,7 @@ def check_citation(claim, *, http_get, judge_fn, judge_name: str,
                 reasons.append("doi does not resolve")
     supports: bool | None = None
     judge_reason = ""
+    judge_calls = 0
     context = ""
     if match is not None and match.found:
         context = match.context
@@ -710,8 +731,10 @@ def check_citation(claim, *, http_get, judge_fn, judge_name: str,
         show_title = None
         if source is not None and title_in_source(claim.title, source.pages):
             show_title = claim.title
-        verdict = support_verdict(judge_fn, claim, context, source_title=show_title,
-                                  source_url=source.final_url if source is not None else None)
+        verdict, judge_calls = support_votes(
+            judge_fn, claim, context, source_title=show_title,
+            source_url=source.final_url if source is not None else None,
+            votes=JUDGE_VOTES)
         supports = verdict.supports
         judge_reason = verdict.reason
         if verdict.supports is False:
@@ -738,4 +761,5 @@ def check_citation(claim, *, http_get, judge_fn, judge_name: str,
         judge_reason=judge_reason,
         judge_name=judge_name,
         context=context,
+        judge_calls=judge_calls,
     )
