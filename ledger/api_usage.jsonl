@@ -33,3 +33,6 @@
 {"ts_unix": 1793066830.4527342, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
 {"ts_unix": 1793066833.6529758, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
 {"ts_unix": 1793066837.9227803, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793069393.769618, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793069397.512759, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793069435.1784177, "run_id": "chart-probe", "stage": "S4-tick-read", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 208, "cached_tokens": 0, "output_tokens": 746, "reasoning_tokens": 523, "search_queries": 0}, "cost_usd": 0.00017000000000000004}

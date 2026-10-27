@@ -11,6 +11,8 @@ dependencies = [
     "pvlib>=0.11",
     "requests>=2.31",
     "jsonschema>=4.21",
+    "meta-sam-parser>=0.1.0",
+    "pillow>=10",
 ]
 
 [dependency-groups]
