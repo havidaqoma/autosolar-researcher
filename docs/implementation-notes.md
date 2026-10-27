@@ -9,6 +9,10 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   outside it and sends failures back with `tools/muse_task.py --feedback`. Revisit if Havid runs the setup.
 - `tools/muse_task.py` calls the Muse Code binary directly, not the `muse.cmd` launcher, to avoid quoting problems
   and to keep the version fixed during the build.
+- T03 attempt 1: Muse Code could not run Python to look at the `meta-sam-parser` API, so it guessed it with
+  duck typing and a regex fallback parser (794 lines, 2 of 64 tests failed). Fix: the orchestrator measured the
+  library and added a "Library facts" section to the spec; attempt 2 used it directly (501 lines, 111 of 111).
+  Lesson: when a task uses a third party library, put the measured API in the spec before the first attempt.
 
 ## Discovered edge cases
 
@@ -24,9 +28,19 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   and the parsing are right. Measured in `docs/smoke/sam_smoke.json`; 20 SAM calls, USD 0.05 computed.
 - OpenAerialMap has no open drone or aerial images over Karimunjawa, Sumba, Kepulauan Seribu, Bawean or Selayar
   (API search, 0 results each; the same query returns 6 for Jakarta and 1,084 for all of Indonesia).
+- `meta-sam-parser` is under the SAM License (read Tuesday 27 Oct): use and redistribution allowed; a
+  redistribution must carry a copy of the licence; a publication of results must acknowledge the use of SAM
+  Materials. The product depends on it through `pyproject.toml` and does not copy its code, so the README needs the
+  acknowledgement only.
+- Chart reader validation (rules fixed in fa03702, results in `docs/smoke/chart_validation.json`): every point it
+  read on 6 synthetic charts was within 1.15% of the y span (median 0.13%), but it returned nothing for the first
+  and last x value of every series (29 of 318 points), so V1 failed the 95% rule (90.9%). On Hiron 2021 Figure 8
+  SAM found the purple hatched area but no object for "green area" (a green checked pattern), so V2 failed.
+  Verdict by the fixed rule: tested and failed idea.
 
 ## Questions for review
 
 - SAM 3.1 role: test 2 (rules fixed in 12696c9 before the run) gave 0 objects on 12 of 12 zoomed, contrast
-  stretched tiles, so SAM leaves the satellite role. New role is Havid's choice; the chart probe
-  (`docs/smoke/sam_fig_probe.json`) found one object per data series on the paper's Figure 7.
+  stretched tiles, so SAM leaves the satellite role (D17). Havid picked the chart reader as the new role (D18).
+- Chart reader after its failed validation: report it as a tested and failed idea (the fixed rule), or a second
+  pre-registered test after an edge column fix and a prompt rule for hatched areas. Havid's choice.

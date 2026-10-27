@@ -57,3 +57,32 @@ the span; daily sum within 2% of 26,214 kWh.
 SAM calls: V1 has 3 area charts x (3 series + 1 tick call) = 12 and 3 line charts x (2 series + 1 tick call) = 9;
 V2 has 3 series + 1 tick call = 4. Total 25 SAM calls (USD 0.0625) plus 7 Muse Spark label calls, about USD 0.07
 computed. No retry of a failed chart.
+
+## Results (added after the run, Tuesday 27 Oct)
+
+Code under test: product commit 6b3350f. Raw results: `chart_validation.json`. Cost: 23 SAM calls and 6 Muse
+Spark label calls, USD 0.0582 computed from the API ledger (V2 stopped after its second SAM call).
+
+V1, synthetic charts:
+
+| Chart | Read | Points | Misses | Largest error of a read point (share of y span) |
+|---|---|---|---|---|
+| area1 | yes | 72 | 6 | 0.0103 |
+| area2 | yes | 72 | 6 | 0.0115 |
+| area3 | yes | 72 | 6 | 0.0104 |
+| line4 | yes | 48 | 3 | 0.0051 |
+| line5 | yes | 22 | 4 | 0.0018 |
+| line6 | yes | 32 | 4 | 0.0030 |
+
+- Charts read: 6 of 6 (rule: at least 5). Median error: 0.0013 of the span (rule: at most 0.01).
+- Points within 3% of the span: 289 of 318, 0.909 (rule: at least 0.95). Every one of the 29 misses is the first
+  or the last x value of a series, where the sample column sits on the edge of the plot; no read point was off by
+  more than 0.0115 of the span. No tick was dropped on any axis of the 6 charts.
+- V1 verdict: FAIL (share within 3% below 0.95).
+
+V2, Hiron 2021 Figure 8: SAM returned an object for "purple area" (Dec. 2017) and no object for "green area"
+(Oct. 2018). In this figure the areas are hatched (diagonal purple and yellow stripes, a green checked
+pattern), not flat fills. `read_chart` stopped with "series not found: Oct. 2018". V2 verdict: FAIL.
+
+Outcome by the rule above: both fail, so the chart reader goes into the report as a tested and failed idea,
+with these numbers. A changed reader would need new rules fixed before a new run; that is Havid's call.
