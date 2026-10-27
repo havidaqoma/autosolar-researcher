@@ -1,0 +1,160 @@
+{
+ "what": "T10e honesty check: local Muse Glimmer on the 4 S3 probe claims with the T10e prompt (title when the source text contains it, plus URL), 3 runs in a row, judge temperature 1.0",
+ "label": "measured",
+ "rule": "the planted trap (nominal WACC quoted for a real discount rate) must get supports false; the orchestrator required it in all 3 runs",
+ "trap_supports_by_run": [
+  false,
+  false,
+  false
+ ],
+ "old_prompt_evidence": "docs/smoke/T10_judge_probe.json",
+ "runs": [
+  {
+   "run": 1,
+   "rows": [
+    {
+     "input": "battery_capex_usd_per_kwh",
+     "description": "installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy",
+     "quote_kind": "exact",
+     "context_chars": 899,
+     "title_shown": true,
+     "prompt_chars": 1880,
+     "supports": false,
+     "reason": "The quote states battery storage costs fell to USD 192/kWh but does not specify the cost is for a lithium-ion battery energy storage system.",
+     "seconds": 20.7
+    },
+    {
+     "input": "pv_capex_usd_per_kwp",
+     "description": "installed capital cost of a solar PV plant per kWp (or per kW) in Indonesia or Southeast Asia",
+     "quote_kind": "near",
+     "context_chars": 883,
+     "title_shown": true,
+     "prompt_chars": 1827,
+     "supports": true,
+     "reason": "The quote explicitly states the unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW for the Indonesia utility-scale solar PV study.",
+     "seconds": 16.3
+    },
+    {
+     "input": "fuel_price_usd_per_l",
+     "description": "price per litre of industrial (non-subsidised) diesel fuel in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 830,
+     "title_shown": true,
+     "prompt_chars": 1636,
+     "supports": false,
+     "reason": "The quote shows 11,420 Rp/liter as an estimated market price under Scenario 1 for Q3 year 0, not a stated actual price per litre of industrial non-subsidised diesel fuel.",
+     "seconds": 23.0
+    },
+    {
+     "input": "discount_rate_frac",
+     "description": "real (inflation-adjusted) discount rate for solar PV or renewable energy projects in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 1099,
+     "title_shown": true,
+     "prompt_chars": 2274,
+     "supports": false,
+     "reason": "The quote states 9.4% as nominal, post-tax WACC in local currency, not a real inflation-adjusted discount rate.",
+     "seconds": 12.5
+    }
+   ]
+  },
+  {
+   "run": 2,
+   "rows": [
+    {
+     "input": "battery_capex_usd_per_kwh",
+     "description": "installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy",
+     "quote_kind": "exact",
+     "context_chars": 899,
+     "title_shown": true,
+     "prompt_chars": 1880,
+     "supports": true,
+     "reason": "The quote explicitly states battery storage costs fell to USD 192/kWh from 2010 to 2024.",
+     "seconds": 11.4
+    },
+    {
+     "input": "pv_capex_usd_per_kwp",
+     "description": "installed capital cost of a solar PV plant per kWp (or per kW) in Indonesia or Southeast Asia",
+     "quote_kind": "near",
+     "context_chars": 883,
+     "title_shown": true,
+     "prompt_chars": 1827,
+     "supports": true,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is set at 1,119 USD/kW and the context specifies this value is used for utility-scale solar PV projects in Indonesia.",
+     "seconds": 24.1
+    },
+    {
+     "input": "fuel_price_usd_per_l",
+     "description": "price per litre of industrial (non-subsidised) diesel fuel in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 830,
+     "title_shown": true,
+     "prompt_chars": 1636,
+     "supports": true,
+     "reason": "The quote lists Diesel with 11,420 in the estimated market prices column for scenario 1, matching the claimed value.",
+     "seconds": 19.1
+    },
+    {
+     "input": "discount_rate_frac",
+     "description": "real (inflation-adjusted) discount rate for solar PV or renewable energy projects in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 1099,
+     "title_shown": true,
+     "prompt_chars": 2274,
+     "supports": false,
+     "reason": "The quote gives a nominal, post-tax WACC of 9.4% for solar PV in Indonesia, not a real inflation-adjusted discount rate.",
+     "seconds": 14.2
+    }
+   ]
+  },
+  {
+   "run": 3,
+   "rows": [
+    {
+     "input": "battery_capex_usd_per_kwh",
+     "description": "installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy",
+     "quote_kind": "exact",
+     "context_chars": 899,
+     "title_shown": true,
+     "prompt_chars": 1880,
+     "supports": true,
+     "reason": "The quote explicitly states battery storage costs fell to USD 192/kWh from 2010 to 2024.",
+     "seconds": 20.4
+    },
+    {
+     "input": "pv_capex_usd_per_kwp",
+     "description": "installed capital cost of a solar PV plant per kWp (or per kW) in Indonesia or Southeast Asia",
+     "quote_kind": "near",
+     "context_chars": 883,
+     "title_shown": true,
+     "prompt_chars": 1827,
+     "supports": true,
+     "reason": "The quote explicitly states the unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW and the context confirms this is for utility-scale solar PV projects in Indonesia.",
+     "seconds": 12.8
+    },
+    {
+     "input": "fuel_price_usd_per_l",
+     "description": "price per litre of industrial (non-subsidised) diesel fuel in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 830,
+     "title_shown": true,
+     "prompt_chars": 1636,
+     "supports": false,
+     "reason": "The quote shows 11,420 Rp/liter as the estimated market price for diesel under a scenario, but the context does not specify this is industrial non-subsidised diesel.",
+     "seconds": 15.0
+    },
+    {
+     "input": "discount_rate_frac",
+     "description": "real (inflation-adjusted) discount rate for solar PV or renewable energy projects in Indonesia",
+     "quote_kind": "exact",
+     "context_chars": 1099,
+     "title_shown": true,
+     "prompt_chars": 2274,
+     "supports": false,
+     "reason": "The quote states 9.4% as the median nominal post-tax WACC in local currency for solar PV in Indonesia, not a real inflation-adjusted discount rate.",
+     "seconds": 11.6
+    }
+   ]
+  }
+ ]
+}
