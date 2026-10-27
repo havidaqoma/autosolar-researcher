@@ -34,11 +34,23 @@ def env_value(name):
     sys.exit(name + " is not set (environment or AUTOSOLAR_ENV_FILE)")
 
 
+class LiveClient:
+    """Passes live=True on every call, so the ledger applies the live caps (USD 2 per run, USD 5 per UTC day)."""
+
+    def __init__(self, client):
+        self._client = client
+
+    def respond(self, *args, **kwargs):
+        kwargs["live"] = True
+        return self._client.respond(*args, **kwargs)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("question")
     ap.add_argument("--inputs", default=str(ROOT / "config" / "default_inputs.json"))
     ap.add_argument("--runs", default=str(ROOT / "runs" / "studies"))
+    ap.add_argument("--live", action="store_true", help="count the calls as public live use (live caps apply)")
     args = ap.parse_args()
     os.environ["MODEL_API_KEY"] = env_value("MODEL_API_KEY")
     cams_email = env_value("AUTOSOLAR_CAMS_EMAIL")
@@ -49,6 +61,8 @@ def main():
 
     run_id = "study-" + time.strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:6]
     client = MetaClient(Ledger(ROOT / "ledger" / "api_usage.jsonl"), timeout_s=120.0)
+    if args.live:
+        client = LiveClient(client)
     t = time.perf_counter()
     out = run_study(args.question, client=client, http_get=requests.get, weather_fn=weather_fn,
                     inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id)
