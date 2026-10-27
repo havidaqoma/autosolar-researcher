@@ -86,3 +86,15 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   answers each of these (page tolerance, open copies via Europe PMC and OpenAlex, unit wording in the prompt, one
   feedback search). A judge no or an out of band value never triggers a second search, so the retry cannot shop
   for a number.
+
+- Second sourcing run after T10d (`docs/smoke/T10_sourcing_run2.json`, measured): 812 s, USD 0.670 for 11 searches
+  (4 inputs took a second search). 3 of 7 inputs checked: PV capex 1119 USD/kW (Frontiers 2024, quote near), PV
+  O&M 24.38 US$/kW per year (Scientific Reports 2022, quote near), diesel 14000 IDR per litre (FFTC page, quote
+  exact, found on search try 2; fx 16500 assumed). The judge said no twice (an IEA battery figure for general
+  storage projects, a 5 % discount rate). Two MDPI pages still answered HTTP 403 after 4 open copies each.
+  The two longest searches read about 2 million input tokens each; that is the cost driver to watch.
+- Second live study (`docs/examples/T10_karimunjawa_report.md`, run 71c5bed5603853e6, computed, 221 s, cached
+  question parse so model cost about USD 0.0001): with the 3 checked inputs the least cost design is 7,250 kWp PV
+  plus 19,000 kWh battery, 0.251 USD/kWh against 0.354 for diesel only (-29.1 %), 85.8 % renewable, 3.10 million
+  litres of diesel saved per year. All 11 gate rows pass, G6 included. Battery cost, discount rate and minimum
+  diesel load are still assumed, so the answer is still a placeholder until those are sourced.
