@@ -37,10 +37,21 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   and last x value of every series (29 of 318 points), so V1 failed the 95% rule (90.9%). On Hiron 2021 Figure 8
   SAM found the purple hatched area but no object for "green area" (a green checked pattern), so V2 failed.
   Verdict by the fixed rule: tested and failed idea.
+- SAM mask rasters are local to their box and smaller than the box when the box is large (measured: 1398 x 298
+  box, 1024 x 218 raster). The T03 spec placed them at their own size, which squeezed every Hiron Figure 8 mask
+  into the left 1024 columns. Found in practice calls, fixed in spec revision T03c with a real fixture test.
+- Chart reader V3 (Havid chose one more test; rules fixed in 31a1bf1 before any V3 call, results in
+  `docs/smoke/chart_validation_v3.json`): V3a PASS on 6 new synthetic charts (318 of 318 points read, median
+  error 0.17% of the y span, 99.4% within 3%); V3b PASS on Hiron 2021 Figure 16, never seen before, against its
+  Table 4 (10 of 10 bars, mean error 0.17%, largest 0.76% of the span). Verdict by the fixed rule: chart numbers
+  may enter the report with the measured error. Weak spots, measured: the first or last x point holds the two
+  synthetic misses over 3% (3.2% and 4.0%); on the practice Figure 8 the 0:00 and 23:00 hours were off by 10%
+  and 32% of the span while the other 22 hours were within 1.6%; Muse Spark misread 6 of 10 x labels on
+  Figure 16 and the leave one out axis fit dropped them.
 
 ## Questions for review
 
 - SAM 3.1 role: test 2 (rules fixed in 12696c9 before the run) gave 0 objects on 12 of 12 zoomed, contrast
   stretched tiles, so SAM leaves the satellite role (D17). Havid picked the chart reader as the new role (D18).
-- Chart reader after its failed validation: report it as a tested and failed idea (the fixed rule), or a second
-  pre-registered test after an edge column fix and a prompt rule for hatched areas. Havid's choice.
+- Chart reader edge points: whether the report marks the first and last x value of each series as "edge, not
+  validated" (proposed, because of the practice Figure 8 result). Havid's choice.

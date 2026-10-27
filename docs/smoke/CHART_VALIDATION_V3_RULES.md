@@ -77,3 +77,40 @@ Hiron Figure 8 with prompts "purple striped area" (Dec. 2017, front), "green che
 
 V3a: 21 SAM calls and 6 Muse Spark label calls. V3b: 2 SAM and 1 Muse Spark. Practice: 4 SAM and 1 Muse Spark.
 27 SAM calls (USD 0.0675) and 8 label calls; at most USD 0.15 in total, computed from the API ledger.
+
+## Results (added after the run, Tuesday 27 Oct)
+
+Run by `tools/validate_chart_reader_v3.py run` on code da97fcf (115 of 115 tests). Raw output in
+`docs/smoke/chart_validation_v3.json`. No chart was retried and no prompt was changed.
+
+V3a, synthetic charts (error as a share of the y span; measured):
+
+| Chart | Points | Missed | Over 3% | Largest error |
+|---|---|---|---|---|
+| area1 | 72 | 0 | 1 (green area, first x) | 0.0396 |
+| area2 | 72 | 0 | 0 | 0.0262 |
+| area3 | 72 | 0 | 1 (green checkered area, first x) | 0.0316 |
+| line4 | 48 | 0 | 0 | 0.0050 |
+| line5 | 22 | 0 | 0 | 0.0021 |
+| line6 | 32 | 0 | 0 | 0.0044 |
+
+6 of 6 charts read (rule 5), median error 0.0017 (rule 0.01), 316 of 318 points within 0.03 = 0.994 (rule 0.95).
+No tick dropped on any axis. V3a PASS.
+
+V3b, Hiron 2021 Figure 16 against Table 4 (measured): 10 of 10 bars read; y span of the used ticks 60 USD per
+MWh; read 299.10, 294.93, 290.19, 285.60, 281.00, 276.26, 271.52, 265.92, 261.18, 257.73. Mean error 0.0017 of
+the span (0.10 USD per MWh), largest 0.0076 (0.46 USD per MWh, the 10% bar). V3b PASS.
+
+Outcome by the rule above: chart numbers may enter the report, each with the measured error of this test.
+
+What the run also showed (measured, reported for honesty, not part of the verdict):
+
+- Muse Spark read 6 of the 10 x labels of Figure 16 wrongly (for example "800" for 80); the leave one out axis
+  fit dropped those 6 and fitted the x axis on the 4 that agree (40, 60, 90, 100). The y fit dropped one stray
+  label ("3").
+- Practice Figure 8 (not counted): 24 of 24 hours read; 22 of them within 0.016 of the span, but 0:00 read 1,046
+  for 1,126 kWh (0.10) and 23:00 read 935 for 1,195 kWh (0.32). Day sum 25,815 kWh against 26,214 kWh (1.5%
+  low). It would still fail the V2 largest error rule. Edge points remain the weak spot.
+
+Cost (computed from the API ledger, run id chart-validation-v3): 27 SAM calls and 8 Muse Spark calls,
+USD 0.069.

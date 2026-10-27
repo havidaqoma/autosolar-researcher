@@ -73,3 +73,38 @@
 {"ts_unix": 1793071899.2119853, "run_id": "chart-practice", "stage": "practice-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
 {"ts_unix": 1793071904.8774254, "run_id": "chart-practice", "stage": "practice-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
 {"ts_unix": 1793072333.5269132, "run_id": "smoke-sam-day1", "stage": "S4-smoke-raw", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073073.3617933, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073077.7358267, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073081.3384192, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073084.6548073, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073090.4202447, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 144, "cached_tokens": 0, "output_tokens": 732, "reasoning_tokens": 544, "search_queries": 0}, "cost_usd": 0.0001608}
+{"ts_unix": 1793073092.2126832, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073097.2146587, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073100.9583094, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073103.738545, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073108.5613778, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 144, "cached_tokens": 0, "output_tokens": 660, "reasoning_tokens": 472, "search_queries": 0}, "cost_usd": 0.0001464}
+{"ts_unix": 1793073111.1256273, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073116.1244867, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073119.8237755, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073123.281761, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073127.6984513, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 144, "cached_tokens": 0, "output_tokens": 505, "reasoning_tokens": 317, "search_queries": 0}, "cost_usd": 0.0001154}
+{"ts_unix": 1793073129.380695, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073131.4117773, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073133.9790816, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073152.52439, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 152, "cached_tokens": 0, "output_tokens": 2243, "reasoning_tokens": 2037, "search_queries": 0}, "cost_usd": 0.0004638}
+{"ts_unix": 1793073153.9792552, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073156.4992023, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073158.2809641, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073163.1840525, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 127, "cached_tokens": 0, "output_tokens": 594, "reasoning_tokens": 440, "search_queries": 0}, "cost_usd": 0.0001315}
+{"ts_unix": 1793073164.5314949, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073165.8164272, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073168.1658049, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073172.487777, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 120, "cached_tokens": 0, "output_tokens": 592, "reasoning_tokens": 455, "search_queries": 0}, "cost_usd": 0.0001304}
+{"ts_unix": 1793073174.3518665, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073177.1378777, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073185.0000906, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 177, "cached_tokens": 0, "output_tokens": 787, "reasoning_tokens": 547, "search_queries": 0}, "cost_usd": 0.0001751}
+{"ts_unix": 1793073188.3096664, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073193.7345371, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073199.2189946, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073204.735928, "run_id": "chart-validation-v3", "stage": "chart-sam", "model": "sam-3.1", "live": false, "usage": {"images": 1}, "cost_usd": 0.0025}
+{"ts_unix": 1793073211.6164968, "run_id": "chart-validation-v3", "stage": "chart-labels", "model": "muse-spark-1.3-contributor", "live": false, "usage": {"input_tokens": 172, "cached_tokens": 0, "output_tokens": 829, "reasoning_tokens": 602, "search_queries": 0}, "cost_usd": 0.000183}
