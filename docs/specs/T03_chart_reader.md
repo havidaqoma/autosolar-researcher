@@ -139,6 +139,28 @@ from autosolar.chart_reader import (ChartReadError, ObjectMask, AxisFit, ChartSp
     for each crop an `input_text` `"Crop i:"` followed by its `input_image` (PNG data URL). Returns
     `parse_label_answer(result.text, len(crops))`. Zero crops: return `[]` without a call.
 
+## Revision T03d: point status (Havid approved, Tuesday 27 Oct)
+
+The V3 test (`docs/smoke/CHART_VALIDATION_V3_RULES.md`) passed, but the first and last x value of a series were
+the weak spot (practice Figure 8: off by 10% and 32% of the span at 0:00 and 23:00). The report must mark them.
+
+- `point_status(x_values: list[float] | tuple[float, ...], values: list[float | None]) -> list[str]`, one
+  status per index:
+  - `"not_read"` when `values[i] is None` (this wins over the edge rule);
+  - else `"edge_not_validated"` when `x_values[i] == min(x_values)` or `x_values[i] == max(x_values)` (order of
+    `x_values` does not matter; every index holding the min or the max is an edge);
+  - else `"validated"`.
+  - Empty `x_values` or `len(values) != len(x_values)`: `ValueError`.
+- `ChartReading` gets one more field, last, with a default so old code still builds it:
+  `point_status: dict[str, list[str]] = field(default_factory=dict)`. `read_chart` fills it with
+  `point_status(spec.x_values, values[name])` for every series name.
+- Module constant `CHART_READER_VALIDATION: dict` with exactly these keys and values (computed by the orchestrator
+  from `docs/smoke/chart_validation_v3.json`; a test recomputes them from that file):
+  `{"source": "docs/smoke/chart_validation_v3.json", "rules_commit": "31a1bf1",
+  "synthetic_inner_median_err_frac": 0.0017, "synthetic_inner_max_err_frac": 0.0132,
+  "synthetic_edge_max_err_frac": 0.0396, "real_figure_mean_err_frac": 0.0017,
+  "real_figure_max_err_frac": 0.0076}`. Errors are shares of the y axis span.
+
 ## Done when
 
 `uv run pytest` passes (all tests, including T01 and T02), no test touches the network, and `AGENTS.md` rules

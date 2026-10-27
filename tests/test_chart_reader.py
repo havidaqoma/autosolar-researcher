@@ -12,7 +12,8 @@ from PIL import Image
 
 from autosolar.chart_reader import (AxisFit, ChartReadError, ChartReading, ChartSpec, ObjectMask, fit_axis,
                                     line_centre_px, parse_label_answer, parse_sam_masks, parse_tick_label,
-                                    read_chart, sam_segment_fn, series_values, spark_label_fn, top_edge_px)
+                                    read_chart, sam_segment_fn, series_values, spark_label_fn, top_edge_px,
+                                    CHART_READER_VALIDATION, point_status)
 
 FIX = pathlib.Path(__file__).parent / "fixtures"
 
@@ -416,3 +417,67 @@ def test_axisfit_inverse_round_trip():
         assert f.px(f.value(px)) == pytest.approx(px)
     assert not math.isnan(f.value(1.0))
     json.dumps({"slope": f.slope})
+
+
+# ---------- revision T03d: point status and the validation record ----------
+
+def test_point_status_basic_and_none_wins():
+    xs = (0.0, 1.0, 2.0, 3.0, 4.0)
+    assert point_status(xs, [1.0, None, 2.0, 3.0, 4.0]) == [
+        "edge_not_validated", "not_read", "validated", "validated", "edge_not_validated"]
+    assert point_status(xs, [None, 1.0, 2.0, 3.0, None]) == [
+        "not_read", "validated", "validated", "validated", "not_read"]
+
+
+def test_point_status_unordered_and_repeated_edges():
+    assert point_status([5.0, 1.0, 3.0], [1.0, 2.0, 3.0]) == ["edge_not_validated", "edge_not_validated", "validated"]
+    assert point_status([1.0, 1.0, 2.0, 3.0, 3.0], [0.1] * 5) == ["edge_not_validated"] * 2 + ["validated"] + [
+        "edge_not_validated"] * 2
+    assert point_status([7.0], [2.0]) == ["edge_not_validated"]
+
+
+@pytest.mark.parametrize("xs, vals", [((), []), ((1.0, 2.0), [1.0]), ((1.0,), [1.0, 2.0])])
+def test_point_status_rejects(xs, vals):
+    with pytest.raises(ValueError):
+        point_status(xs, vals)
+
+
+def test_read_chart_fills_point_status():
+    f = Fakes()
+    r = read_chart(png_bytes(), spec(), f.segment, f.read_labels)
+    assert set(r.point_status) == {"A", "B"}
+    assert r.point_status["A"] == ["edge_not_validated"] + ["validated"] * 8 + ["edge_not_validated"]
+    r2 = read_chart(png_bytes(), spec(stacking="none"), f.segment, f.read_labels)
+    assert r2.point_status["B"][9] == "not_read"
+    assert r2.point_status["B"][0] == "edge_not_validated"
+    assert r2.point_status["B"][1:9] == ["validated"] * 8
+
+
+def test_chartreading_point_status_has_default():
+    fit = AxisFit(slope=1.0, intercept=0.0, used=(0, 1), dropped=(), max_resid=0.0)
+    r = ChartReading(values={}, y_unit="kwh", x_axis=fit, y_axis=fit, ticks=[], plot_box_px=(0.0, 0.0, 1.0, 1.0),
+                     sam_calls=0, label_calls=0)
+    assert r.point_status == {}
+
+
+def test_validation_record_matches_saved_v3_results():
+    root = pathlib.Path(__file__).resolve().parents[1]
+    v = CHART_READER_VALIDATION
+    assert v["source"] == "docs/smoke/chart_validation_v3.json" and v["rules_commit"] == "31a1bf1"
+    d = json.loads((root / v["source"]).read_text(encoding="utf-8"))
+    inner, edge = [], []
+    for row in d["v3a"]:
+        for s in row["series"].values():
+            e = s["err_frac"]
+            for i, x in enumerate(e):
+                (edge if i in (0, len(e) - 1) else inner).append(x)
+    inner.sort()
+    n = len(inner)
+    median = inner[n // 2] if n % 2 else (inner[n // 2 - 1] + inner[n // 2]) / 2
+    assert v["synthetic_inner_median_err_frac"] == round(median, 4)
+    assert v["synthetic_inner_max_err_frac"] == round(max(inner), 4)
+    assert v["synthetic_edge_max_err_frac"] == round(max(edge), 4)
+    assert v["real_figure_mean_err_frac"] == round(d["v3b"]["summary"]["mean_err_frac"], 4)
+    assert v["real_figure_max_err_frac"] == round(d["v3b"]["summary"]["max_err_frac"], 4)
+    assert set(v) == {"source", "rules_commit", "synthetic_inner_median_err_frac", "synthetic_inner_max_err_frac",
+                      "synthetic_edge_max_err_frac", "real_figure_mean_err_frac", "real_figure_max_err_frac"}
