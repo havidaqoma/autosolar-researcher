@@ -1,0 +1,360 @@
+{
+ "schema": "autosolar.sourcing/1",
+ "meta": {
+  "run_id": "sourcing-20261027T223208-4405fa",
+  "targets": "F:\\GITHUB\\autosolar-researcher\\config\\sourcing_targets.json",
+  "base_inputs": "F:\\GITHUB\\autosolar-researcher\\config\\default_inputs.json",
+  "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+  "judge_seconds": [
+   9.7
+  ],
+  "fx_idr_per_usd": 16500.0,
+  "wall_s": 321.8,
+  "search_cost_usd": 0.276096,
+  "g6": [
+   true,
+   "1 of 7 sourced inputs checked, 6 kept assumed"
+  ]
+ },
+ "inputs": {
+  "schema": "autosolar.inputs/1",
+  "note": "Hand entered inputs for the thin end to end path. Every cost is labelled assumed until stage S3 finds and checks a source. Diesel fleet from Hiron et al. 2021 p7; the same paper also prints 2 x 2.7 MW (p1, Table 1 p12), so the fleet size is one of the reported conflicts.",
+  "values": {
+   "pv_capex_usd_per_kwp": {
+    "value": 1000.0,
+    "unit": "USD/kWp",
+    "label": "assumed",
+    "note": "remote island install, including transport"
+   },
+   "pv_om_usd_per_kwp_yr": {
+    "value": 15.0,
+    "unit": "USD/kWp/yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "pv_life_yr": {
+    "value": 25,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_capex_usd_per_kwh": {
+    "value": 300.0,
+    "unit": "USD/kWh",
+    "label": "assumed",
+    "note": "LFP energy part"
+   },
+   "battery_power_capex_usd_per_kw": {
+    "value": 100.0,
+    "unit": "USD/kW",
+    "label": "assumed",
+    "note": "inverter part"
+   },
+   "battery_om_usd_per_kwh_yr": {
+    "value": 7.0,
+    "unit": "USD/kWh/yr",
+    "label": "paper",
+    "note": "S3 checked: Techno-Economic and Operational Environmental Assessment of a Solar-Wind-Battery-Hydrogen Hybrid Energy System for Sustainable and Reliable Household Power Supply in Limpopo, South Africa; https://mdpi-res.com/d_attachment/energies/energies-19-04097/article_deploy/energies-19-04097.pdf?version=1788169841; page 9; quote exact; as written 7 USD/kWh/yr; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low"
+   },
+   "battery_life_yr": {
+    "value": 12,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "diesel_om_usd_per_kwh": {
+    "value": 0.03,
+    "unit": "USD/kWh",
+    "label": "assumed",
+    "note": "existing plant; capital cost treated as sunk"
+   },
+   "fuel_price_usd_per_l": {
+    "value": 0.85,
+    "unit": "USD/L",
+    "label": "assumed",
+    "note": "delivered to the island"
+   },
+   "discount_rate_frac": {
+    "value": 0.08,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "real"
+   },
+   "project_life_yr": {
+    "value": 20,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "currency_year": {
+    "value": 2025,
+    "unit": "year",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_round_trip_eff_frac": {
+    "value": 0.9,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "AC to AC"
+   },
+   "battery_soc_min_frac": {
+    "value": 0.1,
+    "unit": "frac",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_soc_initial_frac": {
+    "value": 0.5,
+    "unit": "frac",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_duration_h": {
+    "value": 4.0,
+    "unit": "h",
+    "label": "assumed",
+    "note": "battery kW = kWh / duration"
+   },
+   "diesel_unit_kw": {
+    "value": 1800.0,
+    "unit": "kW",
+    "label": "paper",
+    "note": "Hiron et al. 2021 p7: 2 x 1.8 MW (p1 and Table 1 print 2 x 2.7 MW)"
+   },
+   "diesel_n_units": {
+    "value": 2,
+    "unit": "units",
+    "label": "paper",
+    "note": "Hiron et al. 2021 p7"
+   },
+   "diesel_min_load_frac": {
+    "value": 0.3,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "share of the rating of the units online"
+   },
+   "fuel_intercept_l_per_h_per_kw_rated": {
+    "value": 0.08,
+    "unit": "L/h per kW rated",
+    "label": "assumed",
+    "note": "straight line fuel curve"
+   },
+   "fuel_slope_l_per_kwh": {
+    "value": 0.25,
+    "unit": "L/kWh",
+    "label": "assumed",
+    "note": "straight line fuel curve"
+   },
+   "co2_kg_per_l": {
+    "value": 2.68,
+    "unit": "kg/L",
+    "label": "assumed",
+    "note": "diesel combustion only"
+   },
+   "unserved_max_frac": {
+    "value": 0.001,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "largest share of load left unserved"
+   },
+   "rf_target_frac": {
+    "value": 0.5,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "renewable share for the high renewable design"
+   },
+   "swing_frac": {
+    "value": 0.2,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "sensitivity swing"
+   },
+   "pv_kwp_step": {
+    "value": 250.0,
+    "unit": "kWp",
+    "label": "assumed",
+    "note": "search grid"
+   },
+   "pv_kwp_max": {
+    "value": 4000.0,
+    "unit": "kWp",
+    "label": "assumed",
+    "note": "search grid, widened when the answer sits on the edge"
+   },
+   "battery_kwh_step": {
+    "value": 1000.0,
+    "unit": "kWh",
+    "label": "assumed",
+    "note": "search grid"
+   },
+   "battery_kwh_max": {
+    "value": 16000.0,
+    "unit": "kWh",
+    "label": "assumed",
+    "note": "search grid, widened when the answer sits on the edge"
+   }
+  }
+ },
+ "rows": [
+  {
+   "input": "pv_capex_usd_per_kwp",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 1000.0,
+   "unit": "USD/kWp",
+   "value_as_written": 800,
+   "unit_as_written": "USD/kWp",
+   "currency_year": null,
+   "title": "Indonesia energy transition outlook",
+   "url": "https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2022/Oct/IRENA_Indonesia_energy_transition_outlook_2022.pdf",
+   "doi": null,
+   "doi_ok": null,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "However, the capex for utility scale solar based on recent projects has rapidly reduced reaching on average at USD 800/kWp, with the Cirata FPV project stands at about USD 650/kWp.",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "fetch: pdf text extraction failed: LimitReachedError"
+   ],
+   "search_cost_usd": 0.032995216
+  },
+  {
+   "input": "pv_om_usd_per_kwp_yr",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 15.0,
+   "unit": "USD/kWp/yr",
+   "value_as_written": 23.33,
+   "unit_as_written": "USD/kWp",
+   "currency_year": null,
+   "title": "Profitability on Solar Power Plant Systems for Households Electricity in Indonesia",
+   "url": "https://ejurnal.itenas.ac.id/index.php/elkomika/article/download/11118/3688",
+   "doi": "10.26760/elkomika.v12i3.672",
+   "doi_ok": true,
+   "page": 8,
+   "quote_kind": "exact",
+   "quote": "According to Darghouth et al. (Darghouth et al., 2020), the yearly expense for the operation and maintenance (O&M) of SPP systems in Indonesia stands at 350,000.00 IDR/kWp or 23.33 USD/kWp of the installed solar panel capacity.",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "unit: cannot convert USD/kWp to USD/kWp/yr"
+   ],
+   "search_cost_usd": 0.02869308
+  },
+  {
+   "input": "battery_capex_usd_per_kwh",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 300.0,
+   "unit": "USD/kWh",
+   "value_as_written": 157,
+   "unit_as_written": "$/kWh",
+   "currency_year": 2023,
+   "title": "Declining costs make solar plus storage economical for industrial captive power",
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12616098/",
+   "doi": "10.1016/j.isci.2025.113763",
+   "doi_ok": true,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "With the GW-scale deployment of co-located systems and low battery pack prices, this could ultimately translate into a 30% reduction in the total capital cost of the battery system to approximately $157/kWh today, with further reductions in pack prices and electrical BOS costs to approximately $114/kWh by 2030.",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "fetch: HTTP 403"
+   ],
+   "search_cost_usd": 0.038720984
+  },
+  {
+   "input": "battery_om_usd_per_kwh_yr",
+   "status": "checked",
+   "label": "paper",
+   "value_used": 7.0,
+   "unit": "USD/kWh/yr",
+   "value_as_written": 7,
+   "unit_as_written": "USD/kWh/yr",
+   "currency_year": null,
+   "title": "Techno-Economic and Operational Environmental Assessment of a Solar-Wind-Battery-Hydrogen Hybrid Energy System for Sustainable and Reliable Household Power Supply in Limpopo, South Africa",
+   "url": "https://mdpi-res.com/d_attachment/energies/energies-19-04097/article_deploy/energies-19-04097.pdf?version=1788169841",
+   "doi": "10.3390/en19174097",
+   "doi_ok": true,
+   "page": 9,
+   "quote_kind": "exact",
+   "quote": "Li-ion battery 15.0 kWh 450 USD/kWh 350 USD/kWh 7 USD/kWh/yr 10 yr Years 10 and 20",
+   "supports": true,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [],
+   "search_cost_usd": 0.036867694
+  },
+  {
+   "input": "fuel_price_usd_per_l",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 0.85,
+   "unit": "USD/L",
+   "value_as_written": 10190,
+   "unit_as_written": "IDR",
+   "currency_year": null,
+   "title": "Techno-Economic Study of Palm Kernel Shell Biomass Operated on a Engine Diesel Dual Fuel",
+   "url": "https://beta.iopscience.iop.org/article/10.1088/1742-6596/2942/1/012012/pdf",
+   "doi": "10.1088/1742-6596/2942/1/012012",
+   "doi_ok": true,
+   "page": 6,
+   "quote_kind": "exact",
+   "quote": "The price of B35 biodiesel in the industrial sector is IDR 10,190, so that the cost of procuring B35 biodiesel for 1 month for a 4.5 kW diesel engine is IDR 6,788,007 (single fuel) and IDR 5,625,858 (dual fuel).",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "unit: bad unit 'IDR'"
+   ],
+   "search_cost_usd": 0.038488742
+  },
+  {
+   "input": "discount_rate_frac",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 0.08,
+   "unit": "frac",
+   "value_as_written": 6.0,
+   "unit_as_written": "%",
+   "currency_year": null,
+   "title": "The cost of financing for renewable power: Data appendix",
+   "url": "https://mc-cd8320d4-36a1-40ac-83cc-3389-cdn-endpoint.azureedge.net/-/media/Files/IRENA/Agency/Publication/2023/May/IRENA_Cost_of_financing_renewable_power_Appendix_2023.pdf?rev=0c9288a22ab44676a1fd5b8ca0c774e8",
+   "doi": null,
+   "doi_ok": null,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "| Algeria | 11% | Indonesia | 6.00% | Saudi Arabia | 6.20% |",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "fetch: HTTP 403"
+   ],
+   "search_cost_usd": 0.020697312000000002
+  },
+  {
+   "input": "diesel_min_load_frac",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 0.3,
+   "unit": "frac",
+   "value_as_written": 30,
+   "unit_as_written": "%",
+   "currency_year": null,
+   "title": "Performance Analysis of a Hybrid Renewable-Energy System for Green Buildings to Improve Efficiency and Reduce GHG Emissions with Multiple Scenarios",
+   "url": "https://www.mdpi.com/2071-1050/15/9/7529",
+   "doi": "10.3390/su15097529",
+   "doi_ok": true,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "The minimum load ratio of the generator was 30%, the specified lifetime was 90,000 h, and the diesel fuel price was USD 0.7/L.",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "fetch: HTTP 403"
+   ],
+   "search_cost_usd": 0.079632638
+  }
+ ]
+}
