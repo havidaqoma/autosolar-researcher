@@ -393,7 +393,8 @@ def test_support_verdict_prompt_and_parse():
     v = support_verdict(judge, iea_claim(), "context " * 1000)
     assert v.supports is True and v.reason == "The quote states the value for this input."
     p = judge.prompts[0]
-    expected = (SUPPORT_INSTRUCTIONS + "\n\nInput: WACC for solar PV in Indonesia\nClaimed value: 9.4 %\nQuote: "
+    expected = (SUPPORT_INSTRUCTIONS + "\n\nInput: WACC for solar PV in Indonesia\nSource title: (not shown)"
+                "\nSource URL: (not shown)\nClaimed value: 9.4 %\nQuote: "
                 + IEA_QUOTE + "\nSource context:\n" + ("context " * 1000)[:MAX_PROMPT_CONTEXT_CHARS])
     assert p == expected
 

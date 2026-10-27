@@ -1,6 +1,7 @@
 """Stage S3 run: source the target inputs by web search, check every citation, write a sourced inputs file.
 
   AUTOSOLAR_ENV_FILE=path/to/.env uv run python tools/source.py [--only name ...]
+  ... tools/source.py --carry runs/sourcing/<earlier>/sourcing.json --only <inputs assumed there>
 
 Orchestrator glue around autosolar.sourcing (T10b). The support judge is Muse Glimmer on this PC (llama-server, the
 config measured in the prep repo speed test); the tool starts it when it is not already up and stops what it
@@ -71,20 +72,56 @@ class TimedJudge:
             self.seconds.append(round(time.perf_counter() - t, 1))
 
 
+def carry_plan(carry_path, all_targets, only, fx):
+    """Check an earlier sourcing file for --carry. Returns its inputs, the rows kept as they are, and its run id.
+
+    Rule (T10e run 3): only inputs that were assumed in the earlier run are searched again; every other row is kept
+    unchanged, so no checked value is replaced or shopped for."""
+    prior_raw, prior_rows, prior_meta = read_sourcing(carry_path)  # G6 checked on read
+    by_input = {r.input: r for r in prior_rows}
+    names = [t.input for t in all_targets]
+    if sorted(by_input) != sorted(names) or len(prior_rows) != len(names):
+        sys.exit("carry run has a different target list")
+    if prior_meta.get("fx_idr_per_usd") != fx:
+        sys.exit("carry run used a different fx")
+    for name in only:
+        if by_input[name].status != "assumed":
+            sys.exit(name + " is checked in the carried run; only assumed inputs are searched again")
+    carried = [by_input[n] for n in names if n not in set(only)]
+    return prior_raw, carried, prior_meta.get("run_id")
+
+
+def merge_rows(carried, new_rows, all_targets):
+    """Carried rows plus new rows, in target file order, one row per target."""
+    order = [t.input for t in all_targets]
+    rows = sorted(list(carried) + list(new_rows), key=lambda r: order.index(r.input))
+    if [r.input for r in rows] != order:
+        sys.exit("merged rows do not cover each target once")
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--targets", default=str(ROOT / "config" / "sourcing_targets.json"))
     ap.add_argument("--inputs", default=str(ROOT / "config" / "default_inputs.json"))
     ap.add_argument("--only", nargs="*", help="input names to source (default: all targets)")
+    ap.add_argument("--carry", help="earlier sourcing.json: keep its rows, search only the --only inputs (assumed)")
     ap.add_argument("--out", default=str(ROOT / "runs" / "sourcing"))
     args = ap.parse_args()
-    targets, fx = load_targets(args.targets)
+    all_targets, fx = load_targets(args.targets)
+    targets = all_targets
     if args.only:
         unknown = sorted(set(args.only) - {t.input for t in targets})
         if unknown:
             sys.exit("not in targets: " + ", ".join(unknown))
         targets = [t for t in targets if t.input in args.only]
-    base_raw = json.loads(pathlib.Path(args.inputs).read_text(encoding="utf-8"))
+    carried, carried_run = [], None
+    if args.carry:
+        if not args.only:
+            sys.exit("--carry needs --only")
+        base_raw, carried, carried_run = carry_plan(args.carry, all_targets, args.only, fx)
+    else:
+        base_raw = json.loads(pathlib.Path(args.inputs).read_text(encoding="utf-8"))
     os.environ["MODEL_API_KEY"] = env_value("MODEL_API_KEY")
     run_id = "sourcing-" + time.strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:6]
     out_dir = pathlib.Path(args.out) / run_id
@@ -95,16 +132,21 @@ def main():
     http_get = functools.partial(requests.get)
     t = time.perf_counter()
     try:
-        raw, rows = source_inputs(base_raw, targets, client=client, run_id=run_id, http_get=http_get,
-                                  judge_fn=judge, judge_name=JUDGE_NAME, fx_idr_per_usd=fx)
+        raw, new_rows = source_inputs(base_raw, targets, client=client, run_id=run_id, http_get=http_get,
+                                      judge_fn=judge, judge_name=JUDGE_NAME, fx_idr_per_usd=fx)
     finally:
         if proc is not None:
             proc.terminate()
             proc.wait(timeout=60)
+    rows = merge_rows(carried, new_rows, all_targets) if args.carry else new_rows
     ok, detail = g6_check(rows, raw)
-    meta = {"run_id": run_id, "targets": args.targets, "base_inputs": args.inputs, "judge": JUDGE_NAME,
+    meta = {"run_id": run_id, "targets": args.targets, "base_inputs": args.carry or args.inputs, "judge": JUDGE_NAME,
             "judge_seconds": judge.seconds, "fx_idr_per_usd": fx, "wall_s": round(time.perf_counter() - t, 1),
-            "search_cost_usd": round(sum(r.search_cost_usd for r in rows), 6), "g6": [ok, detail]}
+            "search_cost_usd": round(sum(r.search_cost_usd for r in new_rows), 6), "g6": [ok, detail]}
+    if args.carry:
+        meta["carried_from"] = carried_run
+        meta["carried_inputs"] = [r.input for r in carried]
+        meta["searched_inputs"] = [r.input for r in new_rows]
     write_sourcing(out_dir / "sourcing.json", raw, rows, meta)
     read_sourcing(out_dir / "sourcing.json")
     (out_dir / "inputs.json").write_text(json.dumps(raw, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
@@ -112,7 +154,7 @@ def main():
     print("G6", ok, detail)
     for r in rows:
         d = dataclasses.asdict(r)
-        print(" ", r.input, r.status, r.value_used, r.unit, "(" + r.label + ")", r.quote_kind, "page", r.page,
+        print(" ", r.input, "(carried)" if r in carried else "", r.status, r.value_used, r.unit, "(" + r.label + ")", r.quote_kind, "page", r.page,
               "| as written", d["value_as_written"], d["unit_as_written"], "|", r.title[:60], "|", r.url[:90])
         for reason in r.reasons:
             print("     reason:", reason[:200])
