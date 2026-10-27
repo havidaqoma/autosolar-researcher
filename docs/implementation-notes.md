@@ -48,6 +48,13 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   synthetic misses over 3% (3.2% and 4.0%); on the practice Figure 8 the 0:00 and 23:00 hours were off by 10%
   and 32% of the span while the other 22 hours were within 1.6%; Muse Spark misread 6 of 10 x labels on
   Figure 16 and the leave one out axis fit dropped them.
+- Weather sources at Karimunjawa (T05 product code on the live services, Tuesday 27 Oct, 64 s with an empty
+  cache; output in `runs/`, not committed): the year closest to the 2016 to 2024 mean is 2020 for both CAMS and
+  NASA POWER. Annual GHI: CAMS 1680.2, NASA POWER 1825.8, PVGIS-ERA5 TMY 2026.7, GSA scaled 1776.8 kWh/m2; spread
+  20.6% (8.7% without ERA5), so every study must show the range. At tilt 10 facing north the T04 model gives
+  1311 (CAMS) to 1584 (ERA5) kWh/kWp, performance ratio 0.77 for all four. The ERA5 TMY total differs by 0.24%
+  from the prep cross-check value (2021.8, PVGIS PVcalc multi year mean, a different PVGIS product). CAMS gives
+  irradiance only, so its case takes temperature and wind from NASA POWER of the same year.
 
 ## Questions for review
 
