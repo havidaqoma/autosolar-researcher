@@ -1,0 +1,60 @@
+{
+ "what": "Exploratory probe after test 2 failed (not pre-registered): can SAM 3.1 segment the data series of a chart in the benchmark paper?",
+ "figure": "Hiron et al. 2021, Energies 14, 8311, Figure 7 'Daily power consumption' (CC BY 4.0), page 9 rendered at 200 dpi, 1654 x 862 px",
+ "image_sha256": "42194d597d2913d389ab968c80923ccd1f8a3a16b9657d5945a3870ce91210e9",
+ "calls": [
+  {
+   "prompt": "blue area",
+   "response_id": "resp_6ae0074ab8c71ca061e64a85",
+   "n_objects": 1,
+   "boxes": [
+    [
+     579,
+     433,
+     1422,
+     655,
+     1654,
+     862,
+     0.875
+    ]
+   ],
+   "mask_chars": 26211
+  },
+  {
+   "prompt": "purple area",
+   "response_id": "resp_6ae00752ff7cdfb0ff6a4155",
+   "n_objects": 1,
+   "boxes": [
+    [
+     579,
+     422,
+     1422,
+     522,
+     1654,
+     862,
+     0.7968
+    ]
+   ],
+   "mask_chars": 10457
+  },
+  {
+   "prompt": "red area",
+   "response_id": "resp_6ae0074e68ebea28733a4127",
+   "n_objects": 1,
+   "boxes": [
+    [
+     588,
+     401,
+     1422,
+     503,
+     1654,
+     862,
+     0.7968
+    ]
+   ],
+   "mask_chars": 8790
+  }
+ ],
+ "cost_usd_computed": 0.0075,
+ "reading": "Each prompt returned exactly one object, one per colour series (blue = 31 Dec 2018, purple = 27 Oct 2018, red = 28 Sep 2018), spanning the plot from x 579 to 1422. Masks not decoded yet."
+}

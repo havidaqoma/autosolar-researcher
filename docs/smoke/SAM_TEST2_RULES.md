@@ -56,3 +56,14 @@ one SAM box.
   - Neither passes: SAM leaves the satellite role. Roofs come from Open Buildings, land cover from ESA WorldCover,
     and the report shows both failed tests with their numbers. Havid picks a new SAM role.
 - Any call that errors counts as a fail for that call; it is not retried silently.
+
+## Results (added after the run, Tuesday 27 Oct)
+
+- 12 of 12 calls succeeded (HTTP 200, billed 1 image each, USD 0.03 computed). All 12 returned 0 objects:
+  building, roof, house and village on tiles A and B; building, village, forest and beach on tile C. Tile A holds
+  767 OSM building centroids and the town is plain to the eye (`sam_test2.json`, tiles in `sam_test2_tiles.json`).
+- Verdict by the rule above: **neither role passes; SAM leaves the satellite role.** Roofs come from Google Open
+  Buildings, land cover from ESA WorldCover, and the report shows both failed tests with their numbers.
+- Exploratory probe after the verdict, not part of these rules (`sam_fig_probe.json`, 3 calls, USD 0.0075): on
+  Figure 7 of the benchmark paper (a chart of three daily load curves), the prompts blue area, purple area and red
+  area each returned exactly one object, one per data series. Input for Havid's choice of a new SAM role.

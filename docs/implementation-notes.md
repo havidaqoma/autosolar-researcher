@@ -27,4 +27,6 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
 
 ## Questions for review
 
-- SAM 3.1 role (plan card B): it does not see buildings or land classes at 10 m. Decision for Havid.
+- SAM 3.1 role: test 2 (rules fixed in 12696c9 before the run) gave 0 objects on 12 of 12 zoomed, contrast
+  stretched tiles, so SAM leaves the satellite role. New role is Havid's choice; the chart probe
+  (`docs/smoke/sam_fig_probe.json`) found one object per data series on the paper's Figure 7.
