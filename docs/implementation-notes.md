@@ -124,3 +124,22 @@ Rule first: the run 3 rule and the `--carry` option were committed in the T10e s
   3,104,707). The minimum load change moves 851 of 925 grid designs by up to 0.0039 USD/kWh, but only 0.000006
   USD/kWh at the chosen design. The 7,500 kWp design is now 0.000005 USD/kWh behind, so the pick between the two
   is a tie in practice. All 11 gate rows pass.
+
+## T10f: the judge must say yes 3 times in a row (Wednesday 28 Oct)
+
+Rule first: the vote rule and the re-judge rule were committed in the T10f spec (067edee) before any run.
+
+- Why: the T10e honesty check showed the local judge gives different verdicts to the same claim at temperature
+  1.0 (2 of 4 probe claims flipped between runs), and a sourcing run asked it once per row.
+- T10f (built by Muse Code on the first attempt, 70 s, USD 0.0061 computed): `support_votes` asks the judge up to
+  3 times with the same prompt and stops at the first answer that is not yes. A row is checked only after 3 yes
+  answers. `CitationCheck.judge_calls` records the calls. 783 of 783 tests pass; the orchestrator's reference
+  caught 19 of 19 planted faults.
+- Re-judge (`docs/smoke/T10f_rejudge.json`, measured, `tools/rejudge.py`, 156 s, 12 local judge calls, no model
+  API cost): all 4 rows checked so far got 3 of 3 yes, so all 4 stay checked with the same values. G6 passes with
+  4 of 7. The tool fails closed: a row that cannot be fetched again goes back to its assumed value.
+- Fourth live study (`docs/examples/T10f_karimunjawa_report.md`, run ff628b57b3c357b1, computed, 321 s, no model
+  cost): all 925 grid designs are identical to the third study, so the answer stands: 7,250 kWp PV plus 19,000 kWh
+  battery at 0.251 USD/kWh against 0.354 for diesel only. All 11 gate rows pass. The report now names the vote rule.
+- Limit that stays: 3 yes answers from one sampled model are stronger evidence than 1, but they are not
+  independent reviews. A second judge model is the next step if a checked value is ever disputed.
