@@ -17,6 +17,7 @@ from autosolar.dispatch import Battery, DieselFleet
 from autosolar.econ import CostInputs
 from autosolar.pv import PVDesign, simulate_pv
 from autosolar.request import Site, StudyRequest, check_request, geocode, parse_question
+from autosolar.sourcing import g6_check, read_sourcing
 from autosolar.sweep import (
     break_even_fuel_price_usd_per_l,
     cost_table,
@@ -88,6 +89,31 @@ FACT_SPECS = (
     ("break_even_fuel_usd_per_l", "USD/L", "computed", 2),
     ("api_cost_usd", "USD", "computed", 5),
 )
+FACT_TITLES = {
+    "site_lat_deg": "Site latitude",
+    "site_lon_deg": "Site longitude",
+    "weather_spread_pct": "Spread of annual sunshine across the weather sources",
+    "demand_kwh_yr": "Annual electricity demand",
+    "demand_peak_kw": "Peak demand",
+    "best_pv_kwp": "Least cost design: PV size",
+    "best_battery_kwh": "Least cost design: battery energy",
+    "best_battery_kw": "Least cost design: battery power",
+    "best_lcoe_usd_per_kwh": "Least cost design: cost of electricity (LCOE)",
+    "best_npc_usd": "Least cost design: net present cost",
+    "best_capex_usd": "Least cost design: up front capital cost",
+    "best_renewable_pct": "Least cost design: renewable share",
+    "best_curtailed_pct": "Least cost design: PV energy curtailed",
+    "best_fuel_l_yr": "Least cost design: diesel fuel",
+    "best_co2_t_yr": "Least cost design: CO2",
+    "diesel_only_lcoe_usd_per_kwh": "Diesel only: cost of electricity (LCOE)",
+    "diesel_only_fuel_l_yr": "Diesel only: diesel fuel",
+    "diesel_only_co2_t_yr": "Diesel only: CO2",
+    "fuel_saved_l_yr": "Diesel fuel saved",
+    "co2_saved_t_yr": "CO2 saved",
+    "lcoe_change_pct": "Change in cost of electricity against diesel only",
+    "break_even_fuel_usd_per_l": "Diesel price at which PV starts to pay",
+    "api_cost_usd": "Model API cost of this study",
+}
 
 _EARTH_RADIUS_KM = 6371.0088
 _NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_.])\d+(?:,\d{3})*(?:\.\d+)?(?![A-Za-z0-9_])")
@@ -250,7 +276,7 @@ def render_markdown(report: dict) -> str:
         fact = facts[key]
         lines.append(
             "- "
-            + key.replace("_", " ")
+            + _clean(FACT_TITLES[key])
             + ": "
             + _clean(fact["text"])
             + " "
@@ -291,6 +317,32 @@ def render_markdown(report: dict) -> str:
     lines.append("|---|---|---|---|---|")
     for row in report["inputs_table"]:
         lines.append(_row_line(row["cells"]))
+    sourcing = report.get("sourcing")
+    if sourcing is not None:
+        s_rows = sourcing["rows"]
+        s_meta = sourcing["meta"] if isinstance(sourcing.get("meta"), dict) else {}
+        count_c = sum(1 for x in s_rows if x["status"] == "checked")
+        count_n = len(s_rows)
+        judge = s_meta.get("judge")
+        judge = judge if isinstance(judge, str) else "not named"
+        lines += ["", "## Sourced inputs", ""]
+        lines.append(
+            str(count_c)
+            + " of "
+            + str(count_n)
+            + " inputs were sourced by web search and checked: the quote was found in the fetched source, the "
+            + "value appears in the quote, the DOI resolves when one is given, and the support judge ("
+            + _clean(judge)
+            + ") agreed. The others keep their assumed value; the last column says why."
+        )
+        lines.append("")
+        lines.append(
+            "| Input | Status | Value used | Unit | Label | As written | Source | URL | Page | Quote match | Why kept "
+            "assumed |"
+        )
+        lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
+        for row in s_rows:
+            lines.append(_row_line(row["cells"]))
     lines += ["", "## Sources", ""]
     for source in report["sources"]:
         lines.append("- " + _clean(source))
@@ -317,10 +369,13 @@ def _write_cached_request(req_file: Path, req: StudyRequest, site: Site) -> None
     req_file.write_text(blob, encoding="utf-8")
 
 
-def _run_hash(lat_w: float, lon_w: float, raw: dict) -> str:
+def _run_hash(lat_w: float, lon_w: float, raw: dict, sourcing_rows: object = None) -> str:
     """16 hex chars marking one inputs and weather point choice."""
+    payload: dict = {"schema": REPORT_SCHEMA, "weather_coords_deg": [lat_w, lon_w], "inputs": raw}
+    if sourcing_rows is not None:
+        payload["sourcing"] = [dataclasses.asdict(r) for r in sourcing_rows]  # type: ignore[union-attr]
     blob = json.dumps(
-        {"schema": REPORT_SCHEMA, "weather_coords_deg": [lat_w, lon_w], "inputs": raw},
+        payload,
         sort_keys=True,
         separators=(",", ":"),
         ensure_ascii=True,
@@ -423,6 +478,8 @@ def _range_row(
         own_pv = float(own["pv_kwp"])
         own_batt = float(own["battery_kwh"])
         own_lcoe = float(own["lcoe_usd_per_kwh"])
+        if note == "" and (own_pv == max(pv_grid) or own_batt == max(battery_grid)):
+            note = "on grid edge"
     return {
         "weather": weather_name,
         "demand": demand_name,
@@ -476,8 +533,12 @@ def _check_g2(hourly: object, result: object, battery_kwh: float, values: dict) 
     stored_kwh = (result.battery_charge_kwh * rte_frac
                   + (result.soc_start_kwh - result.soc_end_kwh) * math.sqrt(rte_frac))
     balanced = bool(result.battery_discharge_kwh <= stored_kwh + _GATE_TOL)
-    detail = "soc band kWh [%g, %g], discharge kWh %g against stored kWh %g" % (
-        floor_kwh, ceil_kwh, float(result.battery_discharge_kwh), float(stored_kwh))
+    detail = "soc band kWh [%s, %s], discharge kWh %s against stored kWh %s" % (
+        fmt_number(floor_kwh, 0),
+        fmt_number(ceil_kwh, 0),
+        fmt_number(float(result.battery_discharge_kwh), 0),
+        fmt_number(float(stored_kwh), 0),
+    )
     return bool(in_band and balanced), detail
 
 
@@ -489,7 +550,7 @@ def _check_g4(hourly: object, diesel: DieselFleet) -> tuple[bool, str]:
     need_kw = running["diesel_units_on"] * float(diesel.unit_kw) * float(diesel.min_load_frac)
     ok = bool((running["diesel_kw"] >= need_kw - _GATE_TOL).all())
     worst_kw = float((running["diesel_kw"] - need_kw).min())
-    return ok, "worst margin kW above min load: %g" % (worst_kw,)
+    return ok, "worst margin kW above min load: " + fmt_number(worst_kw, 1)
 
 
 def _check_g8(table: object) -> tuple[bool, str]:
@@ -503,7 +564,7 @@ def _check_g8(table: object) -> tuple[bool, str]:
         else:
             gap = abs(path_a_f - path_b_f) / path_b_f
         worst = max(worst, gap)
-    return worst <= _TWIN_TOL_FRAC, "max twin gap frac: %g" % (worst,)
+    return worst <= _TWIN_TOL_FRAC, "max twin gap frac: %.1e" % (worst,)
 
 
 def run_study(
@@ -515,12 +576,19 @@ def run_study(
     inputs_path: object,
     runs_dir: object,
     run_id: object,
+    sourcing_path: object = None,
 ) -> StudyOutput:
     """One checked study in a run folder. Returns run hash, dir, report and markdown."""
     if not isinstance(question, str) or not 1 <= len(question.strip()) <= 2000:
         raise ValueError("question must hold 1 to 2000 characters after strip")
     asked = question.strip()
     values, raw = load_inputs(inputs_path)
+    s_rows: list | None = None
+    s_meta: dict | None = None
+    if sourcing_path is not None:
+        s_raw, s_rows, s_meta = read_sourcing(sourcing_path)
+        if s_raw != raw:
+            raise ValueError("inputs file does not match the sourcing file")
     runs_path = Path(runs_dir)
     req_name = hashlib.sha256(asked.encode("utf-8")).hexdigest()[:16] + ".json"
     req_file = runs_path / "requests" / req_name
@@ -535,7 +603,7 @@ def run_study(
         raise UnsupportedSite("site outside the Karimunjawa demand source area")
     lat_w = round(float(site.lat_deg), 2)
     lon_w = round(float(site.lon_deg), 2)
-    run_hash = _run_hash(lat_w, lon_w, raw)
+    run_hash = _run_hash(lat_w, lon_w, raw, s_rows)
     run_dir = runs_path / run_hash
     done_json = run_dir / "report.json"
     done_md = run_dir / "report.md"
@@ -627,8 +695,10 @@ def run_study(
     for name in CASE_NAMES:
         if name in pv_by_case:
             pv = pv_by_case[name]
-            detail = "yield kWh/kWp %g, PR %s" % (
-                float(pv.specific_yield_kwh_kwp), str(pv.performance_ratio_frac))
+            yld = float(pv.specific_yield_kwh_kwp)
+            prf = pv.performance_ratio_frac
+            detail = "yield kWh/kWp " + fmt_number(yld, 0) + ", PR " + (
+                "none" if prf is None else fmt_number(float(prf), 2))
             gates.append(_gate("G3 PV physics", name, bool(g3_ok[name]), detail))
         else:
             gates.append(_gate("G3 PV physics", name, False, "no data for case"))
@@ -644,6 +714,11 @@ def run_study(
         "G5 weather spread", "weather", g5_ok,
         "range required: %s, weather rows in range: %d" % (weather.range_required, len(weather_names)),
     ))
+    if s_rows is not None:
+        g6_ok, g6_detail = g6_check(s_rows, raw)
+        gates.append(_gate("G6 sourced inputs", "inputs", g6_ok, g6_detail))
+        if not g6_ok:
+            raise GateFailed("gate failed: G6 sourced inputs: " + g6_detail)
     g7_ok = not on_grid_edge(table, best)
     gates.append(_gate("G7 grid edge", "main design", g7_ok, "grid widened %d times" % (widened,)))
     g8_ok, g8_detail = _check_g8(table)
@@ -736,6 +811,10 @@ def run_study(
         note = "" if srow["note"] is None else str(srow["note"])
         if isinstance(note, float) and math.isnan(note):
             note = ""
+        if least_pv is not None and note == "" and (
+            least_pv == max(pv_grid) or least_batt == max(battery_grid)
+        ):
+            note = "on grid edge"
         sens_rows.append({
             "input": str(srow["input"]),
             "factor": float(srow["factor"]),
@@ -773,6 +852,37 @@ def run_study(
         "Weather sources: " + ", ".join(CASE_NAMES),
     ]
     sources += [str(note) for note in weather.notes]
+    sourcing_report: dict | None = None
+    if s_rows is not None:
+        assert s_meta is not None
+        for r in s_rows:
+            if r.status == "checked":
+                line = "Sourced input " + r.input + ": " + (r.title or "untitled") + ", " + r.url
+                if isinstance(r.doi, str) and r.doi != "":
+                    line = line + ", doi:" + r.doi
+                sources.append(line)
+        sourcing_rows_report = []
+        for r in s_rows:
+            row_dict = dataclasses.asdict(r)
+            if r.value_as_written is None:
+                written = "none"
+            else:
+                written = format(r.value_as_written, "g") + " " + r.unit_as_written
+            row_dict["cells"] = [
+                r.input,
+                r.status,
+                str(r.value_used),
+                r.unit,
+                r.label,
+                written,
+                r.title or "none",
+                r.url or "none",
+                "none" if r.page is None else str(r.page),
+                r.quote_kind,
+                "; ".join(r.reasons) or "none",
+            ]
+            sourcing_rows_report.append(row_dict)
+        sourcing_report = {"meta": s_meta, "rows": sourcing_rows_report}
     report = {
         "schema": REPORT_SCHEMA,
         "run_hash": run_hash,
@@ -787,6 +897,7 @@ def run_study(
         "gates": gates,
         "inputs_table": inputs_rows,
         "sources": sources,
+        "sourcing": sourcing_report,
         "grid": {"pv_kwp": pv_grid, "battery_kwh": battery_grid, "widened": int(widened)},
     }
     markdown = render_markdown(report)
