@@ -75,3 +75,14 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
 - One live study took 336 s (measured, `runs/T09_live_check.txt`), most of it the weather fetch and the design
   grids. A repeat of the same question with the same inputs is read back from `runs/studies/<run_hash>/` with no
   service call.
+
+- Side row edge flag done (T10c, Tuesday 27 Oct): range and sensitivity rows whose pick sits on the grid edge now
+  carry an edge note, and the report answer lines use readable titles.
+- First real sourcing run (stage S3, `docs/smoke/T10_sourcing_run1.json`, measured): 7 searches, USD 0.276, 322 s.
+  1 of 7 inputs checked (battery O&M 7 USD/kWh/yr, MDPI open PDF, quote exact, judge yes in 9.7 s). The other 6
+  stayed assumed for script reasons, not because the judge said no: 3 publisher pages answered HTTP 403 to the
+  script (PMC, MDPI, an IRENA CDN), 1 IRENA PDF of 152 pages failed in pypdf on 3 pages and was dropped whole, and
+  the search model wrote 2 units the checker could not read (a bare IDR, and USD/kWp for a yearly cost). T10d
+  answers each of these (page tolerance, open copies via Europe PMC and OpenAlex, unit wording in the prompt, one
+  feedback search). A judge no or an out of band value never triggers a second search, so the retry cannot shop
+  for a number.
