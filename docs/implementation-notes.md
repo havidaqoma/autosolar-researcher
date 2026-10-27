@@ -53,5 +53,6 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
 
 - SAM 3.1 role: test 2 (rules fixed in 12696c9 before the run) gave 0 objects on 12 of 12 zoomed, contrast
   stretched tiles, so SAM leaves the satellite role (D17). Havid picked the chart reader as the new role (D18).
-- Chart reader edge points: whether the report marks the first and last x value of each series as "edge, not
-  validated" (proposed, because of the practice Figure 8 result). Havid's choice.
+- Chart reader edge points: Havid approved (Tuesday 27 Oct) marking the first and last x value of each series as
+  "edge, not validated" (T03d, `point_status`). Away from the edges the V3 synthetic error was at most 1.32% of
+  the span (median 0.17%); at the edges up to 3.96% (computed from `docs/smoke/chart_validation_v3.json`).
