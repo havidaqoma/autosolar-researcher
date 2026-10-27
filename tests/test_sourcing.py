@@ -394,7 +394,7 @@ def test_source_inputs_end_to_end():
     assert [r.input for r in rows] == ["pv_capex_usd_per_kwp", "battery_capex_usd_per_kwh", "fuel_price_usd_per_l",
                                        "discount_rate_frac"]
     assert [r.status for r in rows] == ["checked", "checked", "checked", "assumed"]
-    assert len(client.calls) == 4 and len(judge.prompts) == 4
+    assert len(client.calls) == 4 and len(judge.prompts) == 3 + 3 + 3 + 1
     v = raw["values"]
     assert v["pv_capex_usd_per_kwp"] == {
         "value": 1119.0, "unit": "USD/kWp", "label": "paper",

@@ -276,35 +276,35 @@ def test_check_citation_title_found_in_pdf():
     c, get, judge = run(rate_claim(), {PAPER_URL: Resp(200, RATE_PDF)})
     assert c.status == "checked" and c.reasons == [] and c.page == 2
     assert c.value_converted == pytest.approx(0.05)
-    assert judge.prompts == [prompt_for(rate_claim(), TITLE, PAPER_URL, context_of(c))]
+    assert judge.prompts == [prompt_for(rate_claim(), TITLE, PAPER_URL, context_of(c))] * 3
 
 
 def test_check_citation_title_not_in_source_not_shown():
     claim = rate_claim(title="Discount rates for solar PV in Indonesia")
     c, get, judge = run(claim, {PAPER_URL: Resp(200, RATE_PDF)})
     assert c.status == "checked"
-    assert judge.prompts == [prompt_for(claim, "(not shown)", PAPER_URL, context_of(c))]
+    assert judge.prompts == [prompt_for(claim, "(not shown)", PAPER_URL, context_of(c))] * 3
 
 
 def test_check_citation_short_or_empty_title_not_shown():
     for title in ("", "Energies", "  "):
         claim = rate_claim(title=title)
         c, get, judge = run(claim, {PAPER_URL: Resp(200, RATE_PDF)})
-        assert judge.prompts == [prompt_for(claim, "(not shown)", PAPER_URL, context_of(c))], title
+        assert judge.prompts == [prompt_for(claim, "(not shown)", PAPER_URL, context_of(c))] * 3, title
 
 
 def test_check_citation_shows_claim_title_as_written():
     claim = rate_claim(title="  100% RENEWABLE Electricity   in Indonesia ")
     c, get, judge = run(claim, {PAPER_URL: Resp(200, RATE_PDF)})
     assert judge.prompts == [prompt_for(claim, "100% RENEWABLE Electricity   in Indonesia", PAPER_URL,
-                                        context_of(c))]
+                                        context_of(c))] * 3
 
 
 def test_check_citation_url_is_final_url_after_redirect():
     final = "https://www.mdpi.com/1996-1073/17/1/3/pdf?version=final"
     c, get, judge = run(rate_claim(), {PAPER_URL: Resp(200, RATE_PDF, url=final)})
     assert c.final_url == final
-    assert judge.prompts == [prompt_for(rate_claim(), TITLE, final, context_of(c))]
+    assert judge.prompts == [prompt_for(rate_claim(), TITLE, final, context_of(c))] * 3
 
 
 def test_check_citation_mirror_copy_title_and_url():
@@ -317,7 +317,7 @@ def test_check_citation_mirror_copy_title_and_url():
     claim = rate_claim(url=pub, doi=doi)
     c, get, judge = run(claim, table)
     assert c.status == "checked" and c.final_url == oa_pdf and c.doi_ok is True
-    assert judge.prompts == [prompt_for(claim, TITLE, oa_pdf, context_of(c))]
+    assert judge.prompts == [prompt_for(claim, TITLE, oa_pdf, context_of(c))] * 3
 
 
 def test_check_citation_title_checked_against_mirror_not_blocked_page():
@@ -332,7 +332,7 @@ def test_check_citation_title_checked_against_mirror_not_blocked_page():
     claim = rate_claim(url=pub, doi=doi)
     c, get, judge = run(claim, table)
     assert c.status == "checked"
-    assert judge.prompts == [prompt_for(claim, "(not shown)", oa_pdf, context_of(c))]
+    assert judge.prompts == [prompt_for(claim, "(not shown)", oa_pdf, context_of(c))] * 3
 
 
 def test_check_citation_judge_no_still_assumed():
@@ -350,7 +350,7 @@ def test_check_citation_title_uses_html_head_text():
     claim = load_claim()
     c, get, judge = run(claim, {LOAD_URL: Resp(200, LOAD_HTML.encode("utf-8"))}, band_lo=0.1)
     assert c.status == "checked"
-    assert judge.prompts == [prompt_for(claim, "Island grid operation guide", LOAD_URL, context_of(c))]
+    assert judge.prompts == [prompt_for(claim, "Island grid operation guide", LOAD_URL, context_of(c))] * 3
 
 
 # ---------------------------------------------------------------- 4. percent with a descriptor

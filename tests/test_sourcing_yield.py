@@ -241,7 +241,7 @@ def test_blocked_source_read_from_open_copy():
     assert c.is_pdf is True and c.page == 2 and c.quote_kind == "exact" and c.doi_ok is True
     assert c.value_converted == pytest.approx(0.3)
     assert urls(get) == [PUB_URL, OA, OA_PDF, "https://doi.org/api/handles/" + DOI]
-    assert len(judge.prompts) == 1
+    assert len(judge.prompts) == 3
 
 
 def test_copies_tried_in_order_until_quote_found():
@@ -382,7 +382,7 @@ def user_msg(client, i):
 
 def test_second_try_checked():
     raw, rows, client, judge = run_fuel([ans(url=BLOCKED_URL), copy.deepcopy(ANSWERS[2])])
-    assert len(client.calls) == 2 and len(judge.prompts) == 1
+    assert len(client.calls) == 2 and len(judge.prompts) == 3
     assert user_msg(client, 1) == (
         "Input: fuel_price_usd_per_l (USD/L). Find: industrial diesel price in Indonesia. A previous answer could not "
         "be used: fetch: HTTP 403. Do not use " + BLOCKED_URL + ". Find a different source.")

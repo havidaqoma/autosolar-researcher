@@ -174,7 +174,7 @@ def test_dataclass_fields_in_order():
     assert names(CitationCheck) == ["input_name", "status", "reasons", "value_as_written", "unit_as_written",
                                     "value_converted", "target_unit", "url", "final_url", "is_pdf", "page",
                                     "quote_kind", "doi", "doi_ok", "supports", "judge_reason", "judge_name",
-                                    "context"]
+                                    "context", "judge_calls"]
 
 
 # ---------------------------------------------------------------- text
@@ -418,7 +418,7 @@ def test_check_citation_happy_html():
     assert c.status == "checked" and c.reasons == []
     assert c.value_converted == pytest.approx(0.094) and c.target_unit == "frac"
     assert (c.quote_kind, c.page, c.is_pdf, c.supports) == ("exact", 1, False, True)
-    assert c.judge_name == "muse-glimmer (local)" and len(judge.prompts) == 1
+    assert c.judge_name == "muse-glimmer (local)" and len(judge.prompts) == 3 and c.judge_calls == 3
     assert c.doi is None and c.doi_ok is None
     json.dumps(dataclasses.asdict(c))
 
