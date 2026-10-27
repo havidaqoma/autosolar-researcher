@@ -35,10 +35,12 @@ BASE_RAW = json.loads((ROOT / "config" / "default_inputs.json").read_text(encodi
 
 EXPECTED_INSTRUCTIONS = (
     "You find one published number for an energy model input. Use web search. Prefer reports from IRENA, IEA, "
-    "NREL, ADB, World Bank, IESR, government sources or peer-reviewed papers, published in 2021 or later.\n"
+    "NREL, ADB, World Bank, IESR, government sources or peer-reviewed papers, published in 2021 or later. Prefer "
+    "open access sources.\n"
     "Return only one JSON object, no prose, no code fence, with keys:\n"
     '  "value": the number as written in the source (number),\n'
-    '  "unit": the unit as written in the source (string),\n'
+    '  "unit": the unit as written in the source, including what it is per (for example USD/kWh/yr or IDR/L), '
+    'never a bare currency (string),\n'
     '  "currency_year": the year the money is expressed in, or null (integer or null),\n'
     '  "url": the page or PDF where the number appears (string),\n'
     '  "doi": the DOI if the source has one, else null,\n'
@@ -465,9 +467,11 @@ def test_failed_check_keeps_assumed_and_skips_judge():
     bad = FakeResult(json.dumps({"value": 1119, "unit": "USD/kW", "currency_year": 2022, "url": PV_URL,
                                  "doi": "10.3389/fsuep.2024.9999999", "title": "x", "quote": PV_QUOTE}))
     judge = Judge()
-    raw, rows = source_inputs(BASE_RAW, [T_PV], client=FakeClient([bad]), run_id="r", http_get=FakeGet(TABLE),
+    none = FakeResult('{"value": null, "reason": "none found"}', 0.02)
+    raw, rows = source_inputs(BASE_RAW, [T_PV], client=FakeClient([bad, none]), run_id="r", http_get=FakeGet(TABLE),
                               judge_fn=judge, judge_name=JUDGE, fx_idr_per_usd=16500.0)
-    assert rows[0].status == "assumed" and rows[0].reasons == ["doi does not resolve"]
+    assert rows[0].status == "assumed"
+    assert rows[0].reasons == ["try 1: doi does not resolve", "try 2: no source found: none found"]
     assert rows[0].doi_ok is False and rows[0].supports is None and judge.prompts == []
     assert raw["values"]["pv_capex_usd_per_kwp"] == BASE_RAW["values"]["pv_capex_usd_per_kwp"]
 
