@@ -98,3 +98,29 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
   plus 19,000 kWh battery, 0.251 USD/kWh against 0.354 for diesel only (-29.1 %), 85.8 % renewable, 3.10 million
   litres of diesel saved per year. All 11 gate rows pass, G6 included. Battery cost, discount rate and minimum
   diesel load are still assumed, so the answer is still a placeholder until those are sourced.
+
+## T10e and sourcing run 3 (Wednesday 28 Oct)
+
+Rule first: the run 3 rule and the `--carry` option were committed in the T10e spec (b584550) before any run.
+
+- T10e (built by Muse Code on the first attempt, 175 s, USD 0.0106 computed): the judge now sees the source URL,
+  and the source title only when the fetched text contains it, so the search model cannot steer the judge with a
+  made up title. A percent unit with a descriptor such as "% of its rated capacity" now reads as a percent, and a
+  percent still converts only to a fraction. 753 of 753 tests pass.
+- Honesty check (`docs/smoke/T10e_judge_probe.json`, measured, local judge, 3 runs): the planted trap (a nominal
+  WACC quoted for a real discount rate) still got supports false in 3 of 3 runs with the title shown. The other
+  verdicts drift between runs because the judge samples at temperature 1.0: the general battery figure went no, yes,
+  yes and the scenario diesel price went no, yes, no. A sourcing run asks the judge once per row, so one sampled
+  verdict decides each row.
+- Run 3 (`docs/smoke/T10_sourcing_run3.json`, measured): 316 s, USD 0.245 for 6 searches. It carried the 3 checked
+  rows of run 2 unchanged and searched only the 4 assumed inputs. 1 new input checked: diesel minimum load 25 % of
+  rated power (MDPI Energies 2021, open PDF, page 8, quote exact, DOI resolves). Still assumed: battery capex (judge
+  no to a general storage figure, the same call as in the first probe), battery O&M (50 USD/kWh/yr, outside the
+  band), discount rate (HTTP 403, then a connection error). The title change was not tested on the discount rate,
+  because the search did not return the Indonesia paper this time. G6 passes with 4 of 7.
+- Third live study (`docs/examples/T10e_karimunjawa_report.md`, run 9f9ac2afa1f46b43, computed, 472 s, cached
+  question parse so no model cost): the least cost design stays 7,250 kWp PV plus 19,000 kWh battery at 0.251
+  USD/kWh against 0.354 for diesel only, 85.8 % renewable, 3,104,445 litres of diesel saved per year (study 2:
+  3,104,707). The minimum load change moves 851 of 925 grid designs by up to 0.0039 USD/kWh, but only 0.000006
+  USD/kWh at the chosen design. The 7,500 kWp design is now 0.000005 USD/kWh behind, so the pick between the two
+  is a tie in practice. All 11 gate rows pass.
