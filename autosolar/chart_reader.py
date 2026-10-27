@@ -7,7 +7,7 @@ import io
 import json
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Callable
 
 import meta_sam_parser
@@ -288,6 +288,37 @@ class ChartSpec:
             raise ValueError("unknown stacking: " + str(self.stacking))
 
 
+CHART_READER_VALIDATION: dict = {
+    "source": "docs/smoke/chart_validation_v3.json",
+    "rules_commit": "31a1bf1",
+    "synthetic_inner_median_err_frac": 0.0017,
+    "synthetic_inner_max_err_frac": 0.0132,
+    "synthetic_edge_max_err_frac": 0.0396,
+    "real_figure_mean_err_frac": 0.0017,
+    "real_figure_max_err_frac": 0.0076,
+}
+
+
+def point_status(
+    x_values: list[float] | tuple[float, ...],
+    values: list[float | None],
+) -> list[str]:
+    """Mark each point. Inputs in axis units, output in str."""
+    if len(x_values) == 0 or len(values) != len(x_values):
+        raise ValueError("x_values and values must be non empty and same length")
+    lo = min(float(x) for x in x_values)
+    hi = max(float(x) for x in x_values)
+    out: list[str] = []
+    for x, v in zip(x_values, values):
+        if v is None:
+            out.append("not_read")
+        elif float(x) == lo or float(x) == hi:
+            out.append("edge_not_validated")
+        else:
+            out.append("validated")
+    return out
+
+
 @dataclass
 class ChartReading:
     """Numbers read from one chart. Pixels in px."""
@@ -300,6 +331,7 @@ class ChartReading:
     plot_box_px: tuple[float, float, float, float]
     sam_calls: int
     label_calls: int
+    point_status: dict[str, list[str]] = field(default_factory=dict)
 
 
 def _png_size(image_png: bytes) -> tuple[int, int]:
@@ -401,6 +433,9 @@ def read_chart(
         values[name] = series_values(
             outlines[name], spec.x_values, x_axis, y_axis, mode=spec.mode
         )
+    status: dict[str, list[str]] = {}
+    for name in order:
+        status[name] = point_status(spec.x_values, values[name])
     return ChartReading(
         values=values,
         y_unit=spec.y_unit,
@@ -410,6 +445,7 @@ def read_chart(
         plot_box_px=plot_box,
         sam_calls=sam_calls,
         label_calls=label_calls,
+        point_status=status,
     )
 
 
