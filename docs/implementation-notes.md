@@ -63,3 +63,15 @@ Short entries. Plan reference: the prep plan, section 7 (stages and gates) and s
 - Chart reader edge points: Havid approved (Tuesday 27 Oct) marking the first and last x value of each series as
   "edge, not validated" (T03d, `point_status`). Away from the edges the V3 synthetic error was at most 1.32% of
   the span (median 0.17%); at the edges up to 3.96% (computed from `docs/smoke/chart_validation_v3.json`).
+
+- First end to end study (T09, run cbf756b46b12a736, `docs/examples/T09_karimunjawa_report.md`): one question in,
+  report out, no manual step, all 10 gate rows passed. With the costs still assumed, the least cost design is
+  7,750 kWp PV and 19,000 kWh battery (computed), LCOE 0.235 USD/kWh against 0.355 USD/kWh for diesel only
+  (computed), renewable share 87.5% (computed). Hiron et al. 2021 proposed 0.99 MW AC of PV (paper). The gap comes
+  from the assumed costs and the least cost goal, so no claim rests on it until stage S3 brings sourced costs.
+- Side rows can sit on the grid edge. Only the main case widens its grid; the growth demand row and the demand
+  +20% sensitivity row both picked 9,000 kWp, the top of the widened grid (computed). Their LCOE values are upper
+  bounds, not optima. The next report task must mark such rows in the note column.
+- One live study took 336 s (measured, `runs/T09_live_check.txt`), most of it the weather fetch and the design
+  grids. A repeat of the same question with the same inputs is read back from `runs/studies/<run_hash>/` with no
+  service call.
