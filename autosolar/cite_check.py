@@ -21,11 +21,16 @@ MAX_SOURCE_BYTES = 25_000_000
 MIN_QUOTE_CHARS = 20
 CONTEXT_CHARS = 400
 MAX_PROMPT_CONTEXT_CHARS = 3000
+MIN_TITLE_CHARS = 12
+MAX_PROMPT_TITLE_CHARS = 300
+MAX_PROMPT_URL_CHARS = 500
 SUPPORT_INSTRUCTIONS = (
     "Decide if the quote and source context state the claimed value. "
     'Answer with one JSON object {"supports": true or false, "reason": "<one sentence>"}. '
     "Use supports true only when the quote and context state this value, "
     "in this unit, for the thing described. "
+    "The source title and URL show what the whole source is about, for example the country it covers, "
+    "but the value itself must come from the quote and context. "
     "Use supports false otherwise. Keep reason to one sentence."
 )
 
@@ -122,6 +127,25 @@ def normalise_text(text: str) -> str:
     s = s.lower()
     s = re.sub(r"\s+", " ", s)
     return s.strip()
+
+
+def title_in_source(title, pages) -> bool:
+    """Check title appears in source pages. Output True or False."""
+    try:
+        if not isinstance(title, str):
+            return False
+        if not isinstance(pages, list):
+            return False
+        for p in pages:
+            if not isinstance(p, str):
+                return False
+        t = normalise_text(title)
+        if len(t) < MIN_TITLE_CHARS:
+            return False
+        joined = normalise_text(" ".join(pages))
+        return t in joined
+    except Exception:
+        return False
 
 
 def html_to_text(html_str: str) -> str:
@@ -391,9 +415,12 @@ def numbers_in(text: str) -> list[float]:
 def parse_unit(unit: str) -> str:
     """Parse unit string to canonical unit."""
     try:
-        s = unit.strip().lower()
+        s0 = unit.strip().lower()
     except AttributeError:
         raise ValueError("bad unit %r" % (unit,))
+    if re.fullmatch(r"(%|percent)\s+of\s+[a-z]+(\s+[a-z]+)*", s0):
+        return "%"
+    s = s0
     s = s.replace(" ", "")
     if s in ("%", "percent", "pct", "%/yr", "%/year", "%peryear", "%pa"):
         return "%"
@@ -528,10 +555,20 @@ def doi_resolves(doi: str, http_get, *, timeout_s: float = 30.0) -> bool:
     raise FetchError("doi check HTTP " + str(resp.status_code))
 
 
-def support_verdict(judge_fn, claim: Claim, context: str) -> Verdict:
+def support_verdict(judge_fn, claim: Claim, context: str, *, source_title=None, source_url=None) -> Verdict:
     """Ask judge if quote supports claim. Output verdict."""
+    if isinstance(source_title, str) and source_title.strip() != "":
+        title_text = source_title.strip()[:MAX_PROMPT_TITLE_CHARS]
+    else:
+        title_text = "(not shown)"
+    if isinstance(source_url, str) and source_url.strip() != "":
+        url_text = source_url.strip()[:MAX_PROMPT_URL_CHARS]
+    else:
+        url_text = "(not shown)"
     prompt = (
         SUPPORT_INSTRUCTIONS + "\n\nInput: " + claim.description
+        + "\nSource title: " + title_text
+        + "\nSource URL: " + url_text
         + "\nClaimed value: " + str(claim.value) + " " + claim.unit
         + "\nQuote: " + claim.quote
         + "\nSource context:\n" + context[:MAX_PROMPT_CONTEXT_CHARS]
@@ -670,7 +707,11 @@ def check_citation(claim, *, http_get, judge_fn, judge_name: str,
     if match is not None and match.found:
         context = match.context
     if not reasons:
-        verdict = support_verdict(judge_fn, claim, context)
+        show_title = None
+        if source is not None and title_in_source(claim.title, source.pages):
+            show_title = claim.title
+        verdict = support_verdict(judge_fn, claim, context, source_title=show_title,
+                                  source_url=source.final_url if source is not None else None)
         supports = verdict.supports
         judge_reason = verdict.reason
         if verdict.supports is False:
