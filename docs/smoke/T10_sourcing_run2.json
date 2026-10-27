@@ -1,0 +1,368 @@
+{
+ "schema": "autosolar.sourcing/1",
+ "meta": {
+  "run_id": "sourcing-20261027T233157-a911c1",
+  "targets": "F:\\GITHUB\\autosolar-researcher\\config\\sourcing_targets.json",
+  "base_inputs": "F:\\GITHUB\\autosolar-researcher\\config\\default_inputs.json",
+  "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+  "judge_seconds": [
+   28.3,
+   10.9,
+   10.8,
+   7.3,
+   14.0
+  ],
+  "fx_idr_per_usd": 16500.0,
+  "wall_s": 811.9,
+  "search_cost_usd": 0.669912,
+  "g6": [
+   true,
+   "3 of 7 sourced inputs checked, 4 kept assumed"
+  ]
+ },
+ "inputs": {
+  "schema": "autosolar.inputs/1",
+  "note": "Hand entered inputs for the thin end to end path. Every cost is labelled assumed until stage S3 finds and checks a source. Diesel fleet from Hiron et al. 2021 p7; the same paper also prints 2 x 2.7 MW (p1, Table 1 p12), so the fleet size is one of the reported conflicts.",
+  "values": {
+   "pv_capex_usd_per_kwp": {
+    "value": 1119.0,
+    "unit": "USD/kWp",
+    "label": "paper",
+    "note": "S3 checked: A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia; https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full; quote near; as written 1119 USD/kW; currency year 2022; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low"
+   },
+   "pv_om_usd_per_kwp_yr": {
+    "value": 24.38,
+    "unit": "USD/kWp/yr",
+    "label": "paper",
+    "note": "S3 checked: Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study; https://www.nature.com/articles/s41598-022-08968-6; quote near; as written 24.38 US$/kW per year; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low"
+   },
+   "pv_life_yr": {
+    "value": 25,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_capex_usd_per_kwh": {
+    "value": 300.0,
+    "unit": "USD/kWh",
+    "label": "assumed",
+    "note": "LFP energy part"
+   },
+   "battery_power_capex_usd_per_kw": {
+    "value": 100.0,
+    "unit": "USD/kW",
+    "label": "assumed",
+    "note": "inverter part"
+   },
+   "battery_om_usd_per_kwh_yr": {
+    "value": 5.0,
+    "unit": "USD/kWh/yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_life_yr": {
+    "value": 12,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "diesel_om_usd_per_kwh": {
+    "value": 0.03,
+    "unit": "USD/kWh",
+    "label": "assumed",
+    "note": "existing plant; capital cost treated as sunk"
+   },
+   "fuel_price_usd_per_l": {
+    "value": 0.848485,
+    "unit": "USD/L",
+    "label": "docs",
+    "note": "S3 checked: National Strategy for Climate Mitigation: Private Sector Circular Use of Palm Oil Mill Waste; https://ap.fftc.org.tw/article/3866; quote exact; as written 14000 IDR per liter; fx 16500 IDR per USD assumed; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low; found on search try 2"
+   },
+   "discount_rate_frac": {
+    "value": 0.08,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "real"
+   },
+   "project_life_yr": {
+    "value": 20,
+    "unit": "yr",
+    "label": "assumed",
+    "note": ""
+   },
+   "currency_year": {
+    "value": 2025,
+    "unit": "year",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_round_trip_eff_frac": {
+    "value": 0.9,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "AC to AC"
+   },
+   "battery_soc_min_frac": {
+    "value": 0.1,
+    "unit": "frac",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_soc_initial_frac": {
+    "value": 0.5,
+    "unit": "frac",
+    "label": "assumed",
+    "note": ""
+   },
+   "battery_duration_h": {
+    "value": 4.0,
+    "unit": "h",
+    "label": "assumed",
+    "note": "battery kW = kWh / duration"
+   },
+   "diesel_unit_kw": {
+    "value": 1800.0,
+    "unit": "kW",
+    "label": "paper",
+    "note": "Hiron et al. 2021 p7: 2 x 1.8 MW (p1 and Table 1 print 2 x 2.7 MW)"
+   },
+   "diesel_n_units": {
+    "value": 2,
+    "unit": "units",
+    "label": "paper",
+    "note": "Hiron et al. 2021 p7"
+   },
+   "diesel_min_load_frac": {
+    "value": 0.3,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "share of the rating of the units online"
+   },
+   "fuel_intercept_l_per_h_per_kw_rated": {
+    "value": 0.08,
+    "unit": "L/h per kW rated",
+    "label": "assumed",
+    "note": "straight line fuel curve"
+   },
+   "fuel_slope_l_per_kwh": {
+    "value": 0.25,
+    "unit": "L/kWh",
+    "label": "assumed",
+    "note": "straight line fuel curve"
+   },
+   "co2_kg_per_l": {
+    "value": 2.68,
+    "unit": "kg/L",
+    "label": "assumed",
+    "note": "diesel combustion only"
+   },
+   "unserved_max_frac": {
+    "value": 0.001,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "largest share of load left unserved"
+   },
+   "rf_target_frac": {
+    "value": 0.5,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "renewable share for the high renewable design"
+   },
+   "swing_frac": {
+    "value": 0.2,
+    "unit": "frac",
+    "label": "assumed",
+    "note": "sensitivity swing"
+   },
+   "pv_kwp_step": {
+    "value": 250.0,
+    "unit": "kWp",
+    "label": "assumed",
+    "note": "search grid"
+   },
+   "pv_kwp_max": {
+    "value": 4000.0,
+    "unit": "kWp",
+    "label": "assumed",
+    "note": "search grid, widened when the answer sits on the edge"
+   },
+   "battery_kwh_step": {
+    "value": 1000.0,
+    "unit": "kWh",
+    "label": "assumed",
+    "note": "search grid"
+   },
+   "battery_kwh_max": {
+    "value": 16000.0,
+    "unit": "kWh",
+    "label": "assumed",
+    "note": "search grid, widened when the answer sits on the edge"
+   }
+  }
+ },
+ "rows": [
+  {
+   "input": "pv_capex_usd_per_kwp",
+   "status": "checked",
+   "label": "paper",
+   "value_used": 1119.0,
+   "unit": "USD/kWp",
+   "value_as_written": 1119,
+   "unit_as_written": "USD/kW",
+   "currency_year": 2022,
+   "title": "A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia",
+   "url": "https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full",
+   "doi": "10.3389/fsuep.2024.1308441",
+   "doi_ok": true,
+   "page": 1,
+   "quote_kind": "near",
+   "quote": "The unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW (IEA, ).",
+   "supports": true,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [],
+   "search_cost_usd": 0.036637131999999996
+  },
+  {
+   "input": "pv_om_usd_per_kwp_yr",
+   "status": "checked",
+   "label": "paper",
+   "value_used": 24.38,
+   "unit": "USD/kWp/yr",
+   "value_as_written": 24.38,
+   "unit_as_written": "US$/kW per year",
+   "currency_year": null,
+   "title": "Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study",
+   "url": "https://www.nature.com/articles/s41598-022-08968-6",
+   "doi": "10.1038/s41598-022-08968-6",
+   "doi_ok": true,
+   "page": 1,
+   "quote_kind": "near",
+   "quote": "Darghouth et al. estimated that the CAPEX and OPEX for SPP in Indonesia is 1365.76 US$ and 24.38 US$/kW per year.",
+   "supports": true,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [],
+   "search_cost_usd": 0.025366876
+  },
+  {
+   "input": "battery_capex_usd_per_kwh",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 300.0,
+   "unit": "USD/kWh",
+   "value_as_written": 150,
+   "unit_as_written": "USD/kWh",
+   "currency_year": 2024,
+   "title": "Flexibility - Electricity 2026 - IEA",
+   "url": "https://www.iea.org/reports/electricity-2026/flexibility",
+   "doi": null,
+   "doi_ok": null,
+   "page": 1,
+   "quote_kind": "exact",
+   "quote": "Costs have declined significantly in recent years, with battery storage project costs falling by about 40% in 2024 to around USD 150/kWh, underpinning a strong increase in deployment.",
+   "supports": false,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "try 1: fetch: HTTP 403",
+    "try 2: judge says not supported: The quote refers to general battery storage project costs around USD 150/kWh, not specifically the installed capital cost of a lithium-ion battery energy storage system per kWh of storage energy."
+   ],
+   "search_cost_usd": 0.06663811
+  },
+  {
+   "input": "battery_om_usd_per_kwh_yr",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 5.0,
+   "unit": "USD/kWh/yr",
+   "value_as_written": 10,
+   "unit_as_written": "USD/kWh/year",
+   "currency_year": null,
+   "title": "Optimal Annual Operational Cost of a Hybrid Renewable-Based Microgrid to Increase the Power Resilience of a Critical Facility",
+   "url": "https://www.mdpi.com/1996-1073/15/21/8040",
+   "doi": "10.3390/en15218040",
+   "doi_ok": true,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "| O & M cost | 10 USD/kWh/year |",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "try 1: fetch: HTTP 403",
+    "try 1: mirror: no open copy with the quote (4 tried)",
+    "try 2: fetch: HTTP 403",
+    "try 2: mirror: no open copy with the quote (4 tried)"
+   ],
+   "search_cost_usd": 0.270037454
+  },
+  {
+   "input": "fuel_price_usd_per_l",
+   "status": "checked",
+   "label": "docs",
+   "value_used": 0.848485,
+   "unit": "USD/L",
+   "value_as_written": 14000,
+   "unit_as_written": "IDR per liter",
+   "currency_year": null,
+   "title": "National Strategy for Climate Mitigation: Private Sector Circular Use of Palm Oil Mill Waste",
+   "url": "https://ap.fftc.org.tw/article/3866",
+   "doi": null,
+   "doi_ok": null,
+   "page": 1,
+   "quote_kind": "exact",
+   "quote": "Assuming the current industrial diesel price is around IDR 14,000 (US$ 0.84) per liter, the potential financial savings could exceed IDR 4 billion (US$ 238.73 million) per year per installation unit.",
+   "supports": true,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [],
+   "search_cost_usd": 0.125060218
+  },
+  {
+   "input": "discount_rate_frac",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 0.08,
+   "unit": "frac",
+   "value_as_written": 5,
+   "unit_as_written": "%",
+   "currency_year": null,
+   "title": "100% Renewable Electricity in Indonesia",
+   "url": "https://mdpi-res.com/d_attachment/energies/energies-17-00003/article_deploy/energies-17-00003.pdf",
+   "doi": "10.3390/en17010003",
+   "doi_ok": true,
+   "page": 10,
+   "quote_kind": "exact",
+   "quote": "In this study, a real (inflation-free) discount rate of 5% was used for all technologies.",
+   "supports": false,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "judge says not supported: The quote states a 5% real discount rate was used for all technologies but the provided source context does not specify that the study concerns solar PV or renewable energy projects in Indonesia."
+   ],
+   "search_cost_usd": 0.051211972
+  },
+  {
+   "input": "diesel_min_load_frac",
+   "status": "assumed",
+   "label": "assumed",
+   "value_used": 0.3,
+   "unit": "frac",
+   "value_as_written": 30,
+   "unit_as_written": "%",
+   "currency_year": null,
+   "title": "Techno-Economic and Environmental Analysis of Renewable Mix Hybrid Energy System for Sustainable Electrification of Al-Dhafrat Rural Area in Oman",
+   "url": "https://www.mdpi.com/1996-1073/16/1/288/pdf",
+   "doi": "10.3390/en16010288",
+   "doi_ok": true,
+   "page": null,
+   "quote_kind": "not run",
+   "quote": "Lifetime 219,000 h Minimum load ratio 30% Intercept coefficient 0.0226 L/kWh Fuel slope 0.2293 L/kWh Operation and maintenance cost USD 10.27/operational h",
+   "supports": null,
+   "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+   "reasons": [
+    "try 1: unit: unknown currency in unit '% of its rated capacity'",
+    "try 1: fetch: HTTP 403",
+    "try 1: mirror: no open copy with the quote (4 tried)",
+    "try 2: fetch: HTTP 403",
+    "try 2: mirror: no open copy with the quote (4 tried)"
+   ],
+   "search_cost_usd": 0.09495996400000001
+  }
+ ]
+}

@@ -51,7 +51,11 @@ def main():
     ap.add_argument("--inputs", default=str(ROOT / "config" / "default_inputs.json"))
     ap.add_argument("--runs", default=str(ROOT / "runs" / "studies"))
     ap.add_argument("--live", action="store_true", help="count the calls as public live use (live caps apply)")
+    ap.add_argument("--sourcing", default=None,
+                    help="sourcing.json from tools/source.py; the study reads its inputs file and checks it (G6)")
     args = ap.parse_args()
+    if args.sourcing is not None:
+        args.inputs = str(pathlib.Path(args.sourcing).with_name("inputs.json"))
     os.environ["MODEL_API_KEY"] = env_value("MODEL_API_KEY")
     cams_email = env_value("AUTOSOLAR_CAMS_EMAIL")
     fetchers = cached_fetchers(default_fetchers(), ROOT / "runs" / "weather_cache")
@@ -65,7 +69,7 @@ def main():
         client = LiveClient(client)
     t = time.perf_counter()
     out = run_study(args.question, client=client, http_get=requests.get, weather_fn=weather_fn,
-                    inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id)
+                    inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id, sourcing_path=args.sourcing)
     print("run", out.run_hash, "reused" if out.reused else "new", round(time.perf_counter() - t, 1), "s")
     print("folder", out.run_dir)
     for key in ("best_pv_kwp", "best_battery_kwh", "best_lcoe_usd_per_kwh", "diesel_only_lcoe_usd_per_kwh",
