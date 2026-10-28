@@ -30,7 +30,7 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 | Tool | Job | When it runs | How its output is checked |
 |---|---|---|---|
 | Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
-| Muse Glimmer (open weights, on our own GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
+| Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
 | Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study 5ee65dcd3350bec1 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes must be in the study files (48 of 48 in the last review, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images | Validation runs only; no study uses it yet | Rules fixed before each test; the first test failed, the second passed (see "Chart reader") |
 | Muse Code (contributor model) | Wrote the product code from short specs | Build time | The orchestrator writes each spec and its acceptance tests first, and checks that the tests catch planted faults (26 of 26 for the last task, computed) |
@@ -45,7 +45,8 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
 `docs/site/5ee65dcd3350bec1.html`; the run with curated inputs (post hoc) is `docs/site/4a0c0eedd47b2672.html`, with
-the latest Muse Wonder review. Both were re-judged by two models (see Checks) and give the same numbers as the
+the latest Muse Wonder review. Both start from the input file whose 4 checked values were re-judged by two models
+(see Checks; the curated run then replaces 7 values by hand, the diesel price among them) and give the same numbers as the
 earlier runs f86df9819fa150a7 and 579f414386fe2d58, which stay in the gallery. Raw run files are under
 `docs/site/data/`.
 
