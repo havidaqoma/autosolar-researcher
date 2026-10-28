@@ -61,7 +61,7 @@ _UNIT_TABLE = {
                 "kah": 1000.0, "mah": 1e6},
     "area": {"m2": 1.0, "ha": 10000.0, "km2": 1e6},
     "irradiation": {"kwh/m2/yr": 1.0, "kwh/m2/year": 1.0, "kwh/m2/a": 1.0,
-                    "kwh/m2/day": 365.0, "kwh/m2/d": 365.0, "kwh/m2": 1.0},
+                    "kwh/m2/day": 365.0, "kwh/m2/d": 365.0},
     "speed": {"m/s": 1.0, "km/h": 1.0 / 3.6},
     "money_per_energy": {"$/kwh": 1.0, "$/mwh": 0.001, "cents/kwh": 0.01,
                          "c/kwh": 0.01},
@@ -392,6 +392,28 @@ def _p1_p6(check_id: str, quantities: tuple, statements: list) -> CheckResult:
             if len(grp) < 2:
                 continue
             pages.update(_stmt_pages(grp))
+            cleaned = set()
+            for stmt in grp:
+                unit = stmt.get("unit")
+                if isinstance(unit, str):
+                    cleaned.add(_clean_unit(unit))
+                else:
+                    cleaned.add(unit)
+            if len(cleaned) == 1:
+                raws = []
+                for stmt in grp:
+                    count = stmt.get("count")
+                    mult = count if count is not None else 1
+                    raws.append(float(stmt["value"]) * float(mult))
+                if max(raws) - min(raws) > 0.01 * min(abs(c) for c in raws):
+                    failing.append("%s [%s]: differ %s" %
+                                   (qty, _ascii(cond),
+                                    ", ".join(_ref(s) for s in grp)))
+                else:
+                    agreed.append("%s [%s]: %s" %
+                                  (qty, _ascii(cond),
+                                   ", ".join(_ref(s) for s in grp)))
+                continue
             kinds = set()
             canons = []
             comparable = True
