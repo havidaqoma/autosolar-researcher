@@ -73,8 +73,20 @@ def _check_n_units(value: object) -> int:
     return out
 
 
-def _check_diesel(diesel: object) -> tuple[float, int, float, float, float]:
-    """Check DieselFleet fields. Returns unit kw, n, min load, intercept, slope."""
+def _check_must_run_units(value: object, n_units: int) -> int:
+    """Check must run units as int in [0, n_units]. Returns int."""
+    if isinstance(value, bool):
+        raise ValueError("must_run_units must be an int in [0, n_units]: " + repr(value))
+    if not isinstance(value, (int, np.integer)):
+        raise ValueError("must_run_units must be an int in [0, n_units]: " + repr(value))
+    out = int(value)
+    if not 0 <= out <= n_units:
+        raise ValueError("must_run_units must be in [0, n_units]: " + repr(value))
+    return out
+
+
+def _check_diesel(diesel: object) -> tuple[float, int, float, float, float, int]:
+    """Check DieselFleet fields. Returns unit kw, n, min load, intercept, slope, must run."""
     if not isinstance(diesel, DieselFleet):
         raise ValueError("diesel must be a DieselFleet: " + repr(diesel))
     unit_kw = _as_float("unit_kw", diesel.unit_kw)
@@ -92,7 +104,10 @@ def _check_diesel(diesel: object) -> tuple[float, int, float, float, float]:
     slope_l = _as_float("fuel_slope_l_per_kwh", diesel.fuel_slope_l_per_kwh)
     if not slope_l > 0.0:
         raise ValueError("fuel_slope_l_per_kwh must be > 0")
-    return unit_kw, n_units, min_load_frac, intercept_l, slope_l
+    must_run_units = _check_must_run_units(diesel.must_run_units, n_units)
+    if must_run_units >= 1 and min_load_frac > 0.5:
+        raise ValueError("min_load_frac must be at most 0.5 when must_run_units >= 1")
+    return unit_kw, n_units, min_load_frac, intercept_l, slope_l, must_run_units
 
 
 @dataclass(frozen=True)
@@ -119,6 +134,7 @@ class DieselFleet:
     min_load_frac: float
     fuel_intercept_l_per_h_per_kw_rated: float
     fuel_slope_l_per_kwh: float
+    must_run_units: int = 0
 
     def __post_init__(self) -> None:
         """Check ranges. Raises ValueError naming the field."""
@@ -202,7 +218,7 @@ def dispatch(
 ) -> DispatchResult:
     """Hour by hour energy flow. Power in kW, energy in kWh, fuel in l."""
     energy_kwh, power_kw, rte_frac, soc_min_frac, soc_initial_frac = _check_battery(battery)
-    unit_kw, n_units, min_load_frac, intercept_l, slope_l = _check_diesel(diesel)
+    unit_kw, n_units, min_load_frac, intercept_l, slope_l, must_run_n = _check_diesel(diesel)
     pv_vals, load_vals = _check_inputs(pv_kw, load_kw)
 
     eta_frac = math.sqrt(rte_frac)
@@ -229,12 +245,11 @@ def dispatch(
     soc_col: list[float] = []
     fuel_col: list[float] = []
 
+    d_must_kw = float(must_run_n) * unit_kw * min_load_frac
+
     for i in range(n_hours):
         pv_val_kw = float(pv_in[i])
         load_val_kw = float(load_in[i])
-        pv_to_load_kw = pv_val_kw if pv_val_kw < load_val_kw else load_val_kw
-        surplus_kw = pv_val_kw - pv_to_load_kw
-        deficit_kw = load_val_kw - pv_to_load_kw
         pv_to_battery_kw = 0.0
         pv_curtailed_kw = 0.0
         battery_discharge_kw = 0.0
@@ -244,6 +259,89 @@ def dispatch(
         diesel_excess_kw = 0.0
         units_on = 0
         unserved_kw = 0.0
+        if must_run_n >= 1:
+            a_kw = load_val_kw if load_val_kw < d_must_kw else d_must_kw
+            load_left_kw = load_val_kw - a_kw
+            spare_kw = d_must_kw - a_kw
+            pv_to_load_kw = pv_val_kw if pv_val_kw < load_left_kw else load_left_kw
+            surplus_kw = pv_val_kw - pv_to_load_kw
+            deficit_kw = load_left_kw - pv_to_load_kw
+            diesel_kw = d_must_kw
+            diesel_to_load_kw = a_kw
+            units_on = int(must_run_n)
+            if surplus_kw > 0.0:
+                room_kwh = (e_max_kwh - s_kwh) / eta_frac
+                if room_kwh < 0.0:
+                    room_kwh = 0.0
+                pv_to_battery_kw = surplus_kw
+                if power_kw < pv_to_battery_kw:
+                    pv_to_battery_kw = power_kw
+                if room_kwh < pv_to_battery_kw:
+                    pv_to_battery_kw = room_kwh
+                s_kwh += pv_to_battery_kw * eta_frac
+                pv_curtailed_kw = surplus_kw - pv_to_battery_kw
+            if spare_kw > 0.0:
+                power_left_kw = power_kw - pv_to_battery_kw
+                room_kwh = (e_max_kwh - s_kwh) / eta_frac
+                if room_kwh < 0.0:
+                    room_kwh = 0.0
+                diesel_to_battery_kw = spare_kw
+                if power_left_kw < diesel_to_battery_kw:
+                    diesel_to_battery_kw = power_left_kw
+                if room_kwh < diesel_to_battery_kw:
+                    diesel_to_battery_kw = room_kwh
+                s_kwh += diesel_to_battery_kw * eta_frac
+                diesel_excess_kw = spare_kw - diesel_to_battery_kw
+            if deficit_kw > 0.0:
+                headroom_kwh = (s_kwh - e_min_kwh) * eta_frac
+                if headroom_kwh < 0.0:
+                    headroom_kwh = 0.0
+                max_dis_kw = headroom_kwh
+                if power_kw < max_dis_kw:
+                    max_dis_kw = power_kw
+                if deficit_kw <= max_dis_kw + 1e-9:
+                    battery_discharge_kw = deficit_kw
+                else:
+                    rem_kw = deficit_kw - max_dis_kw
+                    need_kw = d_must_kw + rem_kw
+                    need_units = int(math.ceil(need_kw / unit_kw - 1e-9))
+                    if need_units < int(must_run_n):
+                        need_units = int(must_run_n)
+                    if need_units > n_units:
+                        need_units = n_units
+                    units_on = need_units
+                    cap_kw = float(units_on) * unit_kw
+                    battery_discharge_kw = max_dis_kw
+                    if need_kw > cap_kw:
+                        diesel_kw = cap_kw
+                        diesel_to_load_kw = cap_kw
+                        unserved_kw = need_kw - cap_kw
+                    else:
+                        diesel_kw = need_kw
+                        diesel_to_load_kw = need_kw
+                s_kwh -= battery_discharge_kw / eta_frac
+            if units_on > 0:
+                fuel_l = float(units_on) * unit_kw * intercept_l + slope_l * diesel_kw
+            else:
+                fuel_l = 0.0
+            load_col.append(load_val_kw)
+            pv_col.append(pv_val_kw)
+            pv_to_load_col.append(pv_to_load_kw)
+            pv_curtailed_col.append(pv_curtailed_kw)
+            pv_to_battery_col.append(pv_to_battery_kw)
+            discharge_col.append(battery_discharge_kw)
+            diesel_col.append(diesel_kw)
+            diesel_to_load_col.append(diesel_to_load_kw)
+            diesel_to_battery_col.append(diesel_to_battery_kw)
+            diesel_excess_col.append(diesel_excess_kw)
+            units_col.append(units_on)
+            unserved_col.append(unserved_kw)
+            soc_col.append(s_kwh)
+            fuel_col.append(fuel_l)
+            continue
+        pv_to_load_kw = pv_val_kw if pv_val_kw < load_val_kw else load_val_kw
+        surplus_kw = pv_val_kw - pv_to_load_kw
+        deficit_kw = load_val_kw - pv_to_load_kw
         if surplus_kw > 0.0:
             room_kwh = (e_max_kwh - s_kwh) / eta_frac
             if room_kwh < 0.0:
