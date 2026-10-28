@@ -143,3 +143,59 @@ Rule first: the vote rule and the re-judge rule were committed in the T10f spec 
   battery at 0.251 USD/kWh against 0.354 for diesel only. All 11 gate rows pass. The report now names the vote rule.
 - Limit that stays: 3 yes answers from one sampled model are stronger evidence than 1, but they are not
   independent reviews. A second judge model is the next step if a checked value is ever disputed.
+
+## T11 to T13: how firm is the answer, the paper check, the study page (Wednesday 28 Oct)
+
+Asked by Havid after T10f: "can you deep thinking what to improve?" The answer was that the engine was done but
+the judge-facing parts were not, and that an energy engineer would catch six gaps. He chose: HTML gallery plus a
+recorded run, build the paper check, use the 9 ha from the press as the land limit.
+
+- T11a (Muse Code, first attempt, 152 s, USD 0.0162 computed): `DieselFleet.must_run_units`, so a reserve case
+  can keep diesel units running in every hour. 42 tests with a hand worked day; 20 of 20 planted faults caught.
+- T11b (Muse Code, first attempt, 460 s, USD 0.0256 computed): `autosolar/firmness.py` and a report section "How
+  firm is the answer" plus "Not covered by this study". Check inputs live in `config/study_checks.json`: 9 ha of
+  land (press), 0.87 MWdc per ha (paper: Bolinger and Bolinger, IEEE J. Photovoltaics, median US fixed-tilt
+  plants), the published PV size 1,244.48 kWp (paper: 3,889 modules of 320 Wp), one must-run unit (assumed), a 1%
+  near tie (assumed). 52 tests; 27 of 27 planted faults caught.
+- Fifth live study (run 59eba198a2af900c, computed, 424 s): the main answer is unchanged (7,250 kWp plus 19,000
+  kWh, 0.251 against 0.354 USD/kWh). New: 8 designs are within 1% (6,750 to 8,250 kWp); the main design runs the
+  diesel 1,458 h a year and starts it 217 times, so the battery and PV hold the grid alone for 7,302 h. With one
+  diesel unit running in every hour the least cost design shrinks to 1,500 kWp plus 1,000 kWh at 0.336 USD/kWh, and
+  the main design would cost 0.414 USD/kWh, more than diesel only. That is the biggest open question for PLN:
+  can the island grid run on inverters alone? The main design needs 8.3 ha of the 9.0 ha. The published size
+  (1,244 kWp, PV only) gives 0.336 USD/kWh. The true model cost behind the study is USD 0.43 (computed), almost
+  all of it the web search that sourced the inputs; the old cost line showed only the question parse.
+- T12a (Muse Code, first attempt, 525 s, USD 0.0277 computed): `autosolar/paper_check.py` keeps a number only if
+  its quote is in the PDF text layer, then runs the frozen checks P1 to P15. 85 tests; 34 of 34 planted faults.
+  T12a2 (60 s, USD 0.0078): table cells fall back to the numbers on their page, because a PDF text layer prints a
+  table's headers apart from its values. T12b (70 s, USD 0.0050): structured output (`text.format` with a JSON
+  Schema) in the Meta client. T12c (45 s, USD 0.0042): `store` flag, because a 16 MB PDF sent inline is refused when
+  the response is stored (HTTP 413, measured).
+- Paper check on Hiron 2021 (in-sample, measured, `docs/smoke/T12_paper_hiron_v1.json` and
+  `T12_paper_hiron_v2_v4.json`, 3 runs per prompt version, about USD 0.01 a run): v1 found 8, 3 and 1 of the 13
+  hand audit items the frozen checks cover (two runs wrote numbers as strings); v2 found 1, 10 and 1 (two runs broke
+  the JSON); with structured output v3 found 11, 9 and 11 and v4 found 11, 8 and 11 with no extra flags. The
+  990 kW plant that delivers 1,990 kW at 11:00 (P5) is flagged in all 6 structured runs. The prompt was tuned on
+  this paper, so these numbers say the tool can find what a careful reader finds, not how well it generalises.
+  Prompt v4 was frozen (sha e8517bdf125f52f8) before the out-of-sample paper 2 runs.
+- Muse Wonder review (run review-20261028T035915-48ee2e, measured, 130 s, USD 0.29): 10 points, 3 not answered in
+  the report (battery sizing and life, reliability beyond an hourly balance, a year-by-year cash flow). Its first
+  point is the reserve case. One point misreads gate G2 (equal discharge and stored energy is expected when the
+  battery ends where it started); the page shows the points as the reviewer wrote them.
+- T13 (Muse Code, 120 s, USD 0.0143) and T13b (340 s, USD 0.0289): `autosolar/site.py` writes one self contained
+  HTML page per study (inline SVG heat map of every design, tornado chart, weather bars, no script) and a gallery
+  index; `tools/make_site.py` builds `docs/site/` from `config/gallery.json`. The answer section now lists the five
+  caveats next to the headline.
+- Tests: 1,010 of 1,010 pass.
+- Paper 2, out of sample (`docs/smoke/T12_paper2.json`, measured, frozen prompt v4, 3 runs, USD 0.045 in total):
+  the original version of Mathematics 11, 1248 (Basra; its correction notice changes two numbers in Figure 1 and
+  the cost numbers of one paragraph). None of the 3 scored items was flagged in any run. As run, the flags were
+  P1 and P11, P1, P8 and P11, and P11. A hand check found P1 (the same number with the same empty unit) and P8 (a
+  unit with no time period read as per year) false; both were bugs against the frozen check text and were fixed in
+  T12d (85 s, USD 0.0080), and every saved run was scored again by script (`tools/rescore_paper.py`, no model
+  call). After the fix only P11 remains in all 3 runs, and it is not confirmed: the paper gives the battery cost per
+  battery unit (120 USD), not per kWh. Hiron scores did not change. By eye, the paper's result of 8,683,501 kW of PV
+  and 26.7 million batteries looks wrong, but no frozen check compares sizes with the load, so the tool says
+  nothing about it. The README therefore says the paper 2 test does not support a claim of finding errors in papers
+  the checks were not written for.
+- Tests after T12d: 1,019 of 1,019 pass. Spend so far (ledgers): API USD 2.06, Muse Code USD 0.41.
