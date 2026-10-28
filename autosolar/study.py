@@ -18,16 +18,23 @@ from autosolar.econ import CostInputs
 from autosolar.firmness import (
     ALT_KEYS,
     CHECK_NAMES,
+    DUR_KEYS,
     FIRM_CHECK_LABEL,
     FIRM_SPECS,
     FIRM_TITLES,
+    OPTIONAL_CHECK_NAMES,
     OUT_OF_SCOPE,
+    battery_power_use,
+    capex_break_even,
     diesel_size_case,
+    duration_case,
+    engine_hours,
     land_check,
     load_checks,
     near_tie_band,
     reference_design,
     reserve_case,
+    run_stats,
     study_cost,
 )
 from autosolar.pv import PVDesign, simulate_pv
@@ -279,15 +286,18 @@ def firm_items(values: dict, checks_raw: dict) -> list[dict]:
     items: list[dict] = []
     check_entries = checks_raw["values"]
     alt_present = "diesel_unit_kw_alt" in check_entries
+    dur_present = "battery_duration_h_alt" in check_entries
     for key, unit, label, decimals in FIRM_SPECS:
         if key in ALT_KEYS and not alt_present:
+            continue
+        if key in DUR_KEYS and not dur_present:
             continue
         if label == "check":
             shown = check_entries[FIRM_CHECK_LABEL[key]]["label"]
         else:
             shown = label
         val = values[key]
-        if key in ("land_fits", "alt_on_grid_edge"):
+        if key in ("land_fits", "alt_on_grid_edge", "dur_alt_on_grid_edge"):
             items.append({
                 "key": key,
                 "title": FIRM_TITLES[key],
@@ -936,6 +946,48 @@ def run_study(
             "sourcing_cost_usd": firm_cost["sourcing_cost_usd"],
             "total_cost_usd": firm_cost["total_cost_usd"],
         }
+        peak = battery_power_use(best_result.hourly, float(best["battery_kw"]))
+        firm_values["battery_peak_discharge_kw"] = peak["peak_discharge_kw"]
+        firm_values["battery_peak_charge_kw"] = peak["peak_charge_kw"]
+        firm_values["battery_peak_use_pct"] = peak["peak_use_pct"]
+        even = capex_break_even(points, costs, co2_kg_per_l, unserved_max_frac)
+        firm_values["capex_break_even_rise_pct"] = even["rise_pct"]
+        firm_values["capex_break_even_pv_usd_per_kwp"] = even["pv_capex_usd_per_kwp"]
+        firm_values["capex_break_even_battery_usd_per_kwh"] = even["battery_capex_usd_per_kwh"]
+        stats = run_stats(best_result, best_battery_kwh)
+        firm_values["best_unserved_kwh_yr"] = stats["unserved_kwh"]
+        firm_values["best_unserved_hours"] = stats["unserved_hours"]
+        firm_values["best_battery_cycles_yr"] = stats["battery_cycles"]
+        d0_result = None
+        for item in points:
+            if float(item.design.pv_kwp) == 0.0 and float(item.design.battery_kwh) == 0.0:
+                d0_result = item.result
+                break
+        eng = engine_hours(d0_result, best_result)
+        firm_values["engine_hours_diesel_only"] = eng["diesel_only_unit_hours"]
+        firm_values["engine_hours_best"] = eng["design_unit_hours"]
+        firm_values["engine_hours_cut_pct"] = eng["cut_pct"]
+        if "battery_duration_h_alt" in checks_values:
+            dur = duration_case(
+                basis_kw,
+                paper_load,
+                pv_grid,
+                battery_grid,
+                battery_hours=float(checks_values["battery_duration_h_alt"]),
+                battery_template=battery,
+                diesel=diesel,
+                costs=costs,
+                co2_kg_per_l=co2_kg_per_l,
+                unserved_max_frac=unserved_max_frac,
+                main_lcoe_usd_per_kwh=best_lcoe,
+            )
+            firm_values["dur_alt_hours"] = dur["hours"]
+            firm_values["dur_alt_pv_kwp"] = dur["pv_kwp"]
+            firm_values["dur_alt_battery_kwh"] = dur["battery_kwh"]
+            firm_values["dur_alt_battery_kw"] = dur["battery_kw"]
+            firm_values["dur_alt_lcoe_usd_per_kwh"] = dur["lcoe_usd_per_kwh"]
+            firm_values["dur_alt_change_pct"] = dur["change_pct"]
+            firm_values["dur_alt_on_grid_edge"] = dur["on_grid_edge"]
         if "diesel_unit_kw_alt" in checks_values:
             alt = diesel_size_case(
                 basis_kw,
@@ -1088,10 +1140,11 @@ def run_study(
             entry = checks_raw["values"][name]
             if entry["label"] in ("press", "paper"):
                 sources.append("Check input " + name + ": " + entry["note"])
-        if "diesel_unit_kw_alt" in checks_raw["values"]:
-            entry = checks_raw["values"]["diesel_unit_kw_alt"]
-            if entry["label"] in ("press", "paper"):
-                sources.append("Check input diesel_unit_kw_alt: " + entry["note"])
+        for name in OPTIONAL_CHECK_NAMES:
+            if name in checks_raw["values"]:
+                entry = checks_raw["values"][name]
+                if entry["label"] in ("press", "paper"):
+                    sources.append("Check input " + name + ": " + entry["note"])
     report = {
         "schema": REPORT_SCHEMA,
         "run_hash": run_hash,

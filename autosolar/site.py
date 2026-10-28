@@ -83,7 +83,7 @@ def headline(report: dict) -> str:
 
 
 def caveats(report: dict) -> list[str]:
-    """Five or six plain lines from firmness items. Empty when no firmness."""
+    """Five to eight plain lines from firmness items. Empty when no firmness."""
     firm = report.get("firmness")
     if firm is None:
         return []
@@ -153,9 +153,41 @@ def caveats(report: dict) -> list[str]:
         + str(it("sourcing_cost_usd")["text"])
         + " USD was the web search that sourced its inputs."
     )
+    out = [first, second]
     if "alt_diesel_unit_kw" in by_key:
-        return [first, second, alt_line, third, fourth, fifth]
-    return [first, second, third, fourth, fifth]
+        out.append(alt_line)
+    if "capex_break_even_rise_pct" in by_key:
+        rise = it("capex_break_even_rise_pct")
+        pv_at = it("capex_break_even_pv_usd_per_kwp")
+        bat_at = it("capex_break_even_battery_usd_per_kwh")
+        prices = (" (PV to " + str(pv_at["text"]) + " USD/kWp, battery to "
+                 + str(bat_at["text"]) + " USD/kWh)")
+        if rise["value"] is None:
+            island = ("Island prices: no design in the grid beats diesel only "
+                      "at any PV and battery capital price above zero.")
+        elif float(rise["value"]) >= 0.0:
+            island = ("Island prices: PV and battery capital prices can rise "
+                      + str(rise["text"]) + "%" + prices + " before diesel only is cheaper.")
+        else:
+            fall = str(rise["text"])
+            if fall.startswith("-"):
+                fall = fall[1:]
+            island = ("Island prices: diesel only is cheaper now; PV and battery capital "
+                      "prices must fall " + fall + "%" + prices + " before a design with PV beats it.")
+        cut = it("engine_hours_cut_pct")
+        best_h = it("engine_hours_best")
+        d0_h = it("engine_hours_diesel_only")
+        if cut["value"] is not None and float(cut["value"]) > 0.0:
+            engine = ("Diesel engine hours: the least cost design cuts engine hours by "
+                      + str(cut["text"]) + "% (" + str(best_h["text"]) + " against "
+                      + str(d0_h["text"]) + " unit hours a year), so overhaul and engine "
+                      "replacement costs, left out here, would favour it.")
+        else:
+            engine = ("Diesel engine hours: the least cost design runs " + str(best_h["text"])
+                      + " unit hours a year against " + str(d0_h["text"])
+                      + " for diesel only; overhaul and engine replacement costs are left out.")
+        out += [island, engine]
+    return out + [third, fourth, fifth]
 
 
 def _mix_hex(light: tuple, dark: tuple, pos: float) -> str:

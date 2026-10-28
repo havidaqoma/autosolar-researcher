@@ -11,13 +11,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from autosolar.dispatch import Battery, DieselFleet
+from autosolar.dispatch import Battery, DieselFleet, DispatchResult
 from autosolar.econ import CostInputs
-from autosolar.sweep import cost_table, dispatch_grid, least_cost, on_grid_edge
+from autosolar.sweep import GridPoint, cost_table, dispatch_grid, least_cost, on_grid_edge
 
 CHECKS_SCHEMA = "autosolar.checks/1"
 CHECK_NAMES = ("site_land_ha", "pv_mwdc_per_ha", "reference_pv_kwp", "diesel_must_run_units", "near_tie_frac")
-OPTIONAL_CHECK_NAMES = ("diesel_unit_kw_alt",)
+OPTIONAL_CHECK_NAMES = ("diesel_unit_kw_alt", "battery_duration_h_alt")
 LABELS = ("measured", "computed", "assumed", "press", "paper", "paper (abstract)", "docs")
 OUT_OF_SCOPE = (
     "Grid stability: frequency and voltage control, grid forming inverters and protection for hours with no diesel running",
@@ -28,6 +28,7 @@ OUT_OF_SCOPE = (
     "Demand growth beyond the growth case, and new loads such as electric boats",
     "Battery ageing beyond the replacement rule, and salt air corrosion",
     "Diesel price risk beyond the sensitivity table",
+    "Diesel overhaul and engine replacement costs, which grow with engine hours",
 )
 FIRM_SPECS = (
     ("near_tie_pct", "%", "check", 1),
@@ -69,6 +70,25 @@ FIRM_SPECS = (
     ("alt_reserve_pv_kwp", "kWp", "computed", 0),
     ("alt_reserve_battery_kwh", "kWh", "computed", 0),
     ("alt_reserve_lcoe_usd_per_kwh", "USD/kWh", "computed", 3),
+    ("battery_peak_discharge_kw", "kW", "computed", 0),
+    ("battery_peak_charge_kw", "kW", "computed", 0),
+    ("battery_peak_use_pct", "%", "computed", 1),
+    ("dur_alt_hours", "h", "check", 1),
+    ("dur_alt_pv_kwp", "kWp", "computed", 0),
+    ("dur_alt_battery_kwh", "kWh", "computed", 0),
+    ("dur_alt_battery_kw", "kW", "computed", 0),
+    ("dur_alt_lcoe_usd_per_kwh", "USD/kWh", "computed", 3),
+    ("dur_alt_change_pct", "%", "computed", 1),
+    ("dur_alt_on_grid_edge", "", "computed", 0),
+    ("capex_break_even_rise_pct", "%", "computed", 1),
+    ("capex_break_even_pv_usd_per_kwp", "USD/kWp", "computed", 0),
+    ("capex_break_even_battery_usd_per_kwh", "USD/kWh", "computed", 0),
+    ("best_unserved_kwh_yr", "kWh/yr", "computed", 0),
+    ("best_unserved_hours", "h/yr", "computed", 0),
+    ("best_battery_cycles_yr", "cycles/yr", "computed", 0),
+    ("engine_hours_diesel_only", "unit h/yr", "computed", 0),
+    ("engine_hours_best", "unit h/yr", "computed", 0),
+    ("engine_hours_cut_pct", "%", "computed", 1),
     ("sourcing_cost_usd", "USD", "computed", 5),
     ("total_cost_usd", "USD", "computed", 5),
 )
@@ -85,6 +105,36 @@ ALT_KEYS = (
     "alt_reserve_battery_kwh",
     "alt_reserve_lcoe_usd_per_kwh",
 )
+DUR_KEYS = (
+    "dur_alt_hours",
+    "dur_alt_pv_kwp",
+    "dur_alt_battery_kwh",
+    "dur_alt_battery_kw",
+    "dur_alt_lcoe_usd_per_kwh",
+    "dur_alt_change_pct",
+    "dur_alt_on_grid_edge",
+)
+MORE_KEYS = (
+    "battery_peak_discharge_kw",
+    "battery_peak_charge_kw",
+    "battery_peak_use_pct",
+    "dur_alt_hours",
+    "dur_alt_pv_kwp",
+    "dur_alt_battery_kwh",
+    "dur_alt_battery_kw",
+    "dur_alt_lcoe_usd_per_kwh",
+    "dur_alt_change_pct",
+    "dur_alt_on_grid_edge",
+    "capex_break_even_rise_pct",
+    "capex_break_even_pv_usd_per_kwp",
+    "capex_break_even_battery_usd_per_kwh",
+    "best_unserved_kwh_yr",
+    "best_unserved_hours",
+    "best_battery_cycles_yr",
+    "engine_hours_diesel_only",
+    "engine_hours_best",
+    "engine_hours_cut_pct",
+)
 FIRM_CHECK_LABEL = {
     "near_tie_pct": "near_tie_frac",
     "reserve_units": "diesel_must_run_units",
@@ -92,6 +142,7 @@ FIRM_CHECK_LABEL = {
     "land_pv_mwdc_per_ha": "pv_mwdc_per_ha",
     "reference_pv_kwp": "reference_pv_kwp",
     "alt_diesel_unit_kw": "diesel_unit_kw_alt",
+    "dur_alt_hours": "battery_duration_h_alt",
 }
 FIRM_TITLES = {
     "near_tie_pct": "Near tie: share above the least LCOE that still counts as a tie",
@@ -133,6 +184,25 @@ FIRM_TITLES = {
     "alt_reserve_pv_kwp": "Diesel unit size check: reserve case PV size",
     "alt_reserve_battery_kwh": "Diesel unit size check: reserve case battery",
     "alt_reserve_lcoe_usd_per_kwh": "Diesel unit size check: reserve case LCOE",
+    "battery_peak_discharge_kw": "Battery power: highest discharge in any hour, main design",
+    "battery_peak_charge_kw": "Battery power: highest charge in any hour, main design",
+    "battery_peak_use_pct": "Battery power: highest hour as a share of the power rating",
+    "dur_alt_hours": "Battery duration check: other duration (battery kWh per kW)",
+    "dur_alt_pv_kwp": "Battery duration check: least cost PV size",
+    "dur_alt_battery_kwh": "Battery duration check: least cost battery",
+    "dur_alt_battery_kw": "Battery duration check: battery power rating",
+    "dur_alt_lcoe_usd_per_kwh": "Battery duration check: least cost LCOE",
+    "dur_alt_change_pct": "Battery duration check: change against the main least cost LCOE",
+    "dur_alt_on_grid_edge": "Battery duration check: least cost design on the grid edge",
+    "capex_break_even_rise_pct": "Island prices: rise in PV and battery capital prices before diesel only is cheaper",
+    "capex_break_even_pv_usd_per_kwp": "Island prices: PV capital price at that point",
+    "capex_break_even_battery_usd_per_kwh": "Island prices: battery energy capital price at that point",
+    "best_unserved_kwh_yr": "Least cost design: load not served",
+    "best_unserved_hours": "Least cost design: hours with some load not served",
+    "best_battery_cycles_yr": "Least cost design: battery discharge in full battery cycles",
+    "engine_hours_diesel_only": "Diesel engine hours: diesel only (hours times units running)",
+    "engine_hours_best": "Diesel engine hours: least cost design",
+    "engine_hours_cut_pct": "Diesel engine hours: cut by the least cost design",
     "sourcing_cost_usd": "Cost of the web search that sourced the inputs",
     "total_cost_usd": "Total model API cost behind this study",
 }
@@ -181,26 +251,28 @@ def load_checks(path: object) -> tuple[dict, dict]:
             if name == "near_tie_frac" and num > 0.2:
                 raise ValueError("value for near_tie_frac must be at most 0.2")
             values[name] = num
-    if "diesel_unit_kw_alt" in entries:
-        entry = entries["diesel_unit_kw_alt"]
+    for name in OPTIONAL_CHECK_NAMES:
+        if name not in entries:
+            continue
+        entry = entries[name]
         if not isinstance(entry, dict) or set(entry) != {"value", "unit", "label", "note"}:
-            raise ValueError("entry for diesel_unit_kw_alt must hold value, unit, label, note")
+            raise ValueError("entry for " + name + " must hold value, unit, label, note")
         unit = entry["unit"]
         if not isinstance(unit, str) or len(unit) == 0:
-            raise ValueError("unit for diesel_unit_kw_alt must be a non-empty string")
+            raise ValueError("unit for " + name + " must be a non-empty string")
         if entry["label"] not in LABELS:
-            raise ValueError("label for diesel_unit_kw_alt must be one of " + str(LABELS))
+            raise ValueError("label for " + name + " must be one of " + str(LABELS))
         if not isinstance(entry["note"], str):
-            raise ValueError("note for diesel_unit_kw_alt must be a string")
+            raise ValueError("note for " + name + " must be a string")
         val = entry["value"]
         if isinstance(val, bool) or not isinstance(val, (int, float)):
-            raise ValueError("value for diesel_unit_kw_alt must be a finite int or float")
+            raise ValueError("value for " + name + " must be a finite int or float")
         num = float(val)
         if not math.isfinite(num):
-            raise ValueError("value for diesel_unit_kw_alt must be finite")
+            raise ValueError("value for " + name + " must be finite")
         if not num > 0.0:
-            raise ValueError("value for diesel_unit_kw_alt must be above 0")
-        values["diesel_unit_kw_alt"] = num
+            raise ValueError("value for " + name + " must be above 0")
+        values[name] = num
     return values, raw
 
 
@@ -392,6 +464,185 @@ def diesel_size_case(
         "reserve_battery_kwh": reserve["battery_kwh"],
         "reserve_lcoe_usd_per_kwh": reserve["lcoe_usd_per_kwh"],
     }
+
+
+def _real_above_zero(name_str: str, value: object) -> float:
+    """Finite real number above 0. Raises ValueError naming the field."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError(name_str + " must be a real number above 0: " + repr(value))
+    out = float(value)  # type: ignore[arg-type]
+    if not math.isfinite(out) or not out > 0.0:
+        raise ValueError(name_str + " must be a real number above 0: " + repr(value))
+    return out
+
+
+def _real_at_least_zero(name_str: str, value: object) -> float:
+    """Finite real number of at least 0. Raises ValueError naming the field."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError(name_str + " must be a real number of at least 0: " + repr(value))
+    out = float(value)  # type: ignore[arg-type]
+    if not math.isfinite(out) or not out >= 0.0:
+        raise ValueError(name_str + " must be a real number of at least 0: " + repr(value))
+    return out
+
+
+def battery_power_use(hourly: pd.DataFrame, battery_kw: object) -> dict:
+    """Highest charge and discharge in kW and peak share of the rating in pct."""
+    if not isinstance(hourly, pd.DataFrame):
+        raise ValueError("hourly must be a pandas DataFrame")
+    for col in ("battery_discharge_kw", "pv_to_battery_kw", "diesel_to_battery_kw"):
+        if col not in hourly.columns:
+            raise ValueError("hourly is missing column: " + col)
+    if len(hourly) == 0:
+        raise ValueError("hourly must hold at least one row")
+    rating_kw = _real_at_least_zero("battery_kw", battery_kw)
+    dis_kw = float(hourly["battery_discharge_kw"].max())
+    chg_kw = float((hourly["pv_to_battery_kw"] + hourly["diesel_to_battery_kw"]).max())
+    if rating_kw == 0.0:
+        use_pct = None
+    else:
+        use_pct = 100.0 * max(dis_kw, chg_kw) / rating_kw
+    return {"peak_discharge_kw": dis_kw, "peak_charge_kw": chg_kw, "peak_use_pct": use_pct}
+
+
+def duration_case(
+    pv_kw_per_kwp: pd.Series,
+    load_kw: pd.Series,
+    pv_grid: Sequence[float],
+    battery_grid: Sequence[float],
+    *,
+    battery_hours: float,
+    battery_template: Battery,
+    diesel: DieselFleet,
+    costs: CostInputs,
+    co2_kg_per_l: float,
+    unserved_max_frac: float,
+    main_lcoe_usd_per_kwh: float,
+) -> dict:
+    """Least cost design for another battery duration. Sizes in kWp and kWh, money in USD per kWh."""
+    hours_f = _real_above_zero("battery_hours", battery_hours)
+    main_lcoe = _real_above_zero("main_lcoe_usd_per_kwh", main_lcoe_usd_per_kwh)
+    points = dispatch_grid(
+        pv_kw_per_kwp,
+        load_kw,
+        pv_grid,
+        battery_grid,
+        battery_hours=hours_f,
+        battery_template=battery_template,
+        diesel=diesel,
+    )
+    table = cost_table(points, costs, co2_kg_per_l)
+    try:
+        pick = least_cost(table, unserved_max_frac)
+    except ValueError:
+        return {
+            "hours": hours_f,
+            "pv_kwp": None,
+            "battery_kwh": None,
+            "battery_kw": None,
+            "lcoe_usd_per_kwh": None,
+            "change_pct": None,
+            "on_grid_edge": False,
+        }
+    lcoe = float(pick["lcoe_usd_per_kwh"])
+    return {
+        "hours": hours_f,
+        "pv_kwp": float(pick["pv_kwp"]),
+        "battery_kwh": float(pick["battery_kwh"]),
+        "battery_kw": float(pick["battery_kw"]),
+        "lcoe_usd_per_kwh": lcoe,
+        "change_pct": 100.0 * (lcoe / main_lcoe - 1.0),
+        "on_grid_edge": bool(on_grid_edge(table, pick)),
+    }
+
+
+def capex_break_even(
+    points: object,
+    costs: CostInputs,
+    co2_kg_per_l: float,
+    unserved_max_frac: float,
+) -> dict:
+    """Capital price scale in frac at which PV stops beating diesel only."""
+    if isinstance(unserved_max_frac, bool) or not isinstance(unserved_max_frac, numbers.Real):
+        raise ValueError("unserved_max_frac must be a number in [0, 1]: " + repr(unserved_max_frac))
+    limit = float(unserved_max_frac)  # type: ignore[arg-type]
+    if not math.isfinite(limit) or not 0.0 <= limit <= 1.0:
+        raise ValueError("unserved_max_frac must be a number in [0, 1]: " + repr(unserved_max_frac))
+    if not isinstance(points, (list, tuple)) or len(points) == 0:
+        raise ValueError("points must be a non-empty list of GridPoint")
+    for item in points:
+        if not isinstance(item, GridPoint):
+            raise ValueError("points must hold GridPoint: " + repr(item))
+    if not isinstance(costs, CostInputs):
+        raise ValueError("costs must be a CostInputs")
+    first_d0 = None
+    for item in points:
+        if float(item.design.pv_kwp) == 0.0 and float(item.design.battery_kwh) == 0.0:
+            first_d0 = item
+            break
+    if first_d0 is None:
+        raise ValueError("points hold no diesel only point at pv_kwp 0 and battery_kwh 0")
+    table = cost_table(points, costs, co2_kg_per_l)
+    bare = dataclasses.replace(
+        costs,
+        pv_capex_usd_per_kwp=0.0,
+        battery_capex_usd_per_kwh=0.0,
+        battery_power_capex_usd_per_kw=0.0,
+    )
+    table0 = cost_table(points, bare, co2_kg_per_l)
+    d0_row = table[(table["pv_kwp"] == 0.0) & (table["battery_kwh"] == 0.0)].iloc[0]
+    base_lcoe = float(d0_row["lcoe_usd_per_kwh"])
+    factor = None
+    for (_, row), (_, row0) in zip(table.iterrows(), table0.iterrows()):
+        if float(row["pv_kwp"]) == 0.0 and float(row["battery_kwh"]) == 0.0:
+            continue
+        if not float(row["unserved_frac"]) <= limit:
+            continue
+        free = float(row0["lcoe_usd_per_kwh"])
+        slope = float(row["lcoe_usd_per_kwh"]) - free
+        if slope > 0.0:
+            cand = (base_lcoe - free) / slope
+            if factor is None or cand > factor:
+                factor = cand
+    if factor is None or not factor > 0.0:
+        return {"factor": None, "rise_pct": None, "pv_capex_usd_per_kwp": None,
+                "battery_capex_usd_per_kwh": None}
+    scale = float(factor)
+    return {
+        "factor": scale,
+        "rise_pct": 100.0 * (scale - 1.0),
+        "pv_capex_usd_per_kwp": scale * float(costs.pv_capex_usd_per_kwp),
+        "battery_capex_usd_per_kwh": scale * float(costs.battery_capex_usd_per_kwh),
+    }
+
+
+def run_stats(result: DispatchResult, battery_kwh: object) -> dict:
+    """Unserved energy in kWh, unserved hours in h and full battery cycles."""
+    if not isinstance(result, DispatchResult):
+        raise ValueError("result must be a DispatchResult")
+    energy_kwh = _real_at_least_zero("battery_kwh", battery_kwh)
+    unserved_kwh = float(result.unserved_kwh)
+    unserved_hours = int((result.hourly["unserved_kw"] > 0.0).sum())
+    if energy_kwh == 0.0:
+        cycles = None
+    else:
+        cycles = float(result.battery_discharge_kwh) / energy_kwh
+    return {"unserved_kwh": unserved_kwh, "unserved_hours": unserved_hours, "battery_cycles": cycles}
+
+
+def engine_hours(diesel_only: DispatchResult, design: DispatchResult) -> dict:
+    """Running unit hours in unit h and the cut by the design in pct."""
+    if not isinstance(diesel_only, DispatchResult):
+        raise ValueError("diesel_only must be a DispatchResult")
+    if not isinstance(design, DispatchResult):
+        raise ValueError("design must be a DispatchResult")
+    d0_hours = float(diesel_only.hourly["diesel_units_on"].sum())
+    d1_hours = float(design.hourly["diesel_units_on"].sum())
+    if d0_hours == 0.0:
+        cut_pct = None
+    else:
+        cut_pct = 100.0 * (1.0 - d1_hours / d0_hours)
+    return {"diesel_only_unit_hours": d0_hours, "design_unit_hours": d1_hours, "cut_pct": cut_pct}
 
 
 def reference_design(
