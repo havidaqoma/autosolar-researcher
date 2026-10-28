@@ -2,7 +2,7 @@
 
 Question: Is solar plus battery worth it for Karimunjawa? The island runs on diesel.
 
-Run 59eba198a2af900c. Labels: measured (service data saved with the run), computed (this run), paper, docs, assumed.
+Run 84f23f2cd0b0f857. Labels: measured (service data saved with the run), computed (this run), paper, docs, assumed.
 
 ## Answer
 
@@ -60,6 +60,17 @@ Run 59eba198a2af900c. Labels: measured (service data saved with the run), comput
 - Published design size: LCOE: 0.336 USD/kWh (computed)
 - Published design size: renewable share: 17.6 % (computed)
 - Published design size: diesel fuel saved: 348,465 L/yr (computed)
+- Diesel unit size check: other unit rating in the sources: 2,700 kW (paper)
+- Diesel unit size check: diesel only LCOE: 0.410 USD/kWh (computed)
+- Diesel unit size check: least cost PV size: 7,500 kWp (computed)
+- Diesel unit size check: least cost battery: 19,000 kWh (computed)
+- Diesel unit size check: least cost LCOE: 0.260 USD/kWh (computed)
+- Diesel unit size check: saving against diesel only: 36.7 % (computed)
+- Diesel unit size check: least cost design on the grid edge: no (computed)
+- Diesel unit size check: that design with the reserve units always on: 0.519 USD/kWh (computed)
+- Diesel unit size check: reserve case PV size: 750 kWp (computed)
+- Diesel unit size check: reserve case battery: 0 kWh (computed)
+- Diesel unit size check: reserve case LCOE: 0.400 USD/kWh (computed)
 - Cost of the web search that sourced the inputs: 0.43175 USD (computed)
 - Total model API cost behind this study: 0.43188 USD (computed)
 
@@ -188,3 +199,4 @@ Run 59eba198a2af900c. Labels: measured (service data saved with the run), comput
 - Check input site_land_ha: PLN Indonesia Power plans about 9 hectares of land on Legon Bajak for the Karimunjawa PV plant (Tribun Jateng, interview with PLN IP engineering; the same article says permits are in process)
 - Check input pv_mwdc_per_ha: Bolinger and Bolinger, Land Requirements for Utility-Scale PV, IEEE Journal of Photovoltaics, doi:10.1109/JPHOTOV.2021.3136805, Section IV: median power density of fixed-tilt US plants; low latitude sites need less row spacing, so this may overstate the land
 - Check input reference_pv_kwp: Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only
+- Check input diesel_unit_kw_alt: Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units

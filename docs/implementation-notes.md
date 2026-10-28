@@ -199,3 +199,31 @@ recorded run, build the paper check, use the 9 ha from the press as the land lim
   nothing about it. The README therefore says the paper 2 test does not support a claim of finding errors in papers
   the checks were not written for.
 - Tests after T12d: 1,019 of 1,019 pass. Spend so far (ledgers): API USD 2.06, Muse Code USD 0.41.
+
+## Diesel unit size range (Havid approved the range plus polish)
+
+The Hiron paper prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 with the
+feeder voltages (paper). The study uses 1.8 MW units. Rather than pick one in silence, the study now reports both.
+
+- Scratch measurement first (no model call): the saved design grid of study 59eba198a2af900c rerun with 2.7 MW units
+  gave diesel only 0.410 USD/kWh, least cost 7,500 kWp plus 19,000 kWh at 0.260, and a reserve case of 750 kWp, no
+  battery, at 0.400 (computed). Bigger units burn more fuel at low load and set a higher floor when one must run.
+- T14 (Muse Code, first attempt, 270 s, USD 0.0200 computed): optional check input `diesel_unit_kw_alt` in
+  `config/study_checks.json` (2,700 kW, paper); `firmness.diesel_size_case` reruns the design search and the
+  reserve case with that unit size; 11 new rows in "How firm is the answer" and a sixth caveat next to the
+  headline. 46 new tests; 25 of 25 planted faults caught; one more fault was equivalent (dispatch_grid already
+  refuses a grid without the 0 kWp, 0 kWh design) and is not counted.
+- Sixth live study (run 84f23f2cd0b0f857, computed, 510 s, USD 0.0001 for the question parse; same saved sourcing
+  and cached weather): every main number, gate and range row equals study 59eba198a2af900c, and the 2.7 MW rows equal
+  the scratch measurement to the last digit. With 2.7 MW units the answer stays yes (0.260 against 0.410 USD/kWh,
+  -36.7%), but if one unit must run in every hour the main design would cost 0.519 and the best design, 750 kWp with
+  no battery at 0.400, is only 2.4% below diesel only. So the reserve question matters more with the larger units.
+- The gallery now shows study 84f23f2cd0b0f857. Its paper check is still run paper-20261028T035325-b646fb, made
+  against study 59eba198a2af900c; the paper check reads only the study's weather table, and the two weather tables
+  are equal (checked by script), so the result carries over.
+- Second Muse Wonder review (run review-20261028T061110-63e19f, measured, 104 s, USD 0.25): 10 points, 6 not
+  answered (demand data, a battery power set by the assumed 4 h duration, delivered island costs, the fuel price,
+  diesel overhaul and replacement, reliability and ageing outputs). The first review had 3 open, one of them the
+  diesel unit size, which T14 answers. The two lists differ on nearly the same report, so the README presents them
+  as a reader's questions, not a score.
+- Tests after T14: 1,065 of 1,065 pass. Spend so far (ledgers): API USD 2.31, Muse Code USD 0.43.

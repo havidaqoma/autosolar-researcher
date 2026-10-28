@@ -14,24 +14,26 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/59eba198a2af900c.html`. Its raw run files are under `docs/site/data/`.
+`docs/site/84f23f2cd0b0f857.html`. Its raw run files are under `docs/site/data/`.
 
-## The Karimunjawa answer (study 59eba198a2af900c, all numbers computed unless labelled)
+## The Karimunjawa answer (study 84f23f2cd0b0f857, all numbers computed unless labelled)
 
 | | |
 |---|---|
-| Answer | Yes. Solar plus battery cuts the cost of electricity from 0.354 to 0.251 USD/kWh (-29.1%) |
+| Answer | Yes. Solar plus battery cuts the cost of electricity from 0.354 to 0.251 USD/kWh (-29.1%). With the larger diesel units the source paper also prints, the cut is from 0.410 to 0.260 USD/kWh (-36.7%) |
 | Least cost design | 7,250 kWp of PV and 19,000 kWh of battery, 85.8% renewable, 3,104,445 litres of diesel saved a year |
 | Near tie | 8 designs are within 1% (assumed threshold) of the least cost, from 6,750 to 8,250 kWp |
 | Diesel price where PV starts to pay | 0.27 USD/L |
 | Reserve case | If one diesel unit must run in every hour, the least cost design shrinks to 1,500 kWp and 1,000 kWh at 0.336 USD/kWh, and the main design would cost 0.414 USD/kWh, more than diesel only |
+| Diesel unit size | Hiron 2021 prints 2 x 1.8 MW (p7, used above) and 2 x 2.7 MW (p1 and Table 1) (paper). With 2.7 MW units the least cost design is 7,500 kWp and 19,000 kWh at 0.260 USD/kWh. If one 2.7 MW unit must run in every hour, the main design would cost 0.519 USD/kWh and the best design is 750 kWp with no battery at 0.400 USD/kWh, only 2.4% below diesel only |
 | Land | The main design needs 8.3 ha of the 9 ha set aside (press), at 0.87 MWdc per ha (paper) |
 | Published design size | 1,244 kWp of PV (paper), no battery: 0.336 USD/kWh |
 | Model API cost behind the study | USD 0.43, almost all of it the web search that sourced the inputs |
 
 What this means for PLN: solar pays at every size we tried. How big to build depends on one engineering question
 the study cannot answer: can the island grid run on inverters alone for 7,302 hours a year (computed), or must a
-diesel unit always spin?
+diesel unit always spin? The first answer holds with either diesel unit size in the source paper. The second one
+depends on it: if a unit must spin and the units are the larger ones, solar barely pays.
 
 ## How it works
 
@@ -63,8 +65,11 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
   version) the tool flagged none of the 3 corrected numbers and raised no flag a person could confirm (measured,
   3 runs). So the claim that the checks find errors in papers they were not written for is NOT supported yet. The
   corrected items were in a figure and a paragraph about existing power plants, which no frozen check looks at.
-- Second model review: Muse Wonder raised 10 points on the example study; 3 are not answered by the report
-  (battery sizing and life, reliability beyond an hourly balance, a year-by-year cash flow). They are shown as open.
+- Second model review: Muse Wonder raised 10 points on the example study; 6 are not answered by the report
+  (the demand data, a battery power set by an assumed 4 h duration, delivered island costs, the fuel price, diesel
+  overhaul and replacement, reliability and ageing outputs). They are shown as open. An earlier review of the same
+  answer, before the diesel unit size check, left 3 points open, one of them the unit size. Two reviews of nearly
+  the same report differ, so read the list as a reader's questions, not as a score.
 
 ## What it does not cover
 
@@ -77,7 +82,7 @@ report says so.
 
 ```
 uv sync
-uv run pytest                     # 1,019 tests, no network
+uv run pytest                     # 1,065 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -90,11 +95,11 @@ other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.06, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs and one review.
-- `ledger/build_usage.jsonl`: 29 Muse Code runs that wrote the product, USD 0.41 and 1.7 hours in total.
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.31, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs and two reviews.
+- `ledger/build_usage.jsonl`: 30 Muse Code runs that wrote the product, USD 0.43 and 1.8 hours in total.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
-  about USD 0.013 and a review about USD 0.29.
+  about USD 0.013 and a review USD 0.25 to 0.29.
 
 ## Chart reader: how far it can be trusted
 

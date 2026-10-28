@@ -1,6 +1,6 @@
 {
   "schema": "autosolar.report/1",
-  "run_hash": "59eba198a2af900c",
+  "run_hash": "84f23f2cd0b0f857",
   "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
   "request": {
     "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
@@ -1100,7 +1100,8 @@
     "Sourced input diesel_min_load_frac: Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency, https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955, doi:10.3390/en14020457",
     "Check input site_land_ha: PLN Indonesia Power plans about 9 hectares of land on Legon Bajak for the Karimunjawa PV plant (Tribun Jateng, interview with PLN IP engineering; the same article says permits are in process)",
     "Check input pv_mwdc_per_ha: Bolinger and Bolinger, Land Requirements for Utility-Scale PV, IEEE Journal of Photovoltaics, doi:10.1109/JPHOTOV.2021.3136805, Section IV: median power density of fixed-tilt US plants; low latitude sites need less row spacing, so this may overstate the land",
-    "Check input reference_pv_kwp: Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only"
+    "Check input reference_pv_kwp: Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only",
+    "Check input diesel_unit_kw_alt: Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
   ],
   "sourcing": {
     "meta": {
@@ -1746,6 +1747,94 @@
         "text": "348,465"
       },
       {
+        "key": "alt_diesel_unit_kw",
+        "title": "Diesel unit size check: other unit rating in the sources",
+        "value": 2700.0,
+        "unit": "kW",
+        "label": "paper",
+        "text": "2,700"
+      },
+      {
+        "key": "alt_diesel_only_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: diesel only LCOE",
+        "value": 0.40991503347447933,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.410"
+      },
+      {
+        "key": "alt_pv_kwp",
+        "title": "Diesel unit size check: least cost PV size",
+        "value": 7500.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "7,500"
+      },
+      {
+        "key": "alt_battery_kwh",
+        "title": "Diesel unit size check: least cost battery",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "alt_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: least cost LCOE",
+        "value": 0.2595164976556968,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.260"
+      },
+      {
+        "key": "alt_saving_pct",
+        "title": "Diesel unit size check: saving against diesel only",
+        "value": 36.690173215651555,
+        "unit": "%",
+        "label": "computed",
+        "text": "36.7"
+      },
+      {
+        "key": "alt_on_grid_edge",
+        "title": "Diesel unit size check: least cost design on the grid edge",
+        "value": false,
+        "unit": "",
+        "label": "computed",
+        "text": "no"
+      },
+      {
+        "key": "alt_reserve_main_design_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: that design with the reserve units always on",
+        "value": 0.5191010564504912,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.519"
+      },
+      {
+        "key": "alt_reserve_pv_kwp",
+        "title": "Diesel unit size check: reserve case PV size",
+        "value": 750.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "750"
+      },
+      {
+        "key": "alt_reserve_battery_kwh",
+        "title": "Diesel unit size check: reserve case battery",
+        "value": 0.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "0"
+      },
+      {
+        "key": "alt_reserve_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: reserve case LCOE",
+        "value": 0.40003649798782387,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.400"
+      },
+      {
         "key": "sourcing_cost_usd",
         "title": "Cost of the web search that sourced the inputs",
         "value": 0.431749448,
@@ -1804,6 +1893,12 @@
           "unit": "frac",
           "label": "assumed",
           "note": "designs whose LCOE is within this share of the least LCOE count as a near tie"
+        },
+        "diesel_unit_kw_alt": {
+          "value": 2700.0,
+          "unit": "kW",
+          "label": "paper",
+          "note": "Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
         }
       }
     }

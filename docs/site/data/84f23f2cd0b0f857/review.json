@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261028T061110-63e19f",
+  "study": "84f23f2cd0b0f857",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 6307,
+    "cached_tokens": 0,
+    "output_tokens": 11108,
+    "reasoning_tokens": 10101,
+    "search_queries": 0
+  },
+  "cost_usd": 0.247388,
+  "wall_s": 104.0,
+  "report_sha256": "69384a465d3b186e81eef747705a2129dccf6c04054fcdc68bd40b5f1b8fe037",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "Headline '0.251 USD/kWh' and '85.8 %' renewable share assume diesel is off for '7,302 h/yr'; with '1 units' kept running, the same design costs '0.414 USD/kWh' and the optimum falls to '1,500 kWp' and '18.2 %', so the case depends on diesel-off operation that still needs grid-forming, protection and reserve proof.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Demand basis is not reconciled: '9,568,110 kWh/yr' with peak '1,422 kW' implies an unusually high 76.8% load factor, while the source paper is flagged for load totals '2.648e+07 vs 2.621e+04 kWh' and hourly-balance failures; metered PLN load-shape validation is needed before sizing a '19,000 kWh' battery.",
+      "addressed_in": null
+    },
+    {
+      "point": "Battery power is an artefact of an assumed duration: '19,000 kWh' is paired with '4,750 kW' against peak demand of only '1,422 kW' because 'battery_duration_h' is fixed at '4.0'; energy, charge power and discharge power are not independently optimised or sensitivity-tested.",
+      "addressed_in": null
+    },
+    {
+      "point": "Remote-island delivered cost is not bounded by the inputs: PV uses '1119.0 USD/kWp' from 2022, battery capex is an assumed '300.0 USD/kWh', discount rate is an assumed '0.08', and upfront cost is '14,287,750 USD', while shipping, local labour, construction access and island EPC premiums are excluded and may exceed the tested '+/-20 %' swings.",
+      "addressed_in": null
+    },
+    {
+      "point": "Fuel price '0.848485 USD/L' is derived from '14000 IDR per liter' and an assumed '16500 IDR per USD' in a generic document, not a delivered Karimunjawa diesel price; subsidy, inter-island freight and price risk beyond the sensitivity table could move the claimed break-even of '0.27 USD/L'.",
+      "addressed_in": null
+    },
+    {
+      "point": "Land margin is thin and generic: the design needs '8.3 ha' of '9.0 ha' at '0.87 MWdc/ha', the largest fit is '7,830 kWp' below the near-tie high end of '8,250 kWp', and the density check does not prove space for access, setbacks, battery, drainage, shading or permitted layout.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Weather robustness is still coarse: GHI spans '1,731' to '2,049 kWh/m2/yr', a spread of '18.4 %', with LCOE from '0.215' to '0.251 USD/kWh' across mixed single years and a TMY; no P90 weather year, degradation-adjusted yield or climate trend case is given.",
+      "addressed_in": "Range of the answer"
+    },
+    {
+      "point": "Diesel capital is treated as sunk, yet diesel-only '0.354 USD/kWh' is essentially fuel, about '0.324 USD/kWh' from '3,653,468 L/yr', plus assumed O&M '0.03 USD/kWh'; over a '20 yr' project there is no diesel overhaul, replacement or fixed capacity-retention cost for a fleet still needed '1,458 h/yr' in the solar case.",
+      "addressed_in": null
+    },
+    {
+      "point": "Reliability and ageing outputs are missing: the model allows 'unserved_max_frac' of '0.001' but reports no actual unserved kWh or hours, and with 'battery_life_yr' of '12' versus 'project_life_yr' of '20' it gives no PV degradation rate, battery capacity-fade or augmentation schedule behind the '19,000 kWh' rating and '23,591,478 USD' NPC.",
+      "addressed_in": null
+    },
+    {
+      "point": "The exact optimum is over-precise: '7,250 kWp', '19,000 kWh', '0.251 USD/kWh' and '23,591,478 USD' are quoted despite '8 designs' lying within '1.0 %' of least LCOE, spanning '6,750' to '8,250 kWp', on search steps of '250.0 kWp' and '1000.0 kWh'; procurement should treat this as a range, not a point design.",
+      "addressed_in": "How firm is the answer"
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"Headline '0.251 USD/kWh' and '85.8 %' renewable share assume diesel is off for '7,302 h/yr'; with '1 units' kept running, the same design costs '0.414 USD/kWh' and the optimum falls to '1,500 kWp' and '18.2 %', so the case depends on diesel-off operation that still needs grid-forming, protection and reserve proof.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Demand basis is not reconciled: '9,568,110 kWh/yr' with peak '1,422 kW' implies an unusually high 76.8% load factor, while the source paper is flagged for load totals '2.648e+07 vs 2.621e+04 kWh' and hourly-balance failures; metered PLN load-shape validation is needed before sizing a '19,000 kWh' battery.\", \"addressed_in\": null}, {\"point\": \"Battery power is an artefact of an assumed duration: '19,000 kWh' is paired with '4,750 kW' against peak demand of only '1,422 kW' because 'battery_duration_h' is fixed at '4.0'; energy, charge power and discharge power are not independently optimised or sensitivity-tested.\", \"addressed_in\": null}, {\"point\": \"Remote-island delivered cost is not bounded by the inputs: PV uses '1119.0 USD/kWp' from 2022, battery capex is an assumed '300.0 USD/kWh', discount rate is an assumed '0.08', and upfront cost is '14,287,750 USD', while shipping, local labour, construction access and island EPC premiums are excluded and may exceed the tested '+/-20 %' swings.\", \"addressed_in\": null}, {\"point\": \"Fuel price '0.848485 USD/L' is derived from '14000 IDR per liter' and an assumed '16500 IDR per USD' in a generic document, not a delivered Karimunjawa diesel price; subsidy, inter-island freight and price risk beyond the sensitivity table could move the claimed break-even of '0.27 USD/L'.\", \"addressed_in\": null}, {\"point\": \"Land margin is thin and generic: the design needs '8.3 ha' of '9.0 ha' at '0.87 MWdc/ha', the largest fit is '7,830 kWp' below the near-tie high end of '8,250 kWp', and the density check does not prove space for access, setbacks, battery, drainage, shading or permitted layout.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Weather robustness is still coarse: GHI spans '1,731' to '2,049 kWh/m2/yr', a spread of '18.4 %', with LCOE from '0.215' to '0.251 USD/kWh' across mixed single years and a TMY; no P90 weather year, degradation-adjusted yield or climate trend case is given.\", \"addressed_in\": \"Range of the answer\"}, {\"point\": \"Diesel capital is treated as sunk, yet diesel-only '0.354 USD/kWh' is essentially fuel, about '0.324 USD/kWh' from '3,653,468 L/yr', plus assumed O&M '0.03 USD/kWh'; over a '20 yr' project there is no diesel overhaul, replacement or fixed capacity-retention cost for a fleet still needed '1,458 h/yr' in the solar case.\", \"addressed_in\": null}, {\"point\": \"Reliability and ageing outputs are missing: the model allows 'unserved_max_frac' of '0.001' but reports no actual unserved kWh or hours, and with 'battery_life_yr' of '12' versus 'project_life_yr' of '20' it gives no PV degradation rate, battery capacity-fade or augmentation schedule behind the '19,000 kWh' rating and '23,591,478 USD' NPC.\", \"addressed_in\": null}, {\"point\": \"The exact optimum is over-precise: '7,250 kWp', '19,000 kWh', '0.251 USD/kWh' and '23,591,478 USD' are quoted despite '8 designs' lying within '1.0 %' of least LCOE, spanning '6,750' to '8,250 kWp', on search steps of '250.0 kWp' and '1000.0 kWh'; procurement should treat this as a range, not a point design.\", \"addressed_in\": \"How firm is the answer\"}]}"
+}
