@@ -11,7 +11,7 @@ import test_firmness as tf
 import test_study as ts
 from autosolar.dispatch import Battery, DieselFleet
 from autosolar.econ import CostInputs
-from autosolar.firmness import (ALT_KEYS, CHECK_NAMES, FIRM_CHECK_LABEL, FIRM_SPECS, FIRM_TITLES,
+from autosolar.firmness import (ALT_KEYS, CHECK_NAMES, DUR_KEYS, FIRM_CHECK_LABEL, FIRM_SPECS, FIRM_TITLES,
                                 OPTIONAL_CHECK_NAMES, diesel_size_case, load_checks, reserve_case)
 from autosolar.site import caveats
 from autosolar.study import firm_items, fmt_number, load_inputs, run_study
@@ -78,12 +78,12 @@ def direct_reserve(fleet, pick, units=1):
 # ---------- constants ----------
 
 def test_constants():
-    assert OPTIONAL_CHECK_NAMES == ("diesel_unit_kw_alt",)
+    assert OPTIONAL_CHECK_NAMES == ("diesel_unit_kw_alt", "battery_duration_h_alt")
     assert "diesel_unit_kw_alt" not in CHECK_NAMES
     assert ALT_KEYS == tuple(r[0] for r in ROWS)
     i = KEYS.index("reference_fuel_saved_l_yr")
     assert [tuple(r) for r in FIRM_SPECS[i + 1:i + 12]] == ROWS
-    assert KEYS[i + 12] == "sourcing_cost_usd" and KEYS[-1] == "total_cost_usd"
+    assert KEYS[i + 12] == "battery_peak_discharge_kw" and KEYS[-2:] == ["sourcing_cost_usd", "total_cost_usd"]
     assert FIRM_CHECK_LABEL["alt_diesel_unit_kw"] == "diesel_unit_kw_alt"
     for key, title in TITLES.items():
         assert FIRM_TITLES[key] == title
@@ -114,7 +114,7 @@ def _write(tmp_path, fn, name="c.json"):
 
 def test_load_checks_without_alt(tmp_path):
     values, raw = load_checks(_write(tmp_path, lambda r: r["values"].pop("diesel_unit_kw_alt")))
-    assert set(values) == set(CHECK_NAMES) and "diesel_unit_kw_alt" not in raw["values"]
+    assert set(values) == set(CHECK_NAMES) | {"battery_duration_h_alt"} and "diesel_unit_kw_alt" not in raw["values"]
 
 
 def test_load_checks_alt_int_becomes_float(tmp_path):
@@ -261,6 +261,7 @@ def runs(tmp_path_factory):
     inputs = ts.small_inputs(tmp)
     raw = json.loads(CHECKS.read_text(encoding="utf-8"))
     raw["values"].pop("diesel_unit_kw_alt")
+    raw["values"].pop("battery_duration_h_alt")
     no_alt = tmp / "checks_no_alt.json"
     no_alt.write_text(json.dumps(raw), encoding="utf-8")
     with_alt = run_study(ts.QUESTION, client=ts.FakeClient(), http_get=ts.FakeGet(), weather_fn=ts.WeatherFn(),
@@ -332,12 +333,13 @@ def test_main_answer_unchanged(runs):
 def test_without_alt_is_the_old_shape(runs):
     out = runs["noalt"]
     keys = [it["key"] for it in out.report["firmness"]["items"]]
-    assert keys == [k for k in KEYS if k not in ALT_KEYS] and len(keys) == 30
+    assert keys == [k for k in KEYS if k not in ALT_KEYS and k not in DUR_KEYS] and len(keys) == 42
     md = out.markdown
     block = md[md.index("## How firm is the answer\n"):md.index("## Weather sources\n")]
-    assert len([x for x in block.split("\n")[1:] if x]) == 30
+    assert len([x for x in block.split("\n")[1:] if x]) == 42
     assert "Diesel unit size" not in md
-    assert len(caveats(out.report)) == 5
+    assert "Battery duration check" not in md
+    assert len(caveats(out.report)) == 7
 
 
 def test_with_alt_markdown_and_sources(runs):
@@ -349,7 +351,8 @@ def test_with_alt_markdown_and_sources(runs):
     assert lines[i + 3].startswith("- Published design size: diesel fuel saved")
     assert lines[i + 4].startswith("- Diesel unit size check: other unit rating")
     assert lines[i + 14].startswith("- Diesel unit size check: reserve case LCOE")
-    assert lines[i + 15].startswith("- Cost of the web search")
+    assert lines[i + 15].startswith("- Battery power: highest discharge")
+    assert lines[i + 34].startswith("- Cost of the web search")
     note = json.loads(CHECKS.read_text(encoding="utf-8"))["values"]["diesel_unit_kw_alt"]["note"]
     assert runs["alt"].report["sources"] == runs["noalt"].report["sources"] + [
         "Check input diesel_unit_kw_alt: " + note]
@@ -382,7 +385,7 @@ def test_caveats_with_alt(runs):
     r = runs["alt"].report
     it = _items(runs["alt"])
     c = caveats(r)
-    assert len(c) == 6
+    assert len(c) == 8
     assert c[2] == (_head(it) + _mid(it) + " and the least cost design is " + it["alt_reserve_pv_kwp"]["text"]
                     + " kWp with " + it["alt_reserve_battery_kwh"]["text"] + " kWh at "
                     + it["alt_reserve_lcoe_usd_per_kwh"]["text"] + " USD/kWh.")
@@ -403,12 +406,12 @@ def test_caveats_alt_with_no_feasible_design(runs):
                                          "alt_reserve_main_design_lcoe_usd_per_kwh", "alt_reserve_pv_kwp",
                                          "alt_reserve_battery_kwh", "alt_reserve_lcoe_usd_per_kwh"))
     c = caveats(r)
-    assert len(c) == 6
+    assert len(c) == 8
     assert c[2] == _head(it) + " and no design in the grid meets the unserved limit."
 
 
 def test_caveats_alt_with_no_feasible_reserve(runs):
     r, it = _blank(runs["alt"].report, ("alt_reserve_pv_kwp", "alt_reserve_battery_kwh", "alt_reserve_lcoe_usd_per_kwh"))
     c = caveats(r)
-    assert len(c) == 6
+    assert len(c) == 8
     assert c[2] == _head(it) + _mid(it) + " and no design in the grid meets the unserved limit."

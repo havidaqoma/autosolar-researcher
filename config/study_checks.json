@@ -36,6 +36,12 @@
       "unit": "kW",
       "label": "paper",
       "note": "Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
+    },
+    "battery_duration_h_alt": {
+      "value": 8.0,
+      "unit": "h",
+      "label": "assumed",
+      "note": "check case: battery energy in kWh is 8 times its power rating in kW instead of the main 4, so the power rating is halved; this check reruns the design search with that battery"
     }
   }
 }
