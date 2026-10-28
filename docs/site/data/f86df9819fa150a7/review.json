@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261028T110232-c01b38",
+  "study": "f86df9819fa150a7",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 6707,
+    "cached_tokens": 0,
+    "output_tokens": 15380,
+    "reasoning_tokens": 14292,
+    "search_queries": 0
+  },
+  "cost_usd": 0.334428,
+  "wall_s": 107.5,
+  "report_sha256": "fef89662564d5c259892ead7a4b78a19ad2b9b629643a2c1a8c81da27db5ea8b",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "Diesel-off operation is not technically established: the main design holds the grid with no diesel for 7,302 h/yr at 0.251 USD/kWh, but with one diesel always on its LCOE becomes 0.414 USD/kWh and the optimum falls to 1,500 kWp/1,000 kWh; frequency/voltage control, grid-forming inverters and protection are excluded, so a reserve requirement could erase the claimed -29.1% saving.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "The demand basis is unresolved: annual demand of 9,568,110 kWh/yr and peak of 1,422 kW are derived from Hiron 2021, yet the study flags 7 of 24 hourly rows failing energy balance and load totals of 2.648e+07 vs 2.621e+04 kWh; no metered PLN load series or reconciled hourly profile is provided before sizing a 19,000 kWh battery.",
+      "addressed_in": "The published study we used: Hiron 2021 (Energies 14, 8311)"
+    },
+    {
+      "point": "Up-front capital of 14,287,750 USD is exactly 7,250 x 1,119 plus 19,000 x 300 plus 4,750 x 100 USD, with no identifiable allowance for island shipping, local labour, land, grid-integration/protection upgrades, development, taxes or contingency; the 1,119 USD/kWp value is also a 2022 paper value used in a stated 2025 currency-year model without shown escalation.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Battery economics rest on assumed inputs: 300 USD/kWh, 100 USD/kW and a 12 yr life remain assumed after a 192 USD/kWh source was rejected, while the duty is 249 full cycles/yr at 0.90 round-trip efficiency and there is no capacity-fade, throughput-warranty or salt-air degradation model beyond a fixed replacement rule within the 20 yr project.",
+      "addressed_in": "Sourced inputs"
+    },
+    {
+      "point": "The diesel baseline is largely assumed: fuel at 0.848485 USD/L comes from 14,000 IDR/L in a generic document plus an assumed 16,500 IDR/USD exchange rate rather than a Karimunjawa delivered price; the fuel-curve intercept 0.08 L/h/kW-rated, slope 0.25 L/kWh and diesel O&M 0.03 USD/kWh are assumed, and 217 diesel starts/yr carry no stated start, minimum-run or overhaul cost.",
+      "addressed_in": "Inputs"
+    },
+    {
+      "point": "The land-fit claim is too tight to bank: the design needs 8.3 ha from about 9.0 ha set aside, with the largest fitting PV stated as 7,830 kWp, using a US median density of 0.87 MWdc/ha, while ownership, permits, environmental review, layout, shading, soil and construction access remain outside the study.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "The investment case is incomplete: discount rate is an assumed 8% real while NPC of 23,591,478 USD and LCOE of 0.251 USD/kWh are presented, but financing terms, tariffs, subsidies, counterparty and who pays the 14,287,750 USD up-front cost are excluded; discount sensitivity is only +/-20%.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "There is no bankable solar-yield or reliability case: satellite GHI spans 1,731 to 2,049 kWh/m2/yr, an 18.4% spread, and weather-case LCOE spans 0.215 to 0.251 USD/kWh, but there is no on-site measurement, P50/P90 yield, multi-year worst-period test, PV degradation or soiling allowance behind the reported 0 kWh/yr unserved energy.",
+      "addressed_in": null
+    },
+    {
+      "point": "Diesel fleet rating is contradictory and material: the study uses 2 x 1,800 kW although Hiron also prints 2 x 2,700 kW; with 2,700 kW units diesel-only LCOE becomes 0.410 USD/kWh, least-cost LCOE 0.260 USD/kWh and the reserve-case optimum falls to 750 kWp/0 kWh, so actual nameplate rating, unit condition and maintenance capability at the 1,422 kW peak need field verification.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "The expansion path is undefined: the growth case optimum is 8,500 kWp/22,000 kWh at 0.249 USD/kWh, above the stated 7,830 kWp land cap, but the growth rate, target year, tourist-season and growth load shapes, staging plan and treatment of new loads such as electric boats are not specified enough to reserve land or stage procurement.",
+      "addressed_in": null
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"Diesel-off operation is not technically established: the main design holds the grid with no diesel for 7,302 h/yr at 0.251 USD/kWh, but with one diesel always on its LCOE becomes 0.414 USD/kWh and the optimum falls to 1,500 kWp/1,000 kWh; frequency/voltage control, grid-forming inverters and protection are excluded, so a reserve requirement could erase the claimed -29.1% saving.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"The demand basis is unresolved: annual demand of 9,568,110 kWh/yr and peak of 1,422 kW are derived from Hiron 2021, yet the study flags 7 of 24 hourly rows failing energy balance and load totals of 2.648e+07 vs 2.621e+04 kWh; no metered PLN load series or reconciled hourly profile is provided before sizing a 19,000 kWh battery.\", \"addressed_in\": \"The published study we used: Hiron 2021 (Energies 14, 8311)\"}, {\"point\": \"Up-front capital of 14,287,750 USD is exactly 7,250 x 1,119 plus 19,000 x 300 plus 4,750 x 100 USD, with no identifiable allowance for island shipping, local labour, land, grid-integration/protection upgrades, development, taxes or contingency; the 1,119 USD/kWp value is also a 2022 paper value used in a stated 2025 currency-year model without shown escalation.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Battery economics rest on assumed inputs: 300 USD/kWh, 100 USD/kW and a 12 yr life remain assumed after a 192 USD/kWh source was rejected, while the duty is 249 full cycles/yr at 0.90 round-trip efficiency and there is no capacity-fade, throughput-warranty or salt-air degradation model beyond a fixed replacement rule within the 20 yr project.\", \"addressed_in\": \"Sourced inputs\"}, {\"point\": \"The diesel baseline is largely assumed: fuel at 0.848485 USD/L comes from 14,000 IDR/L in a generic document plus an assumed 16,500 IDR/USD exchange rate rather than a Karimunjawa delivered price; the fuel-curve intercept 0.08 L/h/kW-rated, slope 0.25 L/kWh and diesel O&M 0.03 USD/kWh are assumed, and 217 diesel starts/yr carry no stated start, minimum-run or overhaul cost.\", \"addressed_in\": \"Inputs\"}, {\"point\": \"The land-fit claim is too tight to bank: the design needs 8.3 ha from about 9.0 ha set aside, with the largest fitting PV stated as 7,830 kWp, using a US median density of 0.87 MWdc/ha, while ownership, permits, environmental review, layout, shading, soil and construction access remain outside the study.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"The investment case is incomplete: discount rate is an assumed 8% real while NPC of 23,591,478 USD and LCOE of 0.251 USD/kWh are presented, but financing terms, tariffs, subsidies, counterparty and who pays the 14,287,750 USD up-front cost are excluded; discount sensitivity is only +/-20%.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"There is no bankable solar-yield or reliability case: satellite GHI spans 1,731 to 2,049 kWh/m2/yr, an 18.4% spread, and weather-case LCOE spans 0.215 to 0.251 USD/kWh, but there is no on-site measurement, P50/P90 yield, multi-year worst-period test, PV degradation or soiling allowance behind the reported 0 kWh/yr unserved energy.\", \"addressed_in\": null}, {\"point\": \"Diesel fleet rating is contradictory and material: the study uses 2 x 1,800 kW although Hiron also prints 2 x 2,700 kW; with 2,700 kW units diesel-only LCOE becomes 0.410 USD/kWh, least-cost LCOE 0.260 USD/kWh and the reserve-case optimum falls to 750 kWp/0 kWh, so actual nameplate rating, unit condition and maintenance capability at the 1,422 kW peak need field verification.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"The expansion path is undefined: the growth case optimum is 8,500 kWp/22,000 kWh at 0.249 USD/kWh, above the stated 7,830 kWp land cap, but the growth rate, target year, tourist-season and growth load shapes, staging plan and treatment of new loads such as electric boats are not specified enough to reserve land or stage procurement.\", \"addressed_in\": null}]}"
+}

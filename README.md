@@ -14,9 +14,9 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/84f23f2cd0b0f857.html`. Its raw run files are under `docs/site/data/`.
+`docs/site/f86df9819fa150a7.html`. Its raw run files are under `docs/site/data/`.
 
-## The Karimunjawa answer (study 84f23f2cd0b0f857, all numbers computed unless labelled)
+## The Karimunjawa answer (study f86df9819fa150a7, all numbers computed unless labelled)
 
 | | |
 |---|---|
@@ -26,6 +26,9 @@ Open `docs/site/index.html` in a browser (no server, no script, no internet need
 | Diesel price where PV starts to pay | 0.27 USD/L |
 | Reserve case | If one diesel unit must run in every hour, the least cost design shrinks to 1,500 kWp and 1,000 kWh at 0.336 USD/kWh, and the main design would cost 0.414 USD/kWh, more than diesel only |
 | Diesel unit size | Hiron 2021 prints 2 x 1.8 MW (p7, used above) and 2 x 2.7 MW (p1 and Table 1) (paper). With 2.7 MW units the least cost design is 7,500 kWp and 19,000 kWh at 0.260 USD/kWh. If one 2.7 MW unit must run in every hour, the main design would cost 0.519 USD/kWh and the best design is 750 kWp with no battery at 0.400 USD/kWh, only 2.4% below diesel only |
+| Battery power | The battery's power rating (4,750 kW) comes from an assumed 4 h duration. The main design uses up to 96% of it, for charging (4,555 kW); discharge never needs more than the 1,422 kW peak load. With an 8 h battery (assumed, so half the power rating) the least cost design is 7,500 kWp and 19,000 kWh at 0.255 USD/kWh, 1.4% more |
+| Island prices | PV and battery capital prices could rise 189% together (to 3,239 USD/kWp and 868 USD/kWh) before diesel only is cheaper. Shipping and labour, which the study leaves out, would have to nearly triple them to change the answer |
+| Reliability and wear | The least cost design leaves 0 kWh of load not served in the simulated year and cycles the battery 249 times a year. Diesel engine hours fall from 8,760 to 1,458 unit hours a year (-83.4%), so the overhaul costs left out would favour solar |
 | Land | The main design needs 8.3 ha of the 9 ha set aside (press), at 0.87 MWdc per ha (paper) |
 | Published design size | 1,244 kWp of PV (paper), no battery: 0.336 USD/kWh |
 | Model API cost behind the study | USD 0.43, almost all of it the web search that sourced the inputs |
@@ -65,24 +68,27 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
   version) the tool flagged none of the 3 corrected numbers and raised no flag a person could confirm (measured,
   3 runs). So the claim that the checks find errors in papers they were not written for is NOT supported yet. The
   corrected items were in a figure and a paragraph about existing power plants, which no frozen check looks at.
-- Second model review: Muse Wonder raised 10 points on the example study; 6 are not answered by the report
-  (the demand data, a battery power set by an assumed 4 h duration, delivered island costs, the fuel price, diesel
-  overhaul and replacement, reliability and ageing outputs). They are shown as open. An earlier review of the same
-  answer, before the diesel unit size check, left 3 points open, one of them the unit size. Two reviews of nearly
-  the same report differ, so read the list as a reader's questions, not as a score.
+- Second model review: Muse Wonder raised 10 points on the example study; 2 are not answered by the report (a
+  bankable yield and reliability case behind the 0 kWh not served, and an expansion path for demand growth). They
+  are shown as open. The review before the last build left 6 open; the last build answered four of them with new
+  checks (battery power, island prices, load not served and battery cycles, diesel engine hours), scored by a rule
+  written before the review ran (`docs/specs/T15_more_checks.md`). Read honestly, only battery power dropped off the
+  list: the reviewer now points island costs and diesel overhaul to the list of what is not covered, and still asks
+  about ageing. Two reviews of nearly the same report differ, so read the list as a reader's questions, not as a
+  score.
 
 ## What it does not cover
 
 Grid stability and grid-forming inverters, land ownership and permits, site layout, shipping and construction,
-financing and tariffs, demand growth beyond the growth case, battery ageing beyond the replacement rule, and diesel
-price risk beyond the sensitivity table. The hourly load comes from the Hiron paper, which our own check flags; the
+financing and tariffs, demand growth beyond the growth case, battery ageing beyond the replacement rule, diesel
+price risk beyond the sensitivity table, and diesel overhaul and engine replacement. The hourly load comes from the Hiron paper, which our own check flags; the
 report says so.
 
 ## Run it
 
 ```
 uv sync
-uv run pytest                     # 1,065 tests, no network
+uv run pytest                     # 1,169 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -95,11 +101,12 @@ other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.31, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs and two reviews.
-- `ledger/build_usage.jsonl`: 30 Muse Code runs that wrote the product, USD 0.43 and 1.8 hours in total.
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.64, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs and three reviews.
+- `ledger/build_usage.jsonl`: 35 Muse Code runs (31 that wrote the product, 4 sandbox smoke runs), USD 0.48 and
+  2.1 hours in total.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
-  about USD 0.013 and a review USD 0.25 to 0.29.
+  about USD 0.013 and a review USD 0.25 to 0.33.
 
 ## Chart reader: how far it can be trusted
 

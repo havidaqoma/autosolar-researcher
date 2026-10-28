@@ -238,3 +238,44 @@ are still not modelled.
 - The first run of the planted faults missed one (the study passing an unserved limit of 1 to the price check),
   because on the test weather every design already meets the limit. A test that records the arguments the study
   passes was added; it catches that fault, and the reference still passes it.
+
+## Review 3 result (after the run)
+
+- Study f86df9819fa150a7 (computed, 373 s): no new model call. Facts, gates, grid, inputs, range, sensitivity and
+  weather tables and all 41 old rows of "How firm is the answer" equal study 84f23f2cd0b0f857 (checked by script),
+  including the model API cost of USD 0.43 (computed). Only the checks input (the new 8 h entry) and the 19 new rows
+  differ.
+- New rows (computed): battery peak charge 4,555 kW and peak discharge 1,422 kW against a 4,750 kW rating (95.9% use);
+  with an 8 h battery (assumed) the least cost design is 7,500 kWp and 19,000 kWh with a 2,375 kW rating at
+  0.255 USD/kWh (+1.4%, not on the grid edge); capital prices can rise 189.4% (3,239 USD/kWp and 868 USD/kWh) before
+  the least cost design matches diesel only; 0 kWh and 0 hours of load not served a year; 249 battery cycles a year;
+  diesel engine hours fall from 8,760 to 1,458 unit hours a year (-83.4%).
+- Review review-20261028T110232-c01b38 (measured: Muse Wonder, 107.5 s, USD 0.33 from the ledger, same prompt hash
+  740466dd16abd967 as review 2, no parse error, no heading replaced). One review, no rerun.
+- Every point and its `addressed_in`:
+  1. Diesel off operation and the reserve case: "Not covered by this study".
+  2. Demand basis from Hiron 2021 and its flagged rows: "The published study we used: Hiron 2021 (Energies 14, 8311)".
+  3. Up-front capital with no allowance for island shipping, local labour, land, grid upgrades, taxes or
+     contingency; the PV price not escalated to the model year: "Not covered by this study".
+  4. Battery prices and life still assumed; 249 cycles a year with no capacity fade or warranty model: "Sourced
+     inputs".
+  5. Diesel baseline mostly assumed (fuel price, fuel curve, O&M); 217 starts a year with no start, minimum run or
+     overhaul cost: "Inputs".
+  6. Land fit tight (8.3 of 9.0 ha) at a US median density: "Not covered by this study".
+  7. Investment case (assumed discount rate, financing, tariffs, who pays): "Not covered by this study".
+  8. No bankable yield or reliability case behind the 0 kWh a year not served (no site measurement, P50/P90 yield,
+     PV degradation or soiling): null.
+  9. Diesel unit size, 1.8 or 2.7 MW: "How firm is the answer".
+  10. Expansion path not defined (growth case 8,500 kWp is above the 7,830 kWp land limit): null.
+- Topics by the rule:
+  - T3 battery power: not raised (review 2: raised and open).
+  - T4 island prices: raised and marked addressed (points 3 and 6). Both point to "Not covered by this study", so
+    the reviewer reads island costs as a listed gap; point 3 does not mention the new break even row.
+  - T8 diesel overhaul: raised and marked addressed (point 5, "Inputs"). The point still says no overhaul cost is
+    stated; the report lists it as not covered.
+  - T9 load not served and wear: raised and open (points 4, 8 and 10), as expected before the run. Point 10 matched
+    only because "staging" contains "aging"; the outcome is the same without it, since point 8 is open.
+- Open count 2 (review 2: 6). New open points: 8 (a yield and reliability case) and 10 (an expansion path).
+- Plain reading: battery power (T3) dropped off the list. The fall from 6 to 2 open points comes mostly from the
+  reviewer pointing to a section or to the list of what is not covered, not from new answers; as the rule says, the
+  count is not a score. The reviewer did read the new rows (249 cycles a year, 0 kWh a year not served).

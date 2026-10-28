@@ -2,7 +2,7 @@
 
 Question: Is solar plus battery worth it for Karimunjawa? The island runs on diesel.
 
-Run 84f23f2cd0b0f857. Labels: measured (service data saved with the run), computed (this run), paper, docs, assumed.
+Run f86df9819fa150a7. Labels: measured (service data saved with the run), computed (this run), paper, docs, assumed.
 
 ## Answer
 
@@ -71,6 +71,25 @@ Run 84f23f2cd0b0f857. Labels: measured (service data saved with the run), comput
 - Diesel unit size check: reserve case PV size: 750 kWp (computed)
 - Diesel unit size check: reserve case battery: 0 kWh (computed)
 - Diesel unit size check: reserve case LCOE: 0.400 USD/kWh (computed)
+- Battery power: highest discharge in any hour, main design: 1,422 kW (computed)
+- Battery power: highest charge in any hour, main design: 4,555 kW (computed)
+- Battery power: highest hour as a share of the power rating: 95.9 % (computed)
+- Battery duration check: other duration (battery kWh per kW): 8.0 h (assumed)
+- Battery duration check: least cost PV size: 7,500 kWp (computed)
+- Battery duration check: least cost battery: 19,000 kWh (computed)
+- Battery duration check: battery power rating: 2,375 kW (computed)
+- Battery duration check: least cost LCOE: 0.255 USD/kWh (computed)
+- Battery duration check: change against the main least cost LCOE: 1.4 % (computed)
+- Battery duration check: least cost design on the grid edge: no (computed)
+- Island prices: rise in PV and battery capital prices before diesel only is cheaper: 189.4 % (computed)
+- Island prices: PV capital price at that point: 3,239 USD/kWp (computed)
+- Island prices: battery energy capital price at that point: 868 USD/kWh (computed)
+- Least cost design: load not served: 0 kWh/yr (computed)
+- Least cost design: hours with some load not served: 0 h/yr (computed)
+- Least cost design: battery discharge in full battery cycles: 249 cycles/yr (computed)
+- Diesel engine hours: diesel only (hours times units running): 8,760 unit h/yr (computed)
+- Diesel engine hours: least cost design: 1,458 unit h/yr (computed)
+- Diesel engine hours: cut by the least cost design: 83.4 % (computed)
 - Cost of the web search that sourced the inputs: 0.43175 USD (computed)
 - Total model API cost behind this study: 0.43188 USD (computed)
 
@@ -183,6 +202,7 @@ Run 84f23f2cd0b0f857. Labels: measured (service data saved with the run), comput
 - Demand growth beyond the growth case, and new loads such as electric boats
 - Battery ageing beyond the replacement rule, and salt air corrosion
 - Diesel price risk beyond the sensitivity table
+- Diesel overhaul and engine replacement costs, which grow with engine hours
 
 ## Sources
 

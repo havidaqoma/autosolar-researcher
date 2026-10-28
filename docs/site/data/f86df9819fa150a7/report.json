@@ -1,6 +1,6 @@
 {
   "schema": "autosolar.report/1",
-  "run_hash": "84f23f2cd0b0f857",
+  "run_hash": "f86df9819fa150a7",
   "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
   "request": {
     "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
@@ -1835,6 +1835,158 @@
         "text": "0.400"
       },
       {
+        "key": "battery_peak_discharge_kw",
+        "title": "Battery power: highest discharge in any hour, main design",
+        "value": 1422.0,
+        "unit": "kW",
+        "label": "computed",
+        "text": "1,422"
+      },
+      {
+        "key": "battery_peak_charge_kw",
+        "title": "Battery power: highest charge in any hour, main design",
+        "value": 4554.552405234656,
+        "unit": "kW",
+        "label": "computed",
+        "text": "4,555"
+      },
+      {
+        "key": "battery_peak_use_pct",
+        "title": "Battery power: highest hour as a share of the power rating",
+        "value": 95.88531379441382,
+        "unit": "%",
+        "label": "computed",
+        "text": "95.9"
+      },
+      {
+        "key": "dur_alt_hours",
+        "title": "Battery duration check: other duration (battery kWh per kW)",
+        "value": 8.0,
+        "unit": "h",
+        "label": "assumed",
+        "text": "8.0"
+      },
+      {
+        "key": "dur_alt_pv_kwp",
+        "title": "Battery duration check: least cost PV size",
+        "value": 7500.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "7,500"
+      },
+      {
+        "key": "dur_alt_battery_kwh",
+        "title": "Battery duration check: least cost battery",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "dur_alt_battery_kw",
+        "title": "Battery duration check: battery power rating",
+        "value": 2375.0,
+        "unit": "kW",
+        "label": "computed",
+        "text": "2,375"
+      },
+      {
+        "key": "dur_alt_lcoe_usd_per_kwh",
+        "title": "Battery duration check: least cost LCOE",
+        "value": 0.2547245734826362,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.255"
+      },
+      {
+        "key": "dur_alt_change_pct",
+        "title": "Battery duration check: change against the main least cost LCOE",
+        "value": 1.4311628690099276,
+        "unit": "%",
+        "label": "computed",
+        "text": "1.4"
+      },
+      {
+        "key": "dur_alt_on_grid_edge",
+        "title": "Battery duration check: least cost design on the grid edge",
+        "value": false,
+        "unit": "",
+        "label": "computed",
+        "text": "no"
+      },
+      {
+        "key": "capex_break_even_rise_pct",
+        "title": "Island prices: rise in PV and battery capital prices before diesel only is cheaper",
+        "value": 189.41980964283766,
+        "unit": "%",
+        "label": "computed",
+        "text": "189.4"
+      },
+      {
+        "key": "capex_break_even_pv_usd_per_kwp",
+        "title": "Island prices: PV capital price at that point",
+        "value": 3238.6076699033533,
+        "unit": "USD/kWp",
+        "label": "computed",
+        "text": "3,239"
+      },
+      {
+        "key": "capex_break_even_battery_usd_per_kwh",
+        "title": "Island prices: battery energy capital price at that point",
+        "value": 868.259428928513,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "868"
+      },
+      {
+        "key": "best_unserved_kwh_yr",
+        "title": "Least cost design: load not served",
+        "value": 0.0,
+        "unit": "kWh/yr",
+        "label": "computed",
+        "text": "0"
+      },
+      {
+        "key": "best_unserved_hours",
+        "title": "Least cost design: hours with some load not served",
+        "value": 0.0,
+        "unit": "h/yr",
+        "label": "computed",
+        "text": "0"
+      },
+      {
+        "key": "best_battery_cycles_yr",
+        "title": "Least cost design: battery discharge in full battery cycles",
+        "value": 248.71714065048403,
+        "unit": "cycles/yr",
+        "label": "computed",
+        "text": "249"
+      },
+      {
+        "key": "engine_hours_diesel_only",
+        "title": "Diesel engine hours: diesel only (hours times units running)",
+        "value": 8760.0,
+        "unit": "unit h/yr",
+        "label": "computed",
+        "text": "8,760"
+      },
+      {
+        "key": "engine_hours_best",
+        "title": "Diesel engine hours: least cost design",
+        "value": 1458.0,
+        "unit": "unit h/yr",
+        "label": "computed",
+        "text": "1,458"
+      },
+      {
+        "key": "engine_hours_cut_pct",
+        "title": "Diesel engine hours: cut by the least cost design",
+        "value": 83.35616438356163,
+        "unit": "%",
+        "label": "computed",
+        "text": "83.4"
+      },
+      {
         "key": "sourcing_cost_usd",
         "title": "Cost of the web search that sourced the inputs",
         "value": 0.431749448,
@@ -1859,7 +2011,8 @@
       "Financing terms, tariffs, subsidies and who pays",
       "Demand growth beyond the growth case, and new loads such as electric boats",
       "Battery ageing beyond the replacement rule, and salt air corrosion",
-      "Diesel price risk beyond the sensitivity table"
+      "Diesel price risk beyond the sensitivity table",
+      "Diesel overhaul and engine replacement costs, which grow with engine hours"
     ],
     "checks": {
       "schema": "autosolar.checks/1",
@@ -1899,6 +2052,12 @@
           "unit": "kW",
           "label": "paper",
           "note": "Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
+        },
+        "battery_duration_h_alt": {
+          "value": 8.0,
+          "unit": "h",
+          "label": "assumed",
+          "note": "check case: battery energy in kWh is 8 times its power rating in kW instead of the main 4, so the power rating is halved; this check reruns the design search with that battery"
         }
       }
     }
