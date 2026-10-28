@@ -249,8 +249,26 @@ def verify_extraction(extraction: dict, pages: list) -> dict:
     for stmt in extraction["statements"]:
         match = find_quote(stmt["quote"], pages)
         if not match.found:
-            dropped.append({"what": stmt["quantity"], "page": stmt["page"],
-                            "reason": "quote not found in the PDF"})
+            if stmt.get("place") != "table":
+                dropped.append({"what": stmt["quantity"], "page": stmt["page"],
+                                "reason": "quote not found in the PDF"})
+                continue
+            slots = [stmt["page"] - 2, stmt["page"] - 1, stmt["page"]]
+            near = " ".join(pages[i] for i in slots if 0 <= i < len(pages))
+            known = numbers_in(near)
+            if float(stmt["value"]) not in known:
+                dropped.append({"what": stmt["quantity"], "page": stmt["page"],
+                                "reason": "table number not found on its page"})
+                continue
+            if stmt["count"] is not None \
+                    and float(stmt["count"]) not in known:
+                dropped.append({"what": stmt["quantity"], "page": stmt["page"],
+                                "reason": "table number not found on its page"})
+                continue
+            full = dict(stmt)
+            full["found_page"] = stmt["page"]
+            full["quote_kind"] = "table number"
+            kept.append(full)
             continue
         quote_numbers = numbers_in(stmt["quote"])
         if float(stmt["value"]) not in quote_numbers:
