@@ -53,7 +53,10 @@ def main():
     ap.add_argument("--live", action="store_true", help="count the calls as public live use (live caps apply)")
     ap.add_argument("--sourcing", default=None,
                     help="sourcing.json from tools/source.py; the study reads its inputs file and checks it (G6)")
+    ap.add_argument("--checks", default=str(ROOT / "config" / "study_checks.json"),
+                    help="check inputs for the firmness section (T11b); 'none' leaves the section out")
     args = ap.parse_args()
+    checks = None if args.checks == "none" else args.checks
     if args.sourcing is not None:
         args.inputs = str(pathlib.Path(args.sourcing).with_name("inputs.json"))
     os.environ["MODEL_API_KEY"] = env_value("MODEL_API_KEY")
@@ -69,7 +72,8 @@ def main():
         client = LiveClient(client)
     t = time.perf_counter()
     out = run_study(args.question, client=client, http_get=requests.get, weather_fn=weather_fn,
-                    inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id, sourcing_path=args.sourcing)
+                    inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id, sourcing_path=args.sourcing,
+                    checks_path=checks)
     print("run", out.run_hash, "reused" if out.reused else "new", round(time.perf_counter() - t, 1), "s")
     print("folder", out.run_dir)
     for key in ("best_pv_kwp", "best_battery_kwh", "best_lcoe_usd_per_kwh", "diesel_only_lcoe_usd_per_kwh",
@@ -77,6 +81,9 @@ def main():
         f = out.report["facts"][key]
         print(" ", key, f["text"], f["unit"], "(" + f["label"] + ")")
     print("gates", [(g["gate"], g["scope"], g["passed"]) for g in out.report["gates"]])
+    if out.report.get("firmness") is not None:
+        for item in out.report["firmness"]["items"]:
+            print(" ", item["key"], item["text"], item["unit"], "(" + item["label"] + ")")
 
 
 if __name__ == "__main__":
