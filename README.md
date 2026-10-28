@@ -14,7 +14,8 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/f86df9819fa150a7.html`. Its raw run files are under `docs/site/data/`.
+`docs/site/f86df9819fa150a7.html`; the second run with curated inputs (post hoc) is
+`docs/site/579f414386fe2d58.html`. Raw run files are under `docs/site/data/`.
 
 ## The Karimunjawa answer (study f86df9819fa150a7, all numbers computed unless labelled)
 
@@ -38,6 +39,48 @@ the study cannot answer: can the island grid run on inverters alone for 7,302 ho
 diesel unit always spin? The first answer holds with either diesel unit size in the source paper. The second one
 depends on it: if a unit must spin and the units are the larger ones, solar barely pays.
 
+## Second run with curated inputs (post hoc, study 579f414386fe2d58, numbers computed unless labelled)
+
+The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
+3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
+it comes from a palm oil article that gives one rupiah price, converted at an assumed exchange rate. After
+pre-registration the build agent (Hermes) replaced these 7 values by hand, the checked diesel price included,
+with values from named documents (`config/curated_inputs.json`, applied by `tools/curate.py`). Each one is marked
+"curated post hoc" in the report and on the page. The first study stays as it is.
+
+| Input | First study | Curated | Source of the curated value |
+|---|---|---|---|
+| Battery energy capex | 300 USD/kWh (assumed) | 390 USD/kWh (docs) | Danish Energy Agency and EA Energy Analyses, Technology Data for the Indonesian Power Sector 2024, lithium-ion data sheet, 2023 column |
+| Battery power capex | 100 USD/kW (assumed) | 330 USD/kW (docs) | same data sheet |
+| Battery O&M | 5 USD/kWh/yr (assumed) | 4.48 USD/kWh/yr (docs) | same data sheet, fixed plus variable at one cycle a day |
+| Battery life | 12 yr (assumed) | 15 yr (docs) | same data sheet |
+| Battery round trip efficiency | 0.9 (assumed) | 0.9 (docs) | same data sheet, AC |
+| Discount rate, real | 0.08 (assumed) | 0.0673 (docs) | IEA: median cost of capital for solar PV in Indonesia 9.4% nominal, with the Bank Indonesia 2.5% inflation target |
+| Diesel price | 0.848 USD/L (docs, checked) | 1.26 USD/L (docs) | median of 17 Pertamina Patra Niaga industrial price lists (B40, Java), before tax and before shipping to the island |
+
+| | First study | Curated |
+|---|---|---|
+| Diesel only | 0.354 USD/kWh | 0.511 USD/kWh |
+| Least cost design | 7,250 kWp and 19,000 kWh at 0.251 USD/kWh | 8,500 kWp and 19,000 kWh at 0.277 USD/kWh |
+| Cut against diesel only | -29.1% | -45.7% |
+| Renewable share | 85.8% | 89.6% |
+| Diesel price where PV starts to pay | 0.27 USD/L | 0.24 USD/L |
+| Capital prices could rise before diesel only is cheaper | 189% | 365% |
+| One diesel unit must always run | best 0.336 USD/kWh, 5.1% below diesel only | best 0.461 USD/kWh (4,250 kWp, 11,000 kWh), 9.9% below diesel only |
+| Land at 0.87 MWdc per ha (paper) | 8.3 ha, fits the 9 ha | 9.8 ha, does not fit; the largest design that fits (7,750 kWp) costs 0.279 USD/kWh |
+
+The answer gets stronger, not weaker: the higher fuel price raises diesel only far more than the dearer battery
+raises the solar design. At the high discount rate in the sensitivity table (0.081, 1.2 times) the least cost design
+costs 0.297 USD/kWh, still far below diesel only. Three limits of the curated values: the fuel price is a depot
+price before tax and sea transport, so the island price is higher (this would favour solar further); the battery
+prices are at the catalogue's price level of 2022 and battery prices have fallen since (also favouring solar); and
+the discount rate is a solar PV rate applied to the battery as well (the IEA says battery finance costs more). The
+catalogue's own land density for Indonesia (9.1 thousand m2 per MWp, docs) would fit the main design in 7.7 ha; we
+kept the US median because changing a check value after seeing the answer would loosen the check. With the larger
+2.7 MW diesel units the least cost design sits on the edge of the design grid (9,000 kWp), so the best size there
+may be larger. Copies of the source pages, a second read of the table images by OCR and a script that recomputes
+each value are kept with the build files.
+
 ## How it works
 
 | Stage | What runs | Meta tooling |
@@ -59,7 +102,8 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
   load, G5 weather spread, G6 sourced inputs match the inputs file, G7 grid edge, G8 two LCOE formulas agree).
 - Citations: a value is "checked" only with a found quote, a resolving DOI when one is given, and 3 yes votes from
   the judge. Otherwise it keeps its assumed value and the report says why. 4 of 7 inputs are checked in the
-  example; battery capex, battery O&M and the discount rate are still assumed.
+  example; battery capex, battery O&M and the discount rate are still assumed. The post hoc run above
+  replaces 7 inputs by hand from named documents; G6 checks every curated row against its entry.
 - Paper check, in sample: on Hiron 2021 (Energies 14, 8311, the paper that gives the island's hourly load) the
   frozen checks cover 13 of the 14 items a hand audit could not reconcile. With the frozen prompt the tool found 11,
   8 and 11 of them in 3 runs (measured), with no extra flags, including a 990 kW PV plant that delivers 1,990 kW at
@@ -81,7 +125,9 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
 
 Grid stability and grid-forming inverters, land ownership and permits, site layout, shipping and construction,
 financing and tariffs, demand growth beyond the growth case, battery ageing beyond the replacement rule, diesel
-price risk beyond the sensitivity table, and diesel overhaul and engine replacement. The hourly load comes from the Hiron paper, which our own check flags; the
+price risk beyond the sensitivity table, and diesel overhaul and engine replacement. Left out against diesel:
+sea transport and taxes on fuel, and the lower heating value of B40 biodiesel. Left out against solar: PV
+degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs). The hourly load comes from the Hiron paper, which our own check flags; the
 report says so.
 
 ## Run it

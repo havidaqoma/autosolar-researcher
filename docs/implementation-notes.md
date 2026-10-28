@@ -272,3 +272,34 @@ there is time, B (judge README, video, post) from Saturday. The feature freeze s
 - AGENTS.md now holds the sandbox test command. The commit says Havid approved it, but that was read from his plan
   reply, not a direct yes; it is listed for him to confirm or revert.
 - Tests after T15: 1,169 of 1,169. Spend so far (ledgers): API USD 2.64, Muse Code USD 0.48.
+
+## Curated inputs (T16, post hoc)
+
+Havid asked to replace the weak inputs with values from reliable documents. This came after pre-registration, so
+the values are marked post hoc everywhere and the first study stays as it is.
+
+- Sources: the Danish Energy Agency and EA Energy Analyses catalogue for Indonesia (battery data sheet), the IEA
+  commentary on the cost of capital in Southeast Asia with the Bank Indonesia inflation target (discount rate), and
+  17 Pertamina Patra Niaga industrial price lists reposted by a fuel reseller (diesel). Tables in the catalogue are
+  images; they were read by eye and again by OCR (RapidOCR), and both reads agree. One price list value matches a
+  Kontan news report of the same list. A script recomputes every value from the saved copies (7 of 7 pass). The
+  copies stay in the private prep repo for copyright.
+- Outside review (DeepSeek V4.1 flash, max): proceed after fixes. Fixed: battery variable O&M added (4.48 instead
+  of 3.75 USD/kWh/yr), G6 now also checks the judge text, title and URL of each curated row, wording no longer
+  calls the build agent a judge. Not changed on review advice: the land density stays at the US median (0.87), as
+  the catalogue value (1.099) would loosen a check after the answer was known. Each point and its answer is kept
+  with the sources.
+- Test check: reference in scratch, 92 new tests, full suite 1,261 of 1,261, 42 of 42 planted faults caught. The
+  first fault run found that nothing tested the G6 re-read inside `curate_run`; a test now replaces
+  `apply_curated` with one that tampers a value and expects the re-read to fail.
+- T16 (Muse Code, first attempt, 622 s, 37 tool calls, USD 0.021 computed): Muse Code ran the acceptance tests and
+  the full suite (1,261 passed) itself in the sandbox (measured, from the event stream). The orchestrator reran
+  1,261 of 1,261; protected files unchanged; text gate passes.
+- Curated sourcing `runs/sourcing/curated-20261028T212824-b5ae1a` (from the rejudged sourcing; G6 passes: 3 of 10
+  checked, 0 kept assumed, 7 curated post hoc). Eighth live study (run 579f414386fe2d58, computed, 320 s, no new
+  model call): 11 of 11 gates pass. Least cost 8,500 kWp and 19,000 kWh at 0.277 USD/kWh against 0.511 for diesel
+  only (first study: 0.251 against 0.354). The design no longer fits the 9 ha at the US land density; the largest
+  design that fits costs 0.279 USD/kWh. With 2.7 MW diesel units the best design sits on the grid edge (9,000 kWp).
+  The battery charge peak now meets the 4,750 kW rating (100%).
+- The gallery shows both studies; the new one has no Wonder review yet.
+- Tests after T16: 1,261 of 1,261. Spend so far (ledgers): API USD 2.64, Muse Code USD 0.50.
