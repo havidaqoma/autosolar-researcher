@@ -228,3 +228,17 @@ feeder voltages (paper). The study uses 1.8 MW units. Rather than pick one in si
   diesel unit size, which T14 answers. The two lists differ on nearly the same report, so the README presents them
   as a reader's questions, not a score.
 - Tests after T14: 1,065 of 1,065 pass. Spend so far (ledgers): API USD 2.31, Muse Code USD 0.43.
+
+## Muse Code runs its own tests in the sandbox (S00)
+
+Havid ran `muse sandbox windows setup`; `muse sandbox windows check` now reports status=ready (measured). Four
+read-only smoke runs (S00 to S00d, USD 0.0139 computed in total) checked that Muse Code can run pytest itself:
+
+- S00: the shell ran, but `uv` is not on the sandbox PATH and the venv base Python sat in a user folder the
+  sandbox account cannot read. Fix: the same CPython 3.12.13 was copied to F:/uv-python and `.venv/pyvenv.cfg`
+  points there. The full suite still passes (1,065 of 1,065, measured).
+- S00b: timed out on a sandbox lock held by the first-run read refresh, which took about 14 minutes.
+- S00c and S00d: `.venv\Scripts\python.exe -m pytest ... tests/test_diesel_size.py` ran inside the sandbox with no
+  network: 46 passed, exit code 0 (measured, from the raw event stream, not the model's summary).
+- Side effect: S00c left a pytest temp folder in the repo root that only the sandbox account can open. It is
+  ignored by git; later runs use `--basetemp build_logs\pytest_sandbox`.
