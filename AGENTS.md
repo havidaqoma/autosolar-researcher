@@ -28,9 +28,14 @@ pre-feasibility study. Correctness and honest numbers matter more than features.
 
 ## Running commands
 
-The shell tool may be unavailable on this machine (Windows sandbox not set up). If a command cannot run, say so
-plainly in your final answer and never describe test results you did not see. The orchestrator runs
-`uv run pytest` after your task and sends back any failures.
+The shell runs PowerShell inside the Muse Code Windows sandbox with no network. `uv` is not on the sandbox
+PATH, so run tests with the venv Python and keep pytest temp files under `build_logs`:
+
+`.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider -o addopts="" --basetemp build_logs\pytest_sandbox <test files>`
+
+Run the acceptance tests your spec names before you finish, and fix your code until they pass. If a command
+cannot run, say so plainly in your final answer and never describe test results you did not see. The
+orchestrator runs the full suite after your task and sends back any failures.
 
 ## Final answer
 
