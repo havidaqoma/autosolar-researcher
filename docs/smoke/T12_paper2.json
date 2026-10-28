@@ -1,0 +1,460 @@
+{
+  "what": "paper check on paper 2 (Mathematics 11, 1248, original version; out of sample), frozen prompt v4, 3 runs; then all Hiron v3/v4 and paper 2 runs scored again by script after the T12d fixes (no model call)",
+  "prompt_sha256": "e8517bdf125f52f8f735528c13bafc3ae8cd465f322a7fc319315243d0fac866",
+  "schema_sha256": "17df719776e1cde5f73a7ef5b713196ee279a461e782661099df40209811f732",
+  "site": "site 30.5085,47.7804",
+  "site_ghi_kwh_m2_yr_measured": {
+    "NASA POWER": 2054.2893555555556,
+    "PVGIS-ERA5 TMY": 2065.935,
+    "GSA scaled": 2043.9296875
+  },
+  "ground_truth": "scored notice items N1, N2 (Figure 1 numbers) and N3 (cost numbers in the problem statement), fixed in prep before any run",
+  "paper2_runs": [
+    {
+      "run_id": "paper-20261028T040923-bcd39c",
+      "cost_usd": 0.0149443,
+      "wall_s": 89.5,
+      "kept": 35,
+      "as_run_flags": [
+        "P1",
+        "P11"
+      ],
+      "rescored_flags": [
+        "P11"
+      ],
+      "rescored_details": {
+        "P11": "not reproducible: missing battery_capex_usd_per_kwh"
+      }
+    },
+    {
+      "run_id": "paper-20261028T041053-38ee74",
+      "cost_usd": 0.015075300000000002,
+      "wall_s": 76.5,
+      "kept": 39,
+      "as_run_flags": [
+        "P1",
+        "P8",
+        "P11"
+      ],
+      "rescored_flags": [
+        "P11"
+      ],
+      "rescored_details": {
+        "P11": "not reproducible: missing battery_capex_usd_per_kwh"
+      }
+    },
+    {
+      "run_id": "paper-20261028T041209-a3cef0",
+      "cost_usd": 0.0147767,
+      "wall_s": 73.1,
+      "kept": 26,
+      "as_run_flags": [
+        "P11"
+      ],
+      "rescored_flags": [
+        "P11"
+      ],
+      "rescored_details": {
+        "P11": "not reproducible: missing battery_capex_usd_per_kwh"
+      }
+    }
+  ],
+  "hiron_runs_rescored": {
+    "v3": [
+      {
+        "run_id": "paper-20261028T034758-097b6d",
+        "cost_usd": 0.012903,
+        "wall_s": 94.1,
+        "kept": 75,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P7",
+          "P11",
+          "P15"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P7",
+          "P11",
+          "P15"
+        ],
+        "rescored_details": {
+          "P1": "pv_area_m2 []: differ 1.41 ha (p11 text), 11.3 m2 (p12 table), 1.41 ha (p20 conclusion); lcoe_usd_per_kwh [100% penetration]: differ 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1.24 MWp (p11 text); pv 5.321e+06 kWh/yr over 1,240 kWp = 4,291 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 992 kW; battery_kw: worst hour 19:00 1,422 kW above rating 746 kW",
+          "P6": "battery_size []: differ 3.3 Mah (p10 text), 3.3 Mah (p12 text), 4.1 MAh (p12 table), 3.3 MAh (p20 conclusion); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text), 2.7 MW (p12 table)",
+          "P7": "11.3 m2 (p12 table) ratio 0.001513 outside 1 to 3; 11.3 m2 (p17 text) ratio 0.001513 outside 1 to 3",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l",
+          "P15": "load_kwh_day vs schedule: 2.648e+07 vs 2.621e+04 kWh"
+        },
+        "as_run_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "as_run_extra": [
+          "P7"
+        ],
+        "rescored_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "rescored_extra": [
+          "P7"
+        ]
+      },
+      {
+        "run_id": "paper-20261028T034933-63138c",
+        "cost_usd": 0.0117538,
+        "wall_s": 74.2,
+        "kept": 63,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11",
+          "P15"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11",
+          "P15"
+        ],
+        "rescored_details": {
+          "P1": "peak_load_kw []: differ 1.4 MW (p10 text), 1.4 MW (p11 text), 1.422 MW (p15 text), 1.4 MW (p19 text); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); lcoe_usd_per_kwh [10% penetration]: differ 0.3091 USD/kWh (p15 text), 299.6 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1 MW (p11 text); pv 5.321e+06 kWh/yr over 1,000 kWp = 5,321 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 990 kW",
+          "P6": "pv_dc_kwp []: differ 1 MW (p11 text), 1.24 MWp (p11 text); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text)",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l",
+          "P15": "load_kwh_day vs schedule: 2.648e+07 vs 2.621e+04 kWh"
+        },
+        "as_run_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "as_run_extra": [],
+        "rescored_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "rescored_extra": []
+      },
+      {
+        "run_id": "paper-20261028T035048-6940a3",
+        "cost_usd": 0.0132278,
+        "wall_s": 101.2,
+        "kept": 76,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P7",
+          "P11",
+          "P15"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P7",
+          "P11",
+          "P15"
+        ],
+        "rescored_details": {
+          "P1": "peak_load_kw []: differ 1.4 MW (p10 text), 1.41 MW (p12 table), 1.422 MW (p15 text), 1.4 MW (p18 text); pv_area_m2 []: differ 1.41 ha (p11 text), 11.3 m2 (p12 table), 11.3 m2 (p17 text), 1.41 ha (p20 conclusion); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1.24 MWp (p11 text); pv 5.321e+06 kWh/yr over 1,240 kWp = 4,291 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 990 kW",
+          "P6": "battery_size []: differ 3.3 Mah (p10 text), 3.3 Mah (p12 text), 4.1 MAh (p12 table), 3.3 MAh (p20 conclusion); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text), 2.7 MW (p12 table)",
+          "P7": "11.3 m2 (p12 table) ratio 0.001513 outside 1 to 3; 11.3 m2 (p17 text) ratio 0.001513 outside 1 to 3",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, pv_capex_usd_per_kw, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l",
+          "P15": "load_kwh_day vs schedule: 2.648e+07 vs 2.621e+04 kWh"
+        },
+        "as_run_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "as_run_extra": [
+          "P7"
+        ],
+        "rescored_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "rescored_extra": [
+          "P7"
+        ]
+      }
+    ],
+    "v4": [
+      {
+        "run_id": "paper-20261028T035325-b646fb",
+        "cost_usd": 0.012949800000000001,
+        "wall_s": 102.3,
+        "kept": 52,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11",
+          "P15"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11",
+          "P15"
+        ],
+        "rescored_details": {
+          "P1": "energy_served_kwh_yr []: differ 9.665e+05 MWh (p16 text), 966.5 MWh (p16 table); wind_m_s [50 m]: differ 4.37 m/s (p13 text), 4.71 m/s (p14 text); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); lcoe_usd_per_kwh [10% penetration]: differ 0.3091 USD/kWh (p15 text), 299.6 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1.24 MWp (p11 text); pv 5.321e+06 kWh/yr over 1,240 kWp = 4,291 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 990 kW",
+          "P6": "battery_size []: differ 3.3 Mah (p10 text), 4.1 MAh (p12 table), 3.3 MAh (p20 conclusion); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text), 2.7 MW (p12 table)",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l",
+          "P15": "load_kwh_day vs schedule: 2.648e+07 vs 2.621e+04 kWh"
+        },
+        "as_run_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C10",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "as_run_extra": [],
+        "rescored_found": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C10",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "rescored_extra": []
+      },
+      {
+        "run_id": "paper-20261028T035508-df5396",
+        "cost_usd": 0.0123782,
+        "wall_s": 90.7,
+        "kept": 47,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P11"
+        ],
+        "rescored_details": {
+          "P1": "peak_load_kw []: differ 1.4 MW (p11 text), 1.422 MW (p15 text), 1.4 MW (p19 text); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over modules 3,889 pieces (p11 text) x 320 Wp (p11 text); pv 5.321e+06 kWh/yr over 1,244 kWp = 4,275 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 990 kW",
+          "P6": "diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text)",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, pv_capex_usd_per_kw, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l"
+        },
+        "as_run_found": [
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "as_run_extra": [],
+        "rescored_found": [
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "rescored_extra": []
+      },
+      {
+        "run_id": "paper-20261028T035639-fb0125",
+        "cost_usd": 0.004345136,
+        "wall_s": 106.4,
+        "kept": 74,
+        "as_run_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P9",
+          "P11"
+        ],
+        "rescored_flags": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6",
+          "P9",
+          "P11"
+        ],
+        "rescored_details": {
+          "P1": "peak_load_kw []: differ 1.4 MW (p10 text), 1.4 MW (p11 text), 1.41 MW (p12 table), 1.422 MW (p15 text), 1.4 MW (p19 text); wind_m_s [for 100 kW]: differ 4 m/s (p13 text), 6 m/s (p13 text); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); lcoe_usd_per_kwh [10% penetration]: differ 0.3091 USD/kWh (p15 text), 299.6 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+          "P2": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+          "P3": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1.24 MWp (p11 text); pv 5.321e+06 kWh/yr over 1,240 kWp = 4,291 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+          "P4": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+          "P5": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 1,000 kW",
+          "P6": "battery_size []: differ 3.3 Mah (p10 text), 3.3 Mah (p12 text), 4.1 MAh (p12 table), 3.3 MAh (p20 conclusion); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text), 2.7 MW (p12 table)",
+          "P9": "annual_cost_usd items sum 348.9 USD vs stated 3.027e+05 USD (p16 text)",
+          "P11": "not reproducible: missing discount_rate_frac, project_life_yr, om_cost_usd, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l"
+        },
+        "as_run_found": [
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C10",
+          "C11",
+          "C12",
+          "C15",
+          "C16"
+        ],
+        "as_run_extra": [],
+        "rescored_found": [
+          "C3",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C10",
+          "C11",
+          "C12",
+          "C15",
+          "C16"
+        ],
+        "rescored_extra": []
+      }
+    ]
+  },
+  "hand_check": {
+    "P1 (as run, 2 runs)": "false: the same number 0.1192 with the same empty unit; fixed by T12d",
+    "P8 (as run, 1 run)": "false: 5.6 kWh/m2 has no period and was read as per year; fixed by T12d",
+    "P11 (3 runs, after T12d)": "not confirmed: the paper gives a battery capital cost of 120 USD per battery unit (p20), not per kWh, so the inputs are stated in another form",
+    "seen by eye, not by any frozen check": "the paper's result states 8,683,501.427 kW of solar PV and 26,675,783.63 batteries (p22); no frozen check compares sizes with the load"
+  },
+  "result": "0 of 3 scored notice items flagged in 3 of 3 runs; 0 confirmed flags. The claim bar is not met, so the README says the paper 2 test did not support the claim that the checks find errors in papers they were not written for."
+}
