@@ -7,6 +7,8 @@ import re
 
 import pandas as pd
 
+from autosolar.curate import curated_line
+
 SITE_CSS = (
     "body{font-family:Arial,Helvetica,sans-serif;background:#eef0ea;color:#222;"
     "margin:0;padding:0 12px;line-height:1.45}"
@@ -569,11 +571,15 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
         _table(["Name", "Value", "Unit", "Label", "Note"], [list(r["cells"]) for r in report["inputs_table"]])
     )
     if sourcing is not None:
+        s_rows = sourcing["rows"]
+        count_k = sum(1 for r in s_rows if r.get("status") == "curated")
+        if count_k > 0:
+            out.append('<p class="posthoc">' + esc(curated_line(count_k, len(s_rows))) + "</p>")
         out.append(
             _table(
                 ["Input", "Status", "Value used", "Unit", "Label", "As written", "Source", "URL", "Page",
                  "Quote match", "Why kept assumed"],
-                [list(r["cells"]) for r in sourcing["rows"]],
+                [list(r["cells"]) for r in s_rows],
             )
         )
     out.append("</section>")

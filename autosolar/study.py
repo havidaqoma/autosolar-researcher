@@ -12,6 +12,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
+from autosolar.curate import curated_line
 from autosolar.demand import HIRON_2021_SOURCE, build_demand_cases
 from autosolar.dispatch import Battery, DieselFleet
 from autosolar.econ import CostInputs
@@ -430,6 +431,10 @@ def render_markdown(report: dict) -> str:
             + _clean(judge)
             + ") agreed. The others keep their assumed value; the last column says why."
         )
+        count_k = sum(1 for x in s_rows if x["status"] == "curated")
+        if count_k > 0:
+            lines.append("")
+            lines.append(curated_line(count_k, count_n))
         lines.append("")
         lines.append(
             "| Input | Status | Value used | Unit | Label | As written | Source | URL | Page | Quote match | Why kept "
@@ -1110,6 +1115,13 @@ def run_study(
         for r in s_rows:
             if r.status == "checked":
                 line = "Sourced input " + r.input + ": " + (r.title or "untitled") + ", " + r.url
+                if isinstance(r.doi, str) and r.doi != "":
+                    line = line + ", doi:" + r.doi
+                sources.append(line)
+            elif r.status == "curated":
+                line = "Curated input (post hoc) " + r.input + ": " + (r.title or "untitled") + ", " + r.url
+                if r.page is not None:
+                    line = line + ", page " + str(r.page)
                 if isinstance(r.doi, str) and r.doi != "":
                     line = line + ", doi:" + r.doi
                 sources.append(line)

@@ -19,6 +19,8 @@ TARGET_UNITS = ("USD/kWp", "USD/kW", "USD/kWh", "USD/kWp/yr", "USD/kWh/yr", "USD
 SEARCH_ESTIMATE_USD = 0.10
 GLIMMER_URL = "http://127.0.0.1:8093/v1/chat/completions"
 CHECKED_PREFIX = "S3 checked: "
+CURATED_PREFIX = "S5 curated post hoc: "
+CURATED_JUDGE = "none (picked by hand after pre-registration)"
 
 MAX_SEARCH_TRIES = 2
 NO_RETRY_PREFIXES = ("judge says not supported", "judge gave no verdict", "no source found")
@@ -571,6 +573,8 @@ def g6_check(rows: list[SourcingRow], inputs_raw: dict) -> tuple[bool, str]:
             return False, row.input + ": not in inputs"
         entry = values.get(row.input)
         if not isinstance(entry, dict):
+            if row.status == "curated":
+                return False, row.input + ": curated row does not match its input"
             if row.status == "checked":
                 return False, row.input + ": checked row does not match its input"
             return False, row.input + ": assumed row does not match its input"
@@ -589,6 +593,22 @@ def g6_check(rows: list[SourcingRow], inputs_raw: dict) -> tuple[bool, str]:
             )
             if not ok:
                 return False, row.input + ": checked row does not match its input"
+        elif row.status == "curated":
+            note = entry.get("note")
+            ok = (
+                row.reasons == []
+                and row.supports is None
+                and row.judge_name == CURATED_JUDGE
+                and row.quote_kind in ("exact", "table")
+                and row.label in ("paper", "docs")
+                and entry.get("label") == row.label
+                and entry.get("value") == row.value_used
+                and entry.get("unit") == row.unit
+                and isinstance(note, str)
+                and note.startswith(CURATED_PREFIX + str(row.title) + "; " + str(row.url))
+            )
+            if not ok:
+                return False, row.input + ": curated row does not match its input"
         elif row.status == "assumed":
             note = entry.get("note")
             ok = (
@@ -598,6 +618,7 @@ def g6_check(rows: list[SourcingRow], inputs_raw: dict) -> tuple[bool, str]:
                 and entry.get("value") == row.value_used
                 and isinstance(note, str)
                 and not note.startswith(CHECKED_PREFIX)
+                and not note.startswith(CURATED_PREFIX)
             )
             if not ok:
                 return False, row.input + ": assumed row does not match its input"
@@ -611,10 +632,17 @@ def g6_check(rows: list[SourcingRow], inputs_raw: dict) -> tuple[bool, str]:
         note = entry.get("note")
         if isinstance(note, str) and note.startswith(CHECKED_PREFIX) and name not in have:
             return False, name + ": checked note without a sourcing row"
+        if isinstance(note, str) and note.startswith(CURATED_PREFIX) and name not in have:
+            return False, name + ": curated note without a sourcing row"
     count_checked = sum(1 for row in rows if row.status == "checked")
     count_assumed = sum(1 for row in rows if row.status == "assumed")
+    count_curated = sum(1 for row in rows if row.status == "curated")
     total = len(rows)
-    return True, str(count_checked) + " of " + str(total) + " sourced inputs checked, " + str(count_assumed) + " kept assumed"
+    detail = (str(count_checked) + " of " + str(total) + " sourced inputs checked, " + str(count_assumed)
+              + " kept assumed")
+    if count_curated > 0:
+        detail = detail + ", " + str(count_curated) + " curated post hoc"
+    return True, detail
 
 
 def write_sourcing(path, inputs_raw: dict, rows: list[SourcingRow], meta: dict) -> None:
