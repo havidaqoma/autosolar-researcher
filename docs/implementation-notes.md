@@ -213,8 +213,9 @@ feeder voltages (paper). The study uses 1.8 MW units. Rather than pick one in si
   reserve case with that unit size; 11 new rows in "How firm is the answer" and a sixth caveat next to the
   headline. 46 new tests; 25 of 25 planted faults caught; one more fault was equivalent (dispatch_grid already
   refuses a grid without the 0 kWp, 0 kWh design) and is not counted.
-- Sixth live study (run 84f23f2cd0b0f857, computed, 510 s, USD 0.0001 for the question parse; same saved sourcing
-  and cached weather): every main number, gate and range row equals study 59eba198a2af900c, and the 2.7 MW rows equal
+- Sixth live study (run 84f23f2cd0b0f857, computed, 510 s, no new model call: the question parse came from the
+  request cache, and the saved sourcing and cached weather were reused): every main number, gate and range row
+  equals study 59eba198a2af900c, and the 2.7 MW rows equal
   the scratch measurement to the last digit. With 2.7 MW units the answer stays yes (0.260 against 0.410 USD/kWh,
   -36.7%), but if one unit must run in every hour the main design would cost 0.519 and the best design, 750 kWp with
   no battery at 0.400, is only 2.4% below diesel only. So the reserve question matters more with the larger units.
