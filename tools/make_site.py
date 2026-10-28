@@ -3,7 +3,7 @@
   uv run python tools/make_site.py
 
 config/gallery.json lists the runs to publish: {"studies": [{"run": "<study hash>", "paper": "<paper check run id or
-null>", "review": "<review run id or null>"}]}. Each study page is self contained (inline CSS and SVG, no script).
+null>", "review": "<review run id or null>", "note": "<optional short text for the gallery card>"}]}. Each study page is self contained (inline CSS and SVG, no script).
 The run folders stay out of git; the pages and a copy of each run's report.json, paper_check.json and review.json
 under docs/site/data/ are the committed record.
 """
@@ -52,7 +52,8 @@ def main():
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")
         cards.append({"href": name, "site": report["site"]["name"], "question": report["question"],
-                      "headline": headline(report), "run_hash": report["run_hash"]})
+                      "headline": headline(report) + (" | " + entry["note"] if entry.get("note") else ""),
+                      "run_hash": report["run_hash"]})
         print("page", name, len(page), "chars")
     (OUT / "index.html").write_text(render_index_html(cards), encoding="ascii")
     print("index", len(cards), "studies")

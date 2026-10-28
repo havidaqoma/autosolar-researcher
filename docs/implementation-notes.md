@@ -313,3 +313,36 @@ the values are marked post hoc everywhere and the first study stays as it is.
   say-so.
 - Havid was asked again after T16 with the full story, and chose to keep the edit (Wednesday 28 Oct, evening).
 - The edit was used by the T15 and T16 builds (T14 came before it).
+
+## Two judge models (T17, option C, Havid chose Muse Wonder as the third voter)
+
+- Why: all 3 support votes came from one local model (Muse Glimmer), so they could share one blind spot. Muse Spark
+  found the quotes, so it was not used as a judge. Now votes 1 and 2 are Glimmer and vote 3 is `muse-wonder-1.0`;
+  a value stays checked only with 3 yes votes. Wonder votes last, so a value Glimmer turns down costs no API money.
+- Spec and rule: `docs/specs/T17_judge_panel.md`, committed with the tests in d68ee56 before any counted run. Rule:
+  re-judge the 4 checked rows of `rejudge-20261028T013500-26a59e` once, no retry, any no or error goes back to
+  assumed, then one live study on the result and one on its curated copy, reported whichever way they move.
+- Test check: reference in scratch, 55 new tests, full suite 1,316 of 1,316, 26 of 26 planted faults caught. Dry
+  run of `tools/rejudge.py --panel` with fake judges and real fetches: a fake Wonder no sent its row back to
+  assumed; G6 passed.
+- T17 (Muse Code, first attempt, 561 s, 13 calls, USD 0.0081 computed): Muse Code ran the acceptance tests (55
+  passed) and the full suite (1,316 passed) itself in the sandbox (measured, from the event stream). The
+  orchestrator reran 1,316 of 1,316 (commit 426970b).
+- Probe (not counted): one Wonder vote on the made-up test claim parsed as a yes in 5.1 s, USD 0.0127 (measured).
+- Counted re-judge `runs/sourcing/rejudge-20261028T225230-d577a6`: Wonder said yes to all 4 rows (PV capex, PV O&M,
+  diesel price, diesel minimum load), 2.9 to 8.7 s a vote, USD 0.085 for 4 calls (measured, ledger). G6 passes: 4 of
+  7 checked, 3 kept assumed. Every raw vote is in the run's meta.
+- Live study on it: run 5ee65dcd3350bec1 (436 s), 11 of 11 gates. Curated copy
+  `runs/sourcing/curated-20261028T230814-3c30e9` and its live study 4a0c0eedd47b2672 (376 s), 11 of 11 gates. A
+  script compared every fact, grid row, gate, firmness row, range row and sensitivity row with the earlier studies
+  (f86df9819fa150a7 and 579f414386fe2d58): none differ. Only the judge text in the input notes and the sourcing meta
+  changed.
+- Not changed: new searches (`tools/source.py`) still use Glimmer for all 3 votes.
+- Muse Wonder review of the curated run (review-20261028T151531-231e0b, 70 s, USD 0.206 measured): 10 points, 3
+  open (diesel fuel curve and O&M assumed and not in the sensitivity table; the flagged Hiron load data; no forced
+  outages, loss of the largest unit, start costs or sub-hourly ramps). A script found all 48 numbers the review
+  quotes in the study and paper check files. The README now lists the reliability gap under what the study does
+  not cover; the report itself is unchanged.
+- Gallery: 4 studies, newest first, each card with a short note on its inputs and judges (`config/gallery.json`
+  `note`, read by `tools/make_site.py`).
+- Spend so far (ledgers): API USD 2.94, Muse Code USD 0.50.

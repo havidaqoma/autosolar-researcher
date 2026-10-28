@@ -14,10 +14,12 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/f86df9819fa150a7.html`; the second run with curated inputs (post hoc) is
-`docs/site/579f414386fe2d58.html`. Raw run files are under `docs/site/data/`.
+`docs/site/5ee65dcd3350bec1.html`; the run with curated inputs (post hoc) is `docs/site/4a0c0eedd47b2672.html`, with
+the latest Muse Wonder review. Both were re-judged by two models (see Checks) and give the same numbers as the
+earlier runs f86df9819fa150a7 and 579f414386fe2d58, which stay in the gallery. Raw run files are under
+`docs/site/data/`.
 
-## The Karimunjawa answer (study f86df9819fa150a7, all numbers computed unless labelled)
+## The Karimunjawa answer (study 5ee65dcd3350bec1, same numbers as f86df9819fa150a7; computed unless labelled)
 
 | | |
 |---|---|
@@ -32,14 +34,14 @@ Open `docs/site/index.html` in a browser (no server, no script, no internet need
 | Reliability and wear | The least cost design leaves 0 kWh of load not served in the simulated year and cycles the battery 249 times a year. Diesel engine hours fall from 8,760 to 1,458 unit hours a year (-83.4%), so the overhaul costs left out would favour solar |
 | Land | The main design needs 8.3 ha of the 9 ha set aside (press), at 0.87 MWdc per ha (paper) |
 | Published design size | 1,244 kWp of PV (paper), no battery: 0.336 USD/kWh |
-| Model API cost behind the study | USD 0.43, almost all of it the web search that sourced the inputs |
+| Model API cost behind the study | USD 0.43, almost all of it the web search that sourced the inputs, plus USD 0.085 for the two-model re-judge (measured, ledger) |
 
 What this means for PLN: solar pays at every size we tried. How big to build depends on one engineering question
 the study cannot answer: can the island grid run on inverters alone for 7,302 hours a year (computed), or must a
 diesel unit always spin? The first answer holds with either diesel unit size in the source paper. The second one
 depends on it: if a unit must spin and the units are the larger ones, solar barely pays.
 
-## Second run with curated inputs (post hoc, study 579f414386fe2d58, numbers computed unless labelled)
+## Second run with curated inputs (post hoc, study 4a0c0eedd47b2672, same numbers as 579f414386fe2d58)
 
 The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
 3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
@@ -87,7 +89,7 @@ each value are kept with the build files.
 |---|---|---|
 | S1 question | the question becomes a site and a study type | Muse Spark (contributor) |
 | S2 weather | CAMS, NASA POWER, PVGIS-ERA5 and Global Solar Atlas; the spread between them becomes a range | |
-| S3 inputs | web search with citations for 7 cost inputs; each quote must be found in the fetched source, the DOI must resolve, and a local judge must say the quote supports the value 3 times in a row | Muse Spark web search; Muse Glimmer (open weights, local) as judge |
+| S3 inputs | web search with citations for 7 cost inputs; each quote must be found in the fetched source, the DOI must resolve, and the judges must say the quote supports the value 3 times in a row | Muse Spark web search; Muse Glimmer (open weights, local) votes 1 and 2, Muse Wonder vote 3 |
 | S4 to S6 | pvlib PV model, hourly dispatch with diesel minimum load, LCOE two ways, a grid of 925 designs, sensitivity and range tables | |
 | S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks | Muse Spark native PDF input and structured output |
 | S8 report | Markdown, JSON and a static HTML page with charts; every number in the text must appear in the report data | |
@@ -100,10 +102,16 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
 
 - Eleven gates on every study (G1 energy balance, G2 battery, G3 PV physics per weather source, G4 diesel minimum
   load, G5 weather spread, G6 sourced inputs match the inputs file, G7 grid edge, G8 two LCOE formulas agree).
-- Citations: a value is "checked" only with a found quote, a resolving DOI when one is given, and 3 yes votes from
-  the judge. Otherwise it keeps its assumed value and the report says why. 4 of 7 inputs are checked in the
-  example; battery capex, battery O&M and the discount rate are still assumed. The post hoc run above
-  replaces 7 inputs by hand from named documents; G6 checks every curated row against its entry.
+- Citations: a value is "checked" only with a found quote, a resolving DOI when one is given, and 3 yes votes.
+  Otherwise it keeps its assumed value and the report says why. 4 of 7 inputs are checked in the example; battery
+  capex, battery O&M and the discount rate are still assumed. The post hoc run above replaces 7 inputs by hand from
+  named documents; G6 checks every curated row against its entry.
+- Two judge models: three votes from one model can share one blind spot, and Muse Spark found the quotes, so it
+  must not judge them. So the 4 checked values were judged again: Muse Glimmer (local) gives votes 1 and 2, Muse
+  Wonder gives vote 3, and any no or error sends the value back to its assumed value. The rule was committed before
+  the run (`docs/specs/T17_judge_panel.md`). Wonder said yes to all 4 (measured, 4 calls, USD 0.085), so nothing
+  changed. New searches (`tools/source.py`) still use the local judge for all 3 votes; the two-model check is
+  `tools/rejudge.py --panel`.
 - Paper check, in sample: on Hiron 2021 (Energies 14, 8311, the paper that gives the island's hourly load) the
   frozen checks cover 13 of the 14 items a hand audit could not reconcile. With the frozen prompt the tool found 11,
   8 and 11 of them in 3 runs (measured), with no extra flags, including a 990 kW PV plant that delivers 1,990 kW at
@@ -112,7 +120,12 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
   version) the tool flagged none of the 3 corrected numbers and raised no flag a person could confirm (measured,
   3 runs). So the claim that the checks find errors in papers they were not written for is NOT supported yet. The
   corrected items were in a figure and a paragraph about existing power plants, which no frozen check looks at.
-- Second model review: Muse Wonder raised 10 points on the example study; 2 are not answered by the report (a
+- Second model review, curated run: Muse Wonder raised 10 points; 3 are not answered by the report: the diesel
+  fuel curve and diesel O&M are assumed and not in the sensitivity table; the Hiron load data are used although our
+  own check flags that paper; and reliability is an hourly energy balance only (no forced outages, loss of the
+  largest unit, start costs or sub-hourly ramps). Every number the review quotes was found in the study files
+  (computed check, 48 of 48). The other 7 points name sections where the report answers them.
+- Second model review, example study (earlier): Muse Wonder raised 10 points; 2 are not answered by the report (a
   bankable yield and reliability case behind the 0 kWh not served, and an expansion path for demand growth). They
   are shown as open. The review before the last build left 6 open; the last build answered four of them with new
   checks (battery power, island prices, load not served and battery cycles, diesel engine hours), scored by a rule
@@ -125,7 +138,8 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
 
 Grid stability and grid-forming inverters, land ownership and permits, site layout, shipping and construction,
 financing and tariffs, demand growth beyond the growth case, battery ageing beyond the replacement rule, diesel
-price risk beyond the sensitivity table, and diesel overhaul and engine replacement. Left out against diesel:
+price risk beyond the sensitivity table, diesel overhaul and engine replacement, and reliability beyond the hourly
+energy balance (forced outages, loss of the largest unit, sub-hourly ramps). Left out against diesel:
 sea transport and taxes on fuel, and the lower heating value of B40 biodiesel. Left out against solar: PV
 degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs). The hourly load comes from the Hiron paper, which our own check flags; the
 report says so.
@@ -134,7 +148,7 @@ report says so.
 
 ```
 uv sync
-uv run pytest                     # 1,169 tests, no network
+uv run pytest                     # 1,316 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -147,10 +161,11 @@ other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.64, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs and three reviews.
-- `ledger/build_usage.jsonl`: 35 Muse Code runs (31 that wrote the product, 4 sandbox smoke runs), USD 0.48 and
-  2.1 hours in total.
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.94, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, four reviews and the two-model
+  re-judge.
+- `ledger/build_usage.jsonl`: 37 Muse Code runs (33 that wrote the product, 4 sandbox smoke runs), USD 0.50 and
+  2.4 hours in total.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013 and a review USD 0.25 to 0.33.
 

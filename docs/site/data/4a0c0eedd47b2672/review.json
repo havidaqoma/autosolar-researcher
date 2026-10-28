@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261028T151531-231e0b",
+  "study": "4a0c0eedd47b2672",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 8812,
+    "cached_tokens": 0,
+    "output_tokens": 8549,
+    "reasoning_tokens": 7712,
+    "search_queries": 0
+  },
+  "cost_usd": 0.206228,
+  "wall_s": 69.9,
+  "report_sha256": "20cd31b5f5083b9857d1c42675d24ab1b3d7ec041e1fc0c3322f64730a238d91",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "Headline least-cost design of 8,500 kWp PV is not buildable on the stated land: it needs 9.8 ha versus 9.0 ha set aside, exceeding the 7,830 kWp that fits; the land-constrained alternative is 7,750 kWp at 0.279 USD/kWh.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "The 0.277 USD/kWh headline assumes diesel is off for 7,680 h/yr; with a reserve diesel unit always on, the same design costs 0.533 USD/kWh and the reserve-case optimum falls to 49.3% renewable share, so the saving depends on unproven no-diesel grid operation.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "A basic plant fact is unresolved: diesel units are modelled as 1800.0 kW although sources also print 2,700 kW; the alternative changes diesel-only LCOE from 0.511 to 0.594 USD/kWh and pushes the least-cost PV size to 9,000 kWp on the search-grid edge.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Weather uncertainty materially changes the optimum: GHI ranges from 1,731 to 2,049 kWh/m2/yr (18.4% spread), with least-cost PV from 7,250 to 8,500 kWp and LCOE from 0.233 to 0.277 USD/kWh depending on source.",
+      "addressed_in": "Range of the answer"
+    },
+    {
+      "point": "Fuel price 1.26 USD/L is explicitly a pre-tax, pre-sea-transport depot floor, with source values ranging 1.03 to 1.64 USD/L; delivered island fuel cost therefore is not established for the 0.511 USD/kWh diesel baseline or the 0.24 USD/L breakeven claim.",
+      "addressed_in": "Inputs"
+    },
+    {
+      "point": "Diesel economics rest on assumed, unvalidated parameters \u2014 fuel slope 0.25 L/kWh, intercept 0.08 L/h per kW rated, and diesel O&M 0.03 USD/kWh with capital treated as sunk \u2014 and no sensitivity tests these assumptions despite diesel-only fuel of 3,653,468 L/yr driving the comparison.",
+      "addressed_in": null
+    },
+    {
+      "point": "Up-front capital of 18,489,000 USD uses generic prices such as PV capex 1119.0 USD/kWp and battery capex 390.0 USD/kWh, while island shipping, local labour and construction are excluded; remote-island delivered and installed cost is therefore unpriced.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Battery duty is severe at 263 cycles/yr over a 20-year project with a 15-year battery life, yet degradation beyond a replacement rule and salt-air corrosion are excluded from the 0.277 USD/kWh result.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Demand basis needs reconciliation: 9,568,110 kWh/yr with peak 1,422 kW implies a 76.8% load factor, while the underlying Hiron 2021 checks flag an impossible PV yield of 4,291 kWh/kWp, battery output exceeding input, and inconsistent totals; no section explains which Hiron values remain trustworthy for load and plant sizing.",
+      "addressed_in": null
+    },
+    {
+      "point": "Reported reliability is only hourly energy balance with 0 kWh/yr unserved against an allowed unserved fraction of 0.001; the study does not model forced outages, N-1 loss of the largest diesel or battery inverter, diesel start costs or minimum up/down times, or sub-hourly ramps despite 163 starts/yr in the least-cost design.",
+      "addressed_in": null
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"Headline least-cost design of 8,500 kWp PV is not buildable on the stated land: it needs 9.8 ha versus 9.0 ha set aside, exceeding the 7,830 kWp that fits; the land-constrained alternative is 7,750 kWp at 0.279 USD/kWh.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"The 0.277 USD/kWh headline assumes diesel is off for 7,680 h/yr; with a reserve diesel unit always on, the same design costs 0.533 USD/kWh and the reserve-case optimum falls to 49.3% renewable share, so the saving depends on unproven no-diesel grid operation.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"A basic plant fact is unresolved: diesel units are modelled as 1800.0 kW although sources also print 2,700 kW; the alternative changes diesel-only LCOE from 0.511 to 0.594 USD/kWh and pushes the least-cost PV size to 9,000 kWp on the search-grid edge.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Weather uncertainty materially changes the optimum: GHI ranges from 1,731 to 2,049 kWh/m2/yr (18.4% spread), with least-cost PV from 7,250 to 8,500 kWp and LCOE from 0.233 to 0.277 USD/kWh depending on source.\", \"addressed_in\": \"Range of the answer\"}, {\"point\": \"Fuel price 1.26 USD/L is explicitly a pre-tax, pre-sea-transport depot floor, with source values ranging 1.03 to 1.64 USD/L; delivered island fuel cost therefore is not established for the 0.511 USD/kWh diesel baseline or the 0.24 USD/L breakeven claim.\", \"addressed_in\": \"Inputs\"}, {\"point\": \"Diesel economics rest on assumed, unvalidated parameters \u2014 fuel slope 0.25 L/kWh, intercept 0.08 L/h per kW rated, and diesel O&M 0.03 USD/kWh with capital treated as sunk \u2014 and no sensitivity tests these assumptions despite diesel-only fuel of 3,653,468 L/yr driving the comparison.\", \"addressed_in\": null}, {\"point\": \"Up-front capital of 18,489,000 USD uses generic prices such as PV capex 1119.0 USD/kWp and battery capex 390.0 USD/kWh, while island shipping, local labour and construction are excluded; remote-island delivered and installed cost is therefore unpriced.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Battery duty is severe at 263 cycles/yr over a 20-year project with a 15-year battery life, yet degradation beyond a replacement rule and salt-air corrosion are excluded from the 0.277 USD/kWh result.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Demand basis needs reconciliation: 9,568,110 kWh/yr with peak 1,422 kW implies a 76.8% load factor, while the underlying Hiron 2021 checks flag an impossible PV yield of 4,291 kWh/kWp, battery output exceeding input, and inconsistent totals; no section explains which Hiron values remain trustworthy for load and plant sizing.\", \"addressed_in\": null}, {\"point\": \"Reported reliability is only hourly energy balance with 0 kWh/yr unserved against an allowed unserved fraction of 0.001; the study does not model forced outages, N-1 loss of the largest diesel or battery inverter, diesel start costs or minimum up/down times, or sub-hourly ramps despite 163 starts/yr in the least-cost design.\", \"addressed_in\": null}]}"
+}

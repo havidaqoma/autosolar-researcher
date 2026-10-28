@@ -1,0 +1,2409 @@
+{
+  "schema": "autosolar.report/1",
+  "run_hash": "4a0c0eedd47b2672",
+  "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
+  "request": {
+    "question": "Is solar plus battery worth it for Karimunjawa? The island runs on diesel.",
+    "site_name": "Karimunjawa",
+    "country": "Indonesia",
+    "question_type": "pv_battery_for_diesel_grid",
+    "language": "en",
+    "model": "muse-spark-1.3-contributor",
+    "cost_usd": 0.0001285
+  },
+  "site": {
+    "query": "Karimunjawa",
+    "name": "Karimunjawa",
+    "display_name": "Karimunjawa, Jepara, Jawa Tengah, Indonesia",
+    "lat_deg": -5.8796265,
+    "lon_deg": 110.4329073,
+    "osm_type": "node",
+    "osm_id": 450714446,
+    "addresstype": "village",
+    "n_candidates": 3,
+    "source": "OpenStreetMap Nominatim"
+  },
+  "weather_coords_deg": [
+    -5.88,
+    110.43
+  ],
+  "facts": {
+    "site_lat_deg": {
+      "value": -5.8796265,
+      "unit": "deg",
+      "label": "docs",
+      "text": "-5.8796"
+    },
+    "site_lon_deg": {
+      "value": 110.4329073,
+      "unit": "deg",
+      "label": "docs",
+      "text": "110.4329"
+    },
+    "weather_spread_pct": {
+      "value": 18.383492655745563,
+      "unit": "%",
+      "label": "computed",
+      "text": "18.4"
+    },
+    "demand_kwh_yr": {
+      "value": 9568110.0,
+      "unit": "kWh/yr",
+      "label": "computed",
+      "text": "9,568,110"
+    },
+    "demand_peak_kw": {
+      "value": 1422.0,
+      "unit": "kW",
+      "label": "paper",
+      "text": "1,422"
+    },
+    "best_pv_kwp": {
+      "value": 8500.0,
+      "unit": "kWp",
+      "label": "computed",
+      "text": "8,500"
+    },
+    "best_battery_kwh": {
+      "value": 19000.0,
+      "unit": "kWh",
+      "label": "computed",
+      "text": "19,000"
+    },
+    "best_battery_kw": {
+      "value": 4750.0,
+      "unit": "kW",
+      "label": "computed",
+      "text": "4,750"
+    },
+    "best_lcoe_usd_per_kwh": {
+      "value": 0.277412164556804,
+      "unit": "USD/kWh",
+      "label": "computed",
+      "text": "0.277"
+    },
+    "best_npc_usd": {
+      "value": 28719684.9652614,
+      "unit": "USD",
+      "label": "computed",
+      "text": "28,719,685"
+    },
+    "best_capex_usd": {
+      "value": 18489000.0,
+      "unit": "USD",
+      "label": "computed",
+      "text": "18,489,000"
+    },
+    "best_renewable_pct": {
+      "value": 89.60843464452604,
+      "unit": "%",
+      "label": "computed",
+      "text": "89.6"
+    },
+    "best_curtailed_pct": {
+      "value": 20.69986682724448,
+      "unit": "%",
+      "label": "computed",
+      "text": "20.7"
+    },
+    "best_fuel_l_yr": {
+      "value": 404089.10098340973,
+      "unit": "L/yr",
+      "label": "computed",
+      "text": "404,089"
+    },
+    "best_co2_t_yr": {
+      "value": 1082.958790635538,
+      "unit": "t/yr",
+      "label": "computed",
+      "text": "1,083"
+    },
+    "diesel_only_lcoe_usd_per_kwh": {
+      "value": 0.5111158159761959,
+      "unit": "USD/kWh",
+      "label": "computed",
+      "text": "0.511"
+    },
+    "diesel_only_fuel_l_yr": {
+      "value": 3653467.5,
+      "unit": "L/yr",
+      "label": "computed",
+      "text": "3,653,468"
+    },
+    "diesel_only_co2_t_yr": {
+      "value": 9791.2929,
+      "unit": "t/yr",
+      "label": "computed",
+      "text": "9,791"
+    },
+    "fuel_saved_l_yr": {
+      "value": 3249378.3990165903,
+      "unit": "L/yr",
+      "label": "computed",
+      "text": "3,249,378"
+    },
+    "co2_saved_t_yr": {
+      "value": 8708.334109364463,
+      "unit": "t/yr",
+      "label": "computed",
+      "text": "8,708"
+    },
+    "lcoe_change_pct": {
+      "value": -45.724206552488326,
+      "unit": "%",
+      "label": "computed",
+      "text": "-45.7"
+    },
+    "break_even_fuel_usd_per_l": {
+      "value": 0.24112637521607475,
+      "unit": "USD/L",
+      "label": "computed",
+      "text": "0.24"
+    },
+    "api_cost_usd": {
+      "value": 0.0001285,
+      "unit": "USD",
+      "label": "computed",
+      "text": "0.00013"
+    }
+  },
+  "weather_table": [
+    {
+      "case": "CAMS",
+      "year": 2018,
+      "ghi_kwh_m2_yr": 1730.9917742999999,
+      "yield_kwh_kwp_yr": 1353.2910373240716,
+      "performance_ratio_frac": 0.7733115084634804,
+      "g3_passed": true,
+      "cells": [
+        "CAMS",
+        "2018",
+        "1,731",
+        "1,353",
+        "0.77",
+        "yes"
+      ]
+    },
+    {
+      "case": "NASA POWER",
+      "year": 2020,
+      "ghi_kwh_m2_yr": 1825.84221,
+      "yield_kwh_kwp_yr": 1424.0630026864046,
+      "performance_ratio_frac": 0.7726481173782533,
+      "g3_passed": true,
+      "cells": [
+        "NASA POWER",
+        "2020",
+        "1,826",
+        "1,424",
+        "0.77",
+        "yes"
+      ]
+    },
+    {
+      "case": "PVGIS-ERA5 TMY",
+      "year": null,
+      "ghi_kwh_m2_yr": 2049.20852,
+      "yield_kwh_kwp_yr": 1603.4139192835241,
+      "performance_ratio_frac": 0.7765870553549006,
+      "g3_passed": true,
+      "cells": [
+        "PVGIS-ERA5 TMY",
+        "none",
+        "2,049",
+        "1,603",
+        "0.78",
+        "yes"
+      ]
+    },
+    {
+      "case": "GSA scaled",
+      "year": 2018,
+      "ghi_kwh_m2_yr": 1829.3125,
+      "yield_kwh_kwp_yr": 1428.2363539701728,
+      "performance_ratio_frac": 0.771323045456913,
+      "g3_passed": true,
+      "cells": [
+        "GSA scaled",
+        "2018",
+        "1,829",
+        "1,428",
+        "0.77",
+        "yes"
+      ]
+    }
+  ],
+  "range_table": [
+    {
+      "weather": "CAMS",
+      "demand": "paper",
+      "pv_kwp": 8500.0,
+      "battery_kwh": 19000.0,
+      "lcoe_usd_per_kwh": 0.277412164556804,
+      "base_design_lcoe_usd_per_kwh": 0.277412164556804,
+      "note": "",
+      "cells": [
+        "CAMS",
+        "paper",
+        "8,500",
+        "19,000",
+        "0.277",
+        "0.277",
+        ""
+      ]
+    },
+    {
+      "weather": "NASA POWER",
+      "demand": "paper",
+      "pv_kwp": 8250.0,
+      "battery_kwh": 19000.0,
+      "lcoe_usd_per_kwh": 0.26287383661218444,
+      "base_design_lcoe_usd_per_kwh": 0.26289450453232976,
+      "note": "",
+      "cells": [
+        "NASA POWER",
+        "paper",
+        "8,250",
+        "19,000",
+        "0.263",
+        "0.263",
+        ""
+      ]
+    },
+    {
+      "weather": "PVGIS-ERA5 TMY",
+      "demand": "paper",
+      "pv_kwp": 7250.0,
+      "battery_kwh": 19000.0,
+      "lcoe_usd_per_kwh": 0.23256488013907622,
+      "base_design_lcoe_usd_per_kwh": 0.23851639152672094,
+      "note": "",
+      "cells": [
+        "PVGIS-ERA5 TMY",
+        "paper",
+        "7,250",
+        "19,000",
+        "0.233",
+        "0.239",
+        ""
+      ]
+    },
+    {
+      "weather": "GSA scaled",
+      "demand": "paper",
+      "pv_kwp": 8250.0,
+      "battery_kwh": 19000.0,
+      "lcoe_usd_per_kwh": 0.2717763668243071,
+      "base_design_lcoe_usd_per_kwh": 0.27182827960901035,
+      "note": "",
+      "cells": [
+        "GSA scaled",
+        "paper",
+        "8,250",
+        "19,000",
+        "0.272",
+        "0.272",
+        ""
+      ]
+    },
+    {
+      "weather": "CAMS",
+      "demand": "tourist season",
+      "pv_kwp": 8500.0,
+      "battery_kwh": 20000.0,
+      "lcoe_usd_per_kwh": 0.28022250459540615,
+      "base_design_lcoe_usd_per_kwh": 0.281216041573683,
+      "note": "",
+      "cells": [
+        "CAMS",
+        "tourist season",
+        "8,500",
+        "20,000",
+        "0.280",
+        "0.281",
+        ""
+      ]
+    },
+    {
+      "weather": "CAMS",
+      "demand": "growth",
+      "pv_kwp": 9000.0,
+      "battery_kwh": 23000.0,
+      "lcoe_usd_per_kwh": 0.2760101535748504,
+      "base_design_lcoe_usd_per_kwh": 0.28907425093125105,
+      "note": "on grid edge",
+      "cells": [
+        "CAMS",
+        "growth",
+        "9,000",
+        "23,000",
+        "0.276",
+        "0.289",
+        "on grid edge"
+      ]
+    }
+  ],
+  "sensitivity_table": [
+    {
+      "input": "pv_capex_usd_per_kwp",
+      "factor": 0.8,
+      "base_design_lcoe_usd_per_kwh": 0.2600361768286604,
+      "least_cost_pv_kwp": 9000.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.25967842017038767,
+      "same_design": false,
+      "note": "on grid edge",
+      "cells": [
+        "pv_capex_usd_per_kwp",
+        "0.80",
+        "0.260",
+        "9,000",
+        "19,000",
+        "0.260",
+        "no",
+        "on grid edge"
+      ]
+    },
+    {
+      "input": "pv_capex_usd_per_kwp",
+      "factor": 1.2,
+      "base_design_lcoe_usd_per_kwh": 0.2947881522849477,
+      "least_cost_pv_kwp": 8000.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.2943077950121855,
+      "same_design": false,
+      "note": "",
+      "cells": [
+        "pv_capex_usd_per_kwp",
+        "1.20",
+        "0.295",
+        "8,000",
+        "19,000",
+        "0.294",
+        "no",
+        ""
+      ]
+    },
+    {
+      "input": "battery_capex_usd_per_kwh",
+      "factor": 0.8,
+      "base_design_lcoe_usd_per_kwh": 0.26030223813135217,
+      "least_cost_pv_kwp": 8500.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.26030223813135217,
+      "same_design": true,
+      "note": "",
+      "cells": [
+        "battery_capex_usd_per_kwh",
+        "0.80",
+        "0.260",
+        "8,500",
+        "19,000",
+        "0.260",
+        "yes",
+        ""
+      ]
+    },
+    {
+      "input": "battery_capex_usd_per_kwh",
+      "factor": 1.2,
+      "base_design_lcoe_usd_per_kwh": 0.29452209098225585,
+      "least_cost_pv_kwp": 8500.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.29452209098225585,
+      "same_design": true,
+      "note": "",
+      "cells": [
+        "battery_capex_usd_per_kwh",
+        "1.20",
+        "0.295",
+        "8,500",
+        "19,000",
+        "0.295",
+        "yes",
+        ""
+      ]
+    },
+    {
+      "input": "fuel_price_usd_per_l",
+      "factor": 0.8,
+      "base_design_lcoe_usd_per_kwh": 0.26676947196152456,
+      "least_cost_pv_kwp": 7750.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.26600279063728294,
+      "same_design": false,
+      "note": "",
+      "cells": [
+        "fuel_price_usd_per_l",
+        "0.80",
+        "0.267",
+        "7,750",
+        "19,000",
+        "0.266",
+        "no",
+        ""
+      ]
+    },
+    {
+      "input": "fuel_price_usd_per_l",
+      "factor": 1.2,
+      "base_design_lcoe_usd_per_kwh": 0.28805485715208345,
+      "least_cost_pv_kwp": 9000.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.2876387031228999,
+      "same_design": false,
+      "note": "on grid edge",
+      "cells": [
+        "fuel_price_usd_per_l",
+        "1.20",
+        "0.288",
+        "9,000",
+        "19,000",
+        "0.288",
+        "no",
+        "on grid edge"
+      ]
+    },
+    {
+      "input": "discount_rate_frac",
+      "factor": 0.8,
+      "base_design_lcoe_usd_per_kwh": 0.2585069536471063,
+      "least_cost_pv_kwp": 8500.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.2585069536471063,
+      "same_design": true,
+      "note": "",
+      "cells": [
+        "discount_rate_frac",
+        "0.80",
+        "0.259",
+        "8,500",
+        "19,000",
+        "0.259",
+        "yes",
+        ""
+      ]
+    },
+    {
+      "input": "discount_rate_frac",
+      "factor": 1.2,
+      "base_design_lcoe_usd_per_kwh": 0.29693107886867115,
+      "least_cost_pv_kwp": 8250.0,
+      "least_cost_battery_kwh": 19000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.2966996149379832,
+      "same_design": false,
+      "note": "",
+      "cells": [
+        "discount_rate_frac",
+        "1.20",
+        "0.297",
+        "8,250",
+        "19,000",
+        "0.297",
+        "no",
+        ""
+      ]
+    },
+    {
+      "input": "demand",
+      "factor": 0.8,
+      "base_design_lcoe_usd_per_kwh": 0.3080479627756868,
+      "least_cost_pv_kwp": 7000.0,
+      "least_cost_battery_kwh": 15000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.283469372228869,
+      "same_design": false,
+      "note": "",
+      "cells": [
+        "demand",
+        "0.80",
+        "0.308",
+        "7,000",
+        "15,000",
+        "0.283",
+        "no",
+        ""
+      ]
+    },
+    {
+      "input": "demand",
+      "factor": 1.2,
+      "base_design_lcoe_usd_per_kwh": 0.28956482766718755,
+      "least_cost_pv_kwp": 9000.0,
+      "least_cost_battery_kwh": 23000.0,
+      "least_cost_lcoe_usd_per_kwh": 0.27565477384597514,
+      "same_design": false,
+      "note": "on grid edge",
+      "cells": [
+        "demand",
+        "1.20",
+        "0.290",
+        "9,000",
+        "23,000",
+        "0.276",
+        "no",
+        "on grid edge"
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G3 PV physics",
+      "scope": "CAMS",
+      "passed": true,
+      "detail": "yield kWh/kWp 1,353, PR 0.77",
+      "cells": [
+        "G3 PV physics",
+        "CAMS",
+        "yes",
+        "yield kWh/kWp 1,353, PR 0.77"
+      ]
+    },
+    {
+      "gate": "G3 PV physics",
+      "scope": "NASA POWER",
+      "passed": true,
+      "detail": "yield kWh/kWp 1,424, PR 0.77",
+      "cells": [
+        "G3 PV physics",
+        "NASA POWER",
+        "yes",
+        "yield kWh/kWp 1,424, PR 0.77"
+      ]
+    },
+    {
+      "gate": "G3 PV physics",
+      "scope": "PVGIS-ERA5 TMY",
+      "passed": true,
+      "detail": "yield kWh/kWp 1,603, PR 0.78",
+      "cells": [
+        "G3 PV physics",
+        "PVGIS-ERA5 TMY",
+        "yes",
+        "yield kWh/kWp 1,603, PR 0.78"
+      ]
+    },
+    {
+      "gate": "G3 PV physics",
+      "scope": "GSA scaled",
+      "passed": true,
+      "detail": "yield kWh/kWp 1,428, PR 0.77",
+      "cells": [
+        "G3 PV physics",
+        "GSA scaled",
+        "yes",
+        "yield kWh/kWp 1,428, PR 0.77"
+      ]
+    },
+    {
+      "gate": "G1 energy balance",
+      "scope": "main design",
+      "passed": true,
+      "detail": "max hourly gap kW: pv 0, load 0, diesel 0",
+      "cells": [
+        "G1 energy balance",
+        "main design",
+        "yes",
+        "max hourly gap kW: pv 0, load 0, diesel 0"
+      ]
+    },
+    {
+      "gate": "G2 battery",
+      "scope": "main design",
+      "passed": true,
+      "detail": "soc band kWh [1,900, 19,000], discharge kWh 4,999,169 against stored kWh 4,999,169",
+      "cells": [
+        "G2 battery",
+        "main design",
+        "yes",
+        "soc band kWh [1,900, 19,000], discharge kWh 4,999,169 against stored kWh 4,999,169"
+      ]
+    },
+    {
+      "gate": "G4 diesel",
+      "scope": "main design",
+      "passed": true,
+      "detail": "worst margin kW above min load: 0.0",
+      "cells": [
+        "G4 diesel",
+        "main design",
+        "yes",
+        "worst margin kW above min load: 0.0"
+      ]
+    },
+    {
+      "gate": "G5 weather spread",
+      "scope": "weather",
+      "passed": true,
+      "detail": "range required: True, weather rows in range: 4",
+      "cells": [
+        "G5 weather spread",
+        "weather",
+        "yes",
+        "range required: True, weather rows in range: 4"
+      ]
+    },
+    {
+      "gate": "G6 sourced inputs",
+      "scope": "inputs",
+      "passed": true,
+      "detail": "3 of 10 sourced inputs checked, 0 kept assumed, 7 curated post hoc",
+      "cells": [
+        "G6 sourced inputs",
+        "inputs",
+        "yes",
+        "3 of 10 sourced inputs checked, 0 kept assumed, 7 curated post hoc"
+      ]
+    },
+    {
+      "gate": "G7 grid edge",
+      "scope": "main design",
+      "passed": true,
+      "detail": "grid widened 2 times",
+      "cells": [
+        "G7 grid edge",
+        "main design",
+        "yes",
+        "grid widened 2 times"
+      ]
+    },
+    {
+      "gate": "G8 LCOE twins",
+      "scope": "main design",
+      "passed": true,
+      "detail": "max twin gap frac: 1.5e-15",
+      "cells": [
+        "G8 LCOE twins",
+        "main design",
+        "yes",
+        "max twin gap frac: 1.5e-15"
+      ]
+    }
+  ],
+  "inputs_table": [
+    {
+      "name": "pv_capex_usd_per_kwp",
+      "value": 1119.0,
+      "unit": "USD/kWp",
+      "label": "paper",
+      "note": "S3 checked: A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia; https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full; quote near; as written 1119 USD/kW; currency year 2022; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+      "cells": [
+        "pv_capex_usd_per_kwp",
+        "1119.0",
+        "USD/kWp",
+        "paper",
+        "S3 checked: A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia; https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full; quote near; as written 1119 USD/kW; currency year 2022; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes"
+      ]
+    },
+    {
+      "name": "pv_om_usd_per_kwp_yr",
+      "value": 24.38,
+      "unit": "USD/kWp/yr",
+      "label": "paper",
+      "note": "S3 checked: Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study; https://www.nature.com/articles/s41598-022-08968-6; quote near; as written 24.38 US$/kW per year; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+      "cells": [
+        "pv_om_usd_per_kwp_yr",
+        "24.38",
+        "USD/kWp/yr",
+        "paper",
+        "S3 checked: Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study; https://www.nature.com/articles/s41598-022-08968-6; quote near; as written 24.38 US$/kW per year; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes"
+      ]
+    },
+    {
+      "name": "pv_life_yr",
+      "value": 25,
+      "unit": "yr",
+      "label": "assumed",
+      "note": "",
+      "cells": [
+        "pv_life_yr",
+        "25",
+        "yr",
+        "assumed",
+        ""
+      ]
+    },
+    {
+      "name": "battery_capex_usd_per_kwh",
+      "value": 390.0,
+      "unit": "USD/kWh",
+      "label": "docs",
+      "note": "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 0.35 MUSD/MWh energy component, before 0.04 other project costs; currency year 2022; energy component 0.35 plus other project costs 0.04 MUSD/MWh in the 2023 column (the printed year nearest the study); 1 MUSD/MWh = 1000 USD/kWh; USD at price level 2022 without VAT, not escalated; the same page also has a Technology specific data block with a lower expansion cost (total 1.33 MUSD/MW, so 0.33 MUSD/MWh at 4 h) that does not add up with the financial block; the higher financial block is used",
+      "cells": [
+        "battery_capex_usd_per_kwh",
+        "390.0",
+        "USD/kWh",
+        "docs",
+        "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 0.35 MUSD/MWh energy component, before 0.04 other project costs; currency year 2022; energy component 0.35 plus other project costs 0.04 MUSD/MWh in the 2023 column (the printed year nearest the study); 1 MUSD/MWh = 1000 USD/kWh; USD at price level 2022 without VAT, not escalated; the same page also has a Technology specific data block with a lower expansion cost (total 1.33 MUSD/MW, so 0.33 MUSD/MWh at 4 h) that does not add up with the financial block; the higher financial block is used"
+      ]
+    },
+    {
+      "name": "battery_power_capex_usd_per_kw",
+      "value": 330.0,
+      "unit": "USD/kW",
+      "label": "docs",
+      "note": "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 0.33 MUSD/MW; currency year 2022; power component 0.33 MUSD/MW in the 2023 column; 1 MUSD/MW = 1000 USD/kW; with the energy part this gives 390 + 330 / 4 = 472.5 USD/kWh for a 4 h battery, against 0.47 MUSD/MWh total investment printed on the sheet",
+      "cells": [
+        "battery_power_capex_usd_per_kw",
+        "330.0",
+        "USD/kW",
+        "docs",
+        "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 0.33 MUSD/MW; currency year 2022; power component 0.33 MUSD/MW in the 2023 column; 1 MUSD/MW = 1000 USD/kW; with the energy part this gives 390 + 330 / 4 = 472.5 USD/kWh for a 4 h battery, against 0.47 MUSD/MWh total investment printed on the sheet"
+      ]
+    },
+    {
+      "name": "battery_om_usd_per_kwh_yr",
+      "value": 4.48,
+      "unit": "USD/kWh/yr",
+      "label": "docs",
+      "note": "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 15000 USD/MW/year; currency year 2022; fixed 15,000 USD per MW per year over the 4 h discharge time is 3.75 USD per kWh per year; variable O&M 2.00 USD/MWh at an upper bound of one full cycle a day adds 365 x 2.00 / 1000 = 0.73, so 4.48 in total (study f86df9819fa150a7 ran 249 cycles a year, computed)",
+      "cells": [
+        "battery_om_usd_per_kwh_yr",
+        "4.48",
+        "USD/kWh/yr",
+        "docs",
+        "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 15000 USD/MW/year; currency year 2022; fixed 15,000 USD per MW per year over the 4 h discharge time is 3.75 USD per kWh per year; variable O&M 2.00 USD/MWh at an upper bound of one full cycle a day adds 365 x 2.00 / 1000 = 0.73, so 4.48 in total (study f86df9819fa150a7 ran 249 cycles a year, computed)"
+      ]
+    },
+    {
+      "name": "battery_life_yr",
+      "value": 15,
+      "unit": "yr",
+      "label": "docs",
+      "note": "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 15 years; calendar life as printed; at the 249 full cycles a year of study f86df9819fa150a7 (computed) the 7,500 cycles last 30 years, so the calendar life binds; the model replaces the battery at the end of its life",
+      "cells": [
+        "battery_life_yr",
+        "15",
+        "yr",
+        "docs",
+        "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 15 years; calendar life as printed; at the 249 full cycles a year of study f86df9819fa150a7 (computed) the 7,500 cycles last 30 years, so the calendar life binds; the model replaces the battery at the end of its life"
+      ]
+    },
+    {
+      "name": "diesel_om_usd_per_kwh",
+      "value": 0.03,
+      "unit": "USD/kWh",
+      "label": "assumed",
+      "note": "existing plant; capital cost treated as sunk",
+      "cells": [
+        "diesel_om_usd_per_kwh",
+        "0.03",
+        "USD/kWh",
+        "assumed",
+        "existing plant; capital cost treated as sunk"
+      ]
+    },
+    {
+      "name": "fuel_price_usd_per_l",
+      "value": 1.26,
+      "unit": "USD/L",
+      "label": "docs",
+      "note": "S5 curated post hoc: Harga Solar Industri 01-14 Maret 2026 (Solar Industri, a fuel reseller, reposting the Pertamina Patra Niaga industrial fuel list); https://solarindustri.com/berita/harga-solar-industri-01-14-maret-2026/; quote exact; as written 1.26 USD/L; currency year 2026; median of the list's own USD/L column for wilayah 1 (Java) over the 17 half-month lists from October 2025 to September 2026 that pass the period check (the quote is one of them; range 1.03 to 1.64 USD/L; median 21,250 IDR/L), so no exchange rate is assumed; loco depot price before PPN, PPh, PBBKB and sea transport, so a floor for the island; one list value (23,050 IDR/L) matches a Pertamina Patra Niaga letter reported by Kontan (Rp 23,05 juta per KL tanpa pajak)",
+      "cells": [
+        "fuel_price_usd_per_l",
+        "1.26",
+        "USD/L",
+        "docs",
+        "S5 curated post hoc: Harga Solar Industri 01-14 Maret 2026 (Solar Industri, a fuel reseller, reposting the Pertamina Patra Niaga industrial fuel list); https://solarindustri.com/berita/harga-solar-industri-01-14-maret-2026/; quote exact; as written 1.26 USD/L; currency year 2026; median of the list's own USD/L column for wilayah 1 (Java) over the 17 half-month lists from October 2025 to September 2026 that pass the period check (the quote is one of them; range 1.03 to 1.64 USD/L; median 21,250 IDR/L), so no exchange rate is assumed; loco depot price before PPN, PPh, PBBKB and sea transport, so a floor for the island; one list value (23,050 IDR/L) matches a Pertamina Patra Niaga letter reported by Kontan (Rp 23,05 juta per KL tanpa pajak)"
+      ]
+    },
+    {
+      "name": "discount_rate_frac",
+      "value": 0.0673,
+      "unit": "frac",
+      "label": "docs",
+      "note": "S5 curated post hoc: High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan); https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia; quote exact; as written 9.4 % nominal; real rate (1 + 0.094) / (1 + 0.025) - 1 = 0.0673, with the 2.5% inflation target for 2025 to 2027 set in PMK No. 31 of 2024 (Bank Indonesia inflation page); the higher of two sourced real rates (IRENA, The cost of financing for renewable power, 2023, Appendix Figure A1: 6.0% real after tax for solar PV in Indonesia in 2021); a solar PV rate used for the whole system, and the IEA says batteries cost more to finance, so see the sensitivity row at 1.2 times (0.081)",
+      "cells": [
+        "discount_rate_frac",
+        "0.0673",
+        "frac",
+        "docs",
+        "S5 curated post hoc: High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan); https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia; quote exact; as written 9.4 % nominal; real rate (1 + 0.094) / (1 + 0.025) - 1 = 0.0673, with the 2.5% inflation target for 2025 to 2027 set in PMK No. 31 of 2024 (Bank Indonesia inflation page); the higher of two sourced real rates (IRENA, The cost of financing for renewable power, 2023, Appendix Figure A1: 6.0% real after tax for solar PV in Indonesia in 2021); a solar PV rate used for the whole system, and the IEA says batteries cost more to finance, so see the sensitivity row at 1.2 times (0.081)"
+      ]
+    },
+    {
+      "name": "project_life_yr",
+      "value": 20,
+      "unit": "yr",
+      "label": "assumed",
+      "note": "",
+      "cells": [
+        "project_life_yr",
+        "20",
+        "yr",
+        "assumed",
+        ""
+      ]
+    },
+    {
+      "name": "currency_year",
+      "value": 2025,
+      "unit": "year",
+      "label": "assumed",
+      "note": "",
+      "cells": [
+        "currency_year",
+        "2025",
+        "year",
+        "assumed",
+        ""
+      ]
+    },
+    {
+      "name": "battery_round_trip_eff_frac",
+      "value": 0.9,
+      "unit": "frac",
+      "label": "docs",
+      "note": "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 90 %; 90 percent AC to AC as printed; same value as the old assumed input, now with a source",
+      "cells": [
+        "battery_round_trip_eff_frac",
+        "0.9",
+        "frac",
+        "docs",
+        "S5 curated post hoc: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale); https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf; page 266; quote table; as written 90 %; 90 percent AC to AC as printed; same value as the old assumed input, now with a source"
+      ]
+    },
+    {
+      "name": "battery_soc_min_frac",
+      "value": 0.1,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "",
+      "cells": [
+        "battery_soc_min_frac",
+        "0.1",
+        "frac",
+        "assumed",
+        ""
+      ]
+    },
+    {
+      "name": "battery_soc_initial_frac",
+      "value": 0.5,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "",
+      "cells": [
+        "battery_soc_initial_frac",
+        "0.5",
+        "frac",
+        "assumed",
+        ""
+      ]
+    },
+    {
+      "name": "battery_duration_h",
+      "value": 4.0,
+      "unit": "h",
+      "label": "assumed",
+      "note": "battery kW = kWh / duration",
+      "cells": [
+        "battery_duration_h",
+        "4.0",
+        "h",
+        "assumed",
+        "battery kW = kWh / duration"
+      ]
+    },
+    {
+      "name": "diesel_unit_kw",
+      "value": 1800.0,
+      "unit": "kW",
+      "label": "paper",
+      "note": "Hiron et al. 2021 p7: 2 x 1.8 MW (p1 and Table 1 print 2 x 2.7 MW)",
+      "cells": [
+        "diesel_unit_kw",
+        "1800.0",
+        "kW",
+        "paper",
+        "Hiron et al. 2021 p7: 2 x 1.8 MW (p1 and Table 1 print 2 x 2.7 MW)"
+      ]
+    },
+    {
+      "name": "diesel_n_units",
+      "value": 2,
+      "unit": "units",
+      "label": "paper",
+      "note": "Hiron et al. 2021 p7",
+      "cells": [
+        "diesel_n_units",
+        "2",
+        "units",
+        "paper",
+        "Hiron et al. 2021 p7"
+      ]
+    },
+    {
+      "name": "diesel_min_load_frac",
+      "value": 0.25,
+      "unit": "frac",
+      "label": "paper",
+      "note": "S3 checked: Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency; https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955; page 8; quote exact; as written 25 % of their rated power; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+      "cells": [
+        "diesel_min_load_frac",
+        "0.25",
+        "frac",
+        "paper",
+        "S3 checked: Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency; https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955; page 8; quote exact; as written 25 % of their rated power; support judged by Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes"
+      ]
+    },
+    {
+      "name": "fuel_intercept_l_per_h_per_kw_rated",
+      "value": 0.08,
+      "unit": "L/h per kW rated",
+      "label": "assumed",
+      "note": "straight line fuel curve",
+      "cells": [
+        "fuel_intercept_l_per_h_per_kw_rated",
+        "0.08",
+        "L/h per kW rated",
+        "assumed",
+        "straight line fuel curve"
+      ]
+    },
+    {
+      "name": "fuel_slope_l_per_kwh",
+      "value": 0.25,
+      "unit": "L/kWh",
+      "label": "assumed",
+      "note": "straight line fuel curve",
+      "cells": [
+        "fuel_slope_l_per_kwh",
+        "0.25",
+        "L/kWh",
+        "assumed",
+        "straight line fuel curve"
+      ]
+    },
+    {
+      "name": "co2_kg_per_l",
+      "value": 2.68,
+      "unit": "kg/L",
+      "label": "assumed",
+      "note": "diesel combustion only",
+      "cells": [
+        "co2_kg_per_l",
+        "2.68",
+        "kg/L",
+        "assumed",
+        "diesel combustion only"
+      ]
+    },
+    {
+      "name": "unserved_max_frac",
+      "value": 0.001,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "largest share of load left unserved",
+      "cells": [
+        "unserved_max_frac",
+        "0.001",
+        "frac",
+        "assumed",
+        "largest share of load left unserved"
+      ]
+    },
+    {
+      "name": "rf_target_frac",
+      "value": 0.5,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "renewable share for the high renewable design",
+      "cells": [
+        "rf_target_frac",
+        "0.5",
+        "frac",
+        "assumed",
+        "renewable share for the high renewable design"
+      ]
+    },
+    {
+      "name": "swing_frac",
+      "value": 0.2,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "sensitivity swing",
+      "cells": [
+        "swing_frac",
+        "0.2",
+        "frac",
+        "assumed",
+        "sensitivity swing"
+      ]
+    },
+    {
+      "name": "pv_kwp_step",
+      "value": 250.0,
+      "unit": "kWp",
+      "label": "assumed",
+      "note": "search grid",
+      "cells": [
+        "pv_kwp_step",
+        "250.0",
+        "kWp",
+        "assumed",
+        "search grid"
+      ]
+    },
+    {
+      "name": "pv_kwp_max",
+      "value": 4000.0,
+      "unit": "kWp",
+      "label": "assumed",
+      "note": "search grid, widened when the answer sits on the edge",
+      "cells": [
+        "pv_kwp_max",
+        "4000.0",
+        "kWp",
+        "assumed",
+        "search grid, widened when the answer sits on the edge"
+      ]
+    },
+    {
+      "name": "battery_kwh_step",
+      "value": 1000.0,
+      "unit": "kWh",
+      "label": "assumed",
+      "note": "search grid",
+      "cells": [
+        "battery_kwh_step",
+        "1000.0",
+        "kWh",
+        "assumed",
+        "search grid"
+      ]
+    },
+    {
+      "name": "battery_kwh_max",
+      "value": 16000.0,
+      "unit": "kWh",
+      "label": "assumed",
+      "note": "search grid, widened when the answer sits on the edge",
+      "cells": [
+        "battery_kwh_max",
+        "16000.0",
+        "kWh",
+        "assumed",
+        "search grid, widened when the answer sits on the edge"
+      ]
+    }
+  ],
+  "sources": [
+    "Hiron et al. 2021, Energies 14, 8311, Table 6 (p19), doi:10.3390/en14248311",
+    "OpenStreetMap Nominatim (data OpenStreetMap contributors, ODbL)",
+    "Weather sources: CAMS, NASA POWER, PVGIS-ERA5 TMY, GSA scaled",
+    "CAMS case: temperature and wind from NASA POWER 2018",
+    "GSA scaled case: CAMS 2018 hourly shape scaled to the GSA long term annual GHI",
+    "PVGIS-ERA5 TMY case: months from different years, stamped 1990 by pvlib",
+    "Sourced input pv_capex_usd_per_kwp: A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia, https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full, doi:10.3389/fsuep.2024.1308441",
+    "Sourced input pv_om_usd_per_kwp_yr: Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study, https://www.nature.com/articles/s41598-022-08968-6, doi:10.1038/s41598-022-08968-6",
+    "Curated input (post hoc) battery_capex_usd_per_kwh: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale), https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf, page 266",
+    "Curated input (post hoc) battery_om_usd_per_kwh_yr: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale), https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf, page 266",
+    "Curated input (post hoc) fuel_price_usd_per_l: Harga Solar Industri 01-14 Maret 2026 (Solar Industri, a fuel reseller, reposting the Pertamina Patra Niaga industrial fuel list), https://solarindustri.com/berita/harga-solar-industri-01-14-maret-2026/",
+    "Curated input (post hoc) discount_rate_frac: High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan), https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia",
+    "Sourced input diesel_min_load_frac: Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency, https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955, doi:10.3390/en14020457",
+    "Curated input (post hoc) battery_power_capex_usd_per_kw: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale), https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf, page 266",
+    "Curated input (post hoc) battery_life_yr: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale), https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf, page 266",
+    "Curated input (post hoc) battery_round_trip_eff_frac: Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale), https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf, page 266",
+    "Check input site_land_ha: PLN Indonesia Power plans about 9 hectares of land on Legon Bajak for the Karimunjawa PV plant (Tribun Jateng, interview with PLN IP engineering; the same article says permits are in process)",
+    "Check input pv_mwdc_per_ha: Bolinger and Bolinger, Land Requirements for Utility-Scale PV, IEEE Journal of Photovoltaics, doi:10.1109/JPHOTOV.2021.3136805, Section IV: median power density of fixed-tilt US plants; low latitude sites need less row spacing, so this may overstate the land",
+    "Check input reference_pv_kwp: Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only",
+    "Check input diesel_unit_kw_alt: Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
+  ],
+  "sourcing": {
+    "meta": {
+      "run_id": "curated-20261028T230814-3c30e9",
+      "post_hoc": true,
+      "curated_from": "runs/sourcing/rejudge-20261028T225230-d577a6/sourcing.json",
+      "curated_file": "F:\\GITHUB\\autosolar-researcher\\config\\curated_inputs.json",
+      "curated_sha256": "e6866f83e76c29c906838f207b7c5d3149415f29bf2a8807001797669101db75",
+      "curated_inputs": [
+        "battery_capex_usd_per_kwh",
+        "battery_power_capex_usd_per_kw",
+        "battery_om_usd_per_kwh_yr",
+        "battery_life_yr",
+        "battery_round_trip_eff_frac",
+        "discount_rate_frac",
+        "fuel_price_usd_per_l"
+      ],
+      "replaced_rows": [
+        {
+          "input": "battery_capex_usd_per_kwh",
+          "status": "assumed",
+          "label": "assumed",
+          "value_used": 300.0,
+          "unit": "USD/kWh",
+          "value_as_written": 192,
+          "unit_as_written": "USD/kWh",
+          "currency_year": 2024,
+          "title": "Energy Storage Cost-of-service Tool 2.0",
+          "url": "https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2017/Oct/IRENA_DAT_Cost-of-service_Tool_2025.pdf",
+          "doi": null,
+          "doi_ok": null,
+          "page": 1,
+          "quote_kind": "exact",
+          "quote": "System-level battery storage costs fell 93% from USD 2 571 per kilowatt hour (kWh) in 2010 to USD 192/kWh in 2024 owing to technological improvements, enhanced efficiency, manufacturing scale and increased market competition.",
+          "supports": false,
+          "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+          "reasons": [
+            "try 1: fetch: HTTP 403",
+            "try 2: judge says not supported: The quote states system-level battery storage costs fell to USD 192/kWh in 2024, not specifically the installed capital cost of a lithium-ion battery energy storage system per kWh."
+          ],
+          "search_cost_usd": 0.050255344
+        },
+        {
+          "input": "battery_om_usd_per_kwh_yr",
+          "status": "assumed",
+          "label": "assumed",
+          "value_used": 5.0,
+          "unit": "USD/kWh/yr",
+          "value_as_written": 50,
+          "unit_as_written": "USD/kWh/year",
+          "currency_year": null,
+          "title": "Life Cycle Analysis of Energy Storage Technologies: A Comparative Study",
+          "url": "https://www.e3s-conferences.org/articles/e3sconf/pdf/2024/67/e3sconf_sdea2024_08004.pdf",
+          "doi": "10.1051/e3sconf/202453708004",
+          "doi_ok": true,
+          "page": null,
+          "quote_kind": "not run",
+          "quote": "Operating Cost: Lithium-Ion Batteries exhibited an operating cost of $50/kWh/year, whereas Flow Batteries and Pumped Hydro displayed values of $40/kWh/year and $30/kWh/year, respectively.",
+          "supports": null,
+          "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+          "reasons": [
+            "value 50 USD/kWh/yr outside band [0.5, 30]",
+            "fetch: HTTP 403",
+            "mirror: no open copy with the quote (3 tried)"
+          ],
+          "search_cost_usd": 0.090226826
+        },
+        {
+          "input": "fuel_price_usd_per_l",
+          "status": "checked",
+          "label": "docs",
+          "value_used": 0.848485,
+          "unit": "USD/L",
+          "value_as_written": 14000,
+          "unit_as_written": "IDR per liter",
+          "currency_year": null,
+          "title": "National Strategy for Climate Mitigation: Private Sector Circular Use of Palm Oil Mill Waste",
+          "url": "https://ap.fftc.org.tw/article/3866",
+          "doi": null,
+          "doi_ok": null,
+          "page": 1,
+          "quote_kind": "exact",
+          "quote": "Assuming the current industrial diesel price is around IDR 14,000 (US$ 0.84) per liter, the potential financial savings could exceed IDR 4 billion (US$ 238.73 million) per year per installation unit.",
+          "supports": true,
+          "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+          "reasons": [],
+          "search_cost_usd": 0.125060218
+        },
+        {
+          "input": "discount_rate_frac",
+          "status": "assumed",
+          "label": "assumed",
+          "value_used": 0.08,
+          "unit": "frac",
+          "value_as_written": 2.03,
+          "unit_as_written": "%",
+          "currency_year": null,
+          "title": "Life Cycle Cost Analysis of PV-Wind-Battery Hybrid Power System at PLN Nusantara Power Brantas Generation Unit Tulungagung",
+          "url": "https://jaree.its.ac.id/jaree/article/download/550/233/2157",
+          "doi": null,
+          "doi_ok": null,
+          "page": null,
+          "quote_kind": "not run",
+          "quote": "Based on the average BI Rate of 4.89% and an inflation rate of 2.8%, the calculated real discount rate is approximately 2.03%.",
+          "supports": null,
+          "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+          "reasons": [
+            "try 1: fetch: HTTP 403",
+            "try 2: fetch: ConnectionError"
+          ],
+          "search_cost_usd": 0.062532594
+        }
+      ],
+      "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+      "fx_idr_per_usd": 16500.0,
+      "base_meta": {
+        "run_id": "rejudge-20261028T225230-d577a6",
+        "rejudged_from": "runs/sourcing/rejudge-20261028T013500-26a59e/sourcing.json",
+        "source_run": "rejudge-20261028T013500-26a59e",
+        "rule": "docs/specs/T17_judge_panel.md",
+        "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+        "judge_votes": 3,
+        "api_cost_usd": 0.084836,
+        "judge_seconds": [
+          36.3,
+          39.1,
+          29.8,
+          32.5,
+          17.7,
+          9.3,
+          8.2,
+          6.2
+        ],
+        "fx_idr_per_usd": 16500.0,
+        "wall_s": 213.0,
+        "search_cost_usd": 0.0,
+        "rejudge": [
+          {
+            "input": "pv_capex_usd_per_kwp",
+            "status_before": "checked",
+            "judge_calls": 3,
+            "supports": true,
+            "judge_reason": "The quote states the 2022 unsubsidised initial CAPEX is 1,119 USD/kW and the context clarifies this is the average CAPEX for utility-scale solar PV projects in Indonesia.",
+            "reasons": [],
+            "status_after": "checked",
+            "votes": [
+              {
+                "judge": "local",
+                "seconds": 36.3,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW and the context specifies this is for utility-scale solar PV projects in Indonesia.\"}"
+              },
+              {
+                "judge": "local",
+                "seconds": 39.1,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is set at 1,119 USD/kW and the context specifies this value is used for utility-scale solar PV projects in Indonesia.\"}"
+              },
+              {
+                "judge": "wonder",
+                "seconds": 5.7,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states the 2022 unsubsidised initial CAPEX is 1,119 USD/kW and the context clarifies this is the average CAPEX for utility-scale solar PV projects in Indonesia.\"}"
+              }
+            ]
+          },
+          {
+            "input": "pv_om_usd_per_kwp_yr",
+            "status_before": "checked",
+            "judge_calls": 3,
+            "supports": true,
+            "judge_reason": "The quote states that OPEX for solar power plants in Indonesia is 24.38 US$/kW per year, matching the claimed annual operation and maintenance cost per kW.",
+            "reasons": [],
+            "status_after": "checked",
+            "votes": [
+              {
+                "judge": "local",
+                "seconds": 29.8,
+                "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states OPEX for SPP in Indonesia is 24.38 US$/kW per year as estimated by Darghouth et al.\"}"
+              },
+              {
+                "judge": "local",
+                "seconds": 32.5,
+                "raw": "{\"supports\": true, \"reason\": \"The quote and context state that Darghouth et al. estimated OPEX for SPP in Indonesia is 24.38 US$/kW per year.\"}"
+              },
+              {
+                "judge": "wonder",
+                "seconds": 8.7,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states that OPEX for solar power plants in Indonesia is 24.38 US$/kW per year, matching the claimed annual operation and maintenance cost per kW.\"}"
+              }
+            ]
+          },
+          {
+            "input": "fuel_price_usd_per_l",
+            "status_before": "checked",
+            "judge_calls": 3,
+            "supports": true,
+            "judge_reason": "The quote states the current industrial diesel price is around IDR 14,000 per liter.",
+            "reasons": [],
+            "status_after": "checked",
+            "votes": [
+              {
+                "judge": "local",
+                "seconds": 17.7,
+                "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+              },
+              {
+                "judge": "local",
+                "seconds": 9.3,
+                "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+              },
+              {
+                "judge": "wonder",
+                "seconds": 7.5,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+              }
+            ]
+          },
+          {
+            "input": "diesel_min_load_frac",
+            "status_before": "checked",
+            "judge_calls": 3,
+            "supports": true,
+            "judge_reason": "The quote states online diesel generators operate at their minimum loading condition, typically 25% of their rated power.",
+            "reasons": [],
+            "status_after": "checked",
+            "votes": [
+              {
+                "judge": "local",
+                "seconds": 8.2,
+                "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the minimum loading condition is typically 25% of their rated power.\"}"
+              },
+              {
+                "judge": "local",
+                "seconds": 6.2,
+                "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the minimum loading condition is typically 25% of their rated power.\"}"
+              },
+              {
+                "judge": "wonder",
+                "seconds": 2.9,
+                "raw": "{\"supports\": true, \"reason\": \"The quote states online diesel generators operate at their minimum loading condition, typically 25% of their rated power.\"}"
+              }
+            ]
+          }
+        ],
+        "prior_meta": {
+          "run_id": "rejudge-20261028T013500-26a59e",
+          "rejudged_from": "runs/sourcing/sourcing-20261028T005706-df102a/sourcing.json",
+          "source_run": "sourcing-20261028T005706-df102a",
+          "rule": "docs/specs/T10f_judge_votes.md",
+          "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low, yes needed in all 3 votes",
+          "judge_votes": 3,
+          "judge_seconds": [
+            19.5,
+            10.2,
+            14.4,
+            12.3,
+            15.9,
+            21.1,
+            12.4,
+            9.0,
+            10.0,
+            7.8,
+            5.4,
+            7.0
+          ],
+          "fx_idr_per_usd": 16500.0,
+          "wall_s": 156.1,
+          "search_cost_usd": 0.0,
+          "rejudge": [
+            {
+              "input": "pv_capex_usd_per_kwp",
+              "status_before": "checked",
+              "judge_calls": 3,
+              "supports": true,
+              "judge_reason": "The quote states the unsubsidised initial CAPEX in 2022 is set at 1,119 USD/kW and the context specifies this value is used for utility-scale solar PV projects in Indonesia.",
+              "reasons": [],
+              "status_after": "checked"
+            },
+            {
+              "input": "pv_om_usd_per_kwp_yr",
+              "status_before": "checked",
+              "judge_calls": 3,
+              "supports": true,
+              "judge_reason": "The quote explicitly attributes 24.38 US$/kW per year as the OPEX for SPP in Indonesia, matching the claimed annual cost per kW.",
+              "reasons": [],
+              "status_after": "checked"
+            },
+            {
+              "input": "fuel_price_usd_per_l",
+              "status_before": "checked",
+              "judge_calls": 3,
+              "supports": true,
+              "judge_reason": "The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.",
+              "reasons": [],
+              "status_after": "checked"
+            },
+            {
+              "input": "diesel_min_load_frac",
+              "status_before": "checked",
+              "judge_calls": 3,
+              "supports": true,
+              "judge_reason": "The quote explicitly states the minimum loading condition is typically 25% of their rated power.",
+              "reasons": [],
+              "status_after": "checked"
+            }
+          ],
+          "prior_meta": {
+            "run_id": "sourcing-20261028T005706-df102a",
+            "targets": "F:\\GITHUB\\autosolar-researcher\\config\\sourcing_targets.json",
+            "base_inputs": "runs/sourcing/sourcing-20261027T233157-a911c1/sourcing.json",
+            "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+            "judge_seconds": [
+              20.3,
+              10.8
+            ],
+            "fx_idr_per_usd": 16500.0,
+            "wall_s": 315.9,
+            "search_cost_usd": 0.244685,
+            "g6": [
+              true,
+              "4 of 7 sourced inputs checked, 3 kept assumed"
+            ],
+            "carried_from": "sourcing-20261027T233157-a911c1",
+            "carried_inputs": [
+              "pv_capex_usd_per_kwp",
+              "pv_om_usd_per_kwp_yr",
+              "fuel_price_usd_per_l"
+            ],
+            "searched_inputs": [
+              "battery_capex_usd_per_kwh",
+              "battery_om_usd_per_kwh_yr",
+              "discount_rate_frac",
+              "diesel_min_load_frac"
+            ]
+          },
+          "g6": [
+            true,
+            "4 of 7 sourced inputs checked, 3 kept assumed"
+          ]
+        },
+        "g6": [
+          true,
+          "4 of 7 sourced inputs checked, 3 kept assumed"
+        ]
+      }
+    },
+    "rows": [
+      {
+        "input": "pv_capex_usd_per_kwp",
+        "status": "checked",
+        "label": "paper",
+        "value_used": 1119.0,
+        "unit": "USD/kWp",
+        "value_as_written": 1119,
+        "unit_as_written": "USD/kW",
+        "currency_year": 2022,
+        "title": "A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia",
+        "url": "https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full",
+        "doi": "10.3389/fsuep.2024.1308441",
+        "doi_ok": true,
+        "page": 1,
+        "quote_kind": "near",
+        "quote": "The unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW (IEA, ).",
+        "supports": true,
+        "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+        "reasons": [],
+        "search_cost_usd": 0.036637131999999996,
+        "cells": [
+          "pv_capex_usd_per_kwp",
+          "checked",
+          "1119.0",
+          "USD/kWp",
+          "paper",
+          "1119 USD/kW",
+          "A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia",
+          "https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full",
+          "1",
+          "near",
+          "none"
+        ]
+      },
+      {
+        "input": "pv_om_usd_per_kwp_yr",
+        "status": "checked",
+        "label": "paper",
+        "value_used": 24.38,
+        "unit": "USD/kWp/yr",
+        "value_as_written": 24.38,
+        "unit_as_written": "US$/kW per year",
+        "currency_year": null,
+        "title": "Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study",
+        "url": "https://www.nature.com/articles/s41598-022-08968-6",
+        "doi": "10.1038/s41598-022-08968-6",
+        "doi_ok": true,
+        "page": 1,
+        "quote_kind": "near",
+        "quote": "Darghouth et al. estimated that the CAPEX and OPEX for SPP in Indonesia is 1365.76 US$ and 24.38 US$/kW per year.",
+        "supports": true,
+        "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+        "reasons": [],
+        "search_cost_usd": 0.025366876,
+        "cells": [
+          "pv_om_usd_per_kwp_yr",
+          "checked",
+          "24.38",
+          "USD/kWp/yr",
+          "paper",
+          "24.38 US$/kW per year",
+          "Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study",
+          "https://www.nature.com/articles/s41598-022-08968-6",
+          "1",
+          "near",
+          "none"
+        ]
+      },
+      {
+        "input": "battery_capex_usd_per_kwh",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 390.0,
+        "unit": "USD/kWh",
+        "value_as_written": 0.35,
+        "unit_as_written": "MUSD/MWh energy component, before 0.04 other project costs",
+        "currency_year": 2022,
+        "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+        "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+        "doi": null,
+        "doi_ok": null,
+        "page": 266,
+        "quote_kind": "table",
+        "quote": "Batteries - Lithium-ion (utility-scale), column 2023: - energy component (MUSD/MWh) 0.35; - other project costs (MUSD/MWh) 0.04; uncertainty (2023) of the energy component 0.26 to 0.38",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "battery_capex_usd_per_kwh",
+          "curated",
+          "390.0",
+          "USD/kWh",
+          "docs",
+          "0.35 MUSD/MWh energy component, before 0.04 other project costs",
+          "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+          "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+          "266",
+          "table",
+          "none"
+        ]
+      },
+      {
+        "input": "battery_om_usd_per_kwh_yr",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 4.48,
+        "unit": "USD/kWh/yr",
+        "value_as_written": 15000,
+        "unit_as_written": "USD/MW/year",
+        "currency_year": 2022,
+        "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+        "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+        "doi": null,
+        "doi_ok": null,
+        "page": 266,
+        "quote_kind": "table",
+        "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Fixed O&M (USD/MW/year) 15,000; Discharge time (hours) 4; Variable O&M (USD/MWh) 2.00",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "battery_om_usd_per_kwh_yr",
+          "curated",
+          "4.48",
+          "USD/kWh/yr",
+          "docs",
+          "15000 USD/MW/year",
+          "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+          "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+          "266",
+          "table",
+          "none"
+        ]
+      },
+      {
+        "input": "fuel_price_usd_per_l",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 1.26,
+        "unit": "USD/L",
+        "value_as_written": 1.26,
+        "unit_as_written": "USD/L",
+        "currency_year": 2026,
+        "title": "Harga Solar Industri 01-14 Maret 2026 (Solar Industri, a fuel reseller, reposting the Pertamina Patra Niaga industrial fuel list)",
+        "url": "https://solarindustri.com/berita/harga-solar-industri-01-14-maret-2026/",
+        "doi": null,
+        "doi_ok": null,
+        "page": null,
+        "quote_kind": "exact",
+        "quote": "Harga Dasar (Rp/Liter) Harga Dasar (US$/Liter) Biosolar Industri (B40) (Wilayah 1) IDR 21.250 USD 1,26",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "fuel_price_usd_per_l",
+          "curated",
+          "1.26",
+          "USD/L",
+          "docs",
+          "1.26 USD/L",
+          "Harga Solar Industri 01-14 Maret 2026 (Solar Industri, a fuel reseller, reposting the Pertamina Patra Niaga industrial fuel list)",
+          "https://solarindustri.com/berita/harga-solar-industri-01-14-maret-2026/",
+          "none",
+          "exact",
+          "none"
+        ]
+      },
+      {
+        "input": "discount_rate_frac",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 0.0673,
+        "unit": "frac",
+        "value_as_written": 9.4,
+        "unit_as_written": "% nominal",
+        "currency_year": null,
+        "title": "High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan)",
+        "url": "https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia",
+        "doi": null,
+        "doi_ok": null,
+        "page": null,
+        "quote_kind": "exact",
+        "quote": "The median weighted average cost of capital (WACC, nominal, post-tax and in local currency) for solar PV in Indonesia, Viet Nam and the Philippines based on survey responses was 9.4%, 9.0% and 8.0% respectively in 2024",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "discount_rate_frac",
+          "curated",
+          "0.0673",
+          "frac",
+          "docs",
+          "9.4 % nominal",
+          "High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan)",
+          "https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia",
+          "none",
+          "exact",
+          "none"
+        ]
+      },
+      {
+        "input": "diesel_min_load_frac",
+        "status": "checked",
+        "label": "paper",
+        "value_used": 0.25,
+        "unit": "frac",
+        "value_as_written": 25,
+        "unit_as_written": "% of their rated power",
+        "currency_year": null,
+        "title": "Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency",
+        "url": "https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955",
+        "doi": "10.3390/en14020457",
+        "doi_ok": true,
+        "page": 8,
+        "quote_kind": "exact",
+        "quote": "When RES generation is greater than the load demand, online diesel generators operate at their minimum loading condition, which is typically 25% of their rated power.",
+        "supports": true,
+        "judge_name": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low (votes 1 and 2) and muse-wonder-1.0 (vote 3), yes needed in all 3 votes",
+        "reasons": [],
+        "search_cost_usd": 0.04167045800000001,
+        "cells": [
+          "diesel_min_load_frac",
+          "checked",
+          "0.25",
+          "frac",
+          "paper",
+          "25 % of their rated power",
+          "Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency",
+          "https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955",
+          "8",
+          "exact",
+          "none"
+        ]
+      },
+      {
+        "input": "battery_power_capex_usd_per_kw",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 330.0,
+        "unit": "USD/kW",
+        "value_as_written": 0.33,
+        "unit_as_written": "MUSD/MW",
+        "currency_year": 2022,
+        "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+        "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+        "doi": null,
+        "doi_ok": null,
+        "page": 266,
+        "quote_kind": "table",
+        "quote": "Batteries - Lithium-ion (utility-scale), column 2023: - power component (MUSD/MW) 0.33; uncertainty (2023) 0.24 to 0.35",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "battery_power_capex_usd_per_kw",
+          "curated",
+          "330.0",
+          "USD/kW",
+          "docs",
+          "0.33 MUSD/MW",
+          "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+          "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+          "266",
+          "table",
+          "none"
+        ]
+      },
+      {
+        "input": "battery_life_yr",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 15,
+        "unit": "yr",
+        "value_as_written": 15,
+        "unit_as_written": "years",
+        "currency_year": null,
+        "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+        "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+        "doi": null,
+        "doi_ok": null,
+        "page": 266,
+        "quote_kind": "table",
+        "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Technical lifetime (years) 15; Technical lifetime (cycles) 7,500",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "battery_life_yr",
+          "curated",
+          "15",
+          "yr",
+          "docs",
+          "15 years",
+          "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+          "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+          "266",
+          "table",
+          "none"
+        ]
+      },
+      {
+        "input": "battery_round_trip_eff_frac",
+        "status": "curated",
+        "label": "docs",
+        "value_used": 0.9,
+        "unit": "frac",
+        "value_as_written": 90,
+        "unit_as_written": "%",
+        "currency_year": null,
+        "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+        "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+        "doi": null,
+        "doi_ok": null,
+        "page": 266,
+        "quote_kind": "table",
+        "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Round-trip efficiency (%) AC 90",
+        "supports": null,
+        "judge_name": "none (picked by hand after pre-registration)",
+        "reasons": [],
+        "search_cost_usd": 0.0,
+        "cells": [
+          "battery_round_trip_eff_frac",
+          "curated",
+          "0.9",
+          "frac",
+          "docs",
+          "90 %",
+          "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+          "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+          "266",
+          "table",
+          "none"
+        ]
+      }
+    ]
+  },
+  "grid": {
+    "pv_kwp": [
+      0.0,
+      250.0,
+      500.0,
+      750.0,
+      1000.0,
+      1250.0,
+      1500.0,
+      1750.0,
+      2000.0,
+      2250.0,
+      2500.0,
+      2750.0,
+      3000.0,
+      3250.0,
+      3500.0,
+      3750.0,
+      4000.0,
+      4250.0,
+      4500.0,
+      4750.0,
+      5000.0,
+      5250.0,
+      5500.0,
+      5750.0,
+      6000.0,
+      6250.0,
+      6500.0,
+      6750.0,
+      7000.0,
+      7250.0,
+      7500.0,
+      7750.0,
+      8000.0,
+      8250.0,
+      8500.0,
+      8750.0,
+      9000.0
+    ],
+    "battery_kwh": [
+      0.0,
+      1000.0,
+      2000.0,
+      3000.0,
+      4000.0,
+      5000.0,
+      6000.0,
+      7000.0,
+      8000.0,
+      9000.0,
+      10000.0,
+      11000.0,
+      12000.0,
+      13000.0,
+      14000.0,
+      15000.0,
+      16000.0,
+      17000.0,
+      18000.0,
+      19000.0,
+      20000.0,
+      21000.0,
+      22000.0,
+      23000.0,
+      24000.0
+    ],
+    "widened": 2
+  },
+  "firmness": {
+    "items": [
+      {
+        "key": "near_tie_pct",
+        "title": "Near tie: share above the least LCOE that still counts as a tie",
+        "value": 1.0,
+        "unit": "%",
+        "label": "assumed",
+        "text": "1.0"
+      },
+      {
+        "key": "near_tie_count",
+        "title": "Near tie: designs within that share",
+        "value": 8.0,
+        "unit": "designs",
+        "label": "computed",
+        "text": "8"
+      },
+      {
+        "key": "near_tie_pv_kwp_min",
+        "title": "Near tie: smallest PV size",
+        "value": 7500.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "7,500"
+      },
+      {
+        "key": "near_tie_pv_kwp_max",
+        "title": "Near tie: largest PV size",
+        "value": 9000.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "9,000"
+      },
+      {
+        "key": "near_tie_battery_kwh_min",
+        "title": "Near tie: smallest battery",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "near_tie_battery_kwh_max",
+        "title": "Near tie: largest battery",
+        "value": 20000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "20,000"
+      },
+      {
+        "key": "best_diesel_run_hours",
+        "title": "Least cost design: hours the diesel runs",
+        "value": 1080.0,
+        "unit": "h/yr",
+        "label": "computed",
+        "text": "1,080"
+      },
+      {
+        "key": "best_diesel_starts",
+        "title": "Least cost design: diesel starts",
+        "value": 163.0,
+        "unit": "starts/yr",
+        "label": "computed",
+        "text": "163"
+      },
+      {
+        "key": "best_no_diesel_hours",
+        "title": "Least cost design: hours the battery and PV hold the grid with no diesel",
+        "value": 7680.0,
+        "unit": "h/yr",
+        "label": "computed",
+        "text": "7,680"
+      },
+      {
+        "key": "reserve_units",
+        "title": "Reserve case: diesel units that run in every hour",
+        "value": 1.0,
+        "unit": "units",
+        "label": "assumed",
+        "text": "1"
+      },
+      {
+        "key": "reserve_pv_kwp",
+        "title": "Reserve case: least cost PV size",
+        "value": 4250.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "4,250"
+      },
+      {
+        "key": "reserve_battery_kwh",
+        "title": "Reserve case: least cost battery",
+        "value": 11000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "11,000"
+      },
+      {
+        "key": "reserve_lcoe_usd_per_kwh",
+        "title": "Reserve case: least cost LCOE",
+        "value": 0.46062205392118843,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.461"
+      },
+      {
+        "key": "reserve_renewable_pct",
+        "title": "Reserve case: renewable share",
+        "value": 49.251983455760104,
+        "unit": "%",
+        "label": "computed",
+        "text": "49.3"
+      },
+      {
+        "key": "reserve_fuel_l_yr",
+        "title": "Reserve case: diesel fuel",
+        "value": 2475346.5114427684,
+        "unit": "L/yr",
+        "label": "computed",
+        "text": "2,475,347"
+      },
+      {
+        "key": "reserve_main_design_lcoe_usd_per_kwh",
+        "title": "Reserve case: LCOE of the main design",
+        "value": 0.5325650652694226,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.533"
+      },
+      {
+        "key": "land_site_ha",
+        "title": "Land: area set aside for the PV plant",
+        "value": 9.0,
+        "unit": "ha",
+        "label": "press",
+        "text": "9.0"
+      },
+      {
+        "key": "land_pv_mwdc_per_ha",
+        "title": "Land: PV per hectare",
+        "value": 0.87,
+        "unit": "MWdc/ha",
+        "label": "paper",
+        "text": "0.87"
+      },
+      {
+        "key": "land_need_ha",
+        "title": "Land: area the main design needs",
+        "value": 9.770114942528735,
+        "unit": "ha",
+        "label": "computed",
+        "text": "9.8"
+      },
+      {
+        "key": "land_max_pv_kwp",
+        "title": "Land: largest PV that fits",
+        "value": 7830.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "7,830"
+      },
+      {
+        "key": "land_fits",
+        "title": "Land: main design fits",
+        "value": false,
+        "unit": "",
+        "label": "computed",
+        "text": "no"
+      },
+      {
+        "key": "land_pv_kwp",
+        "title": "Land: least cost PV size that fits",
+        "value": 7750.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "7,750"
+      },
+      {
+        "key": "land_battery_kwh",
+        "title": "Land: battery with that PV",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "land_lcoe_usd_per_kwh",
+        "title": "Land: LCOE of that design",
+        "value": 0.27869563039317724,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.279"
+      },
+      {
+        "key": "reference_pv_kwp",
+        "title": "Published design size: PV only",
+        "value": 1244.48,
+        "unit": "kWp",
+        "label": "paper",
+        "text": "1,244"
+      },
+      {
+        "key": "reference_lcoe_usd_per_kwh",
+        "title": "Published design size: LCOE",
+        "value": 0.47674982198718385,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.477"
+      },
+      {
+        "key": "reference_renewable_pct",
+        "title": "Published design size: renewable share",
+        "value": 17.601565654613548,
+        "unit": "%",
+        "label": "computed",
+        "text": "17.6"
+      },
+      {
+        "key": "reference_fuel_saved_l_yr",
+        "title": "Published design size: diesel fuel saved",
+        "value": 348465.2622240167,
+        "unit": "L/yr",
+        "label": "computed",
+        "text": "348,465"
+      },
+      {
+        "key": "alt_diesel_unit_kw",
+        "title": "Diesel unit size check: other unit rating in the sources",
+        "value": 2700.0,
+        "unit": "kW",
+        "label": "paper",
+        "text": "2,700"
+      },
+      {
+        "key": "alt_diesel_only_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: diesel only LCOE",
+        "value": 0.5941737239642939,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.594"
+      },
+      {
+        "key": "alt_pv_kwp",
+        "title": "Diesel unit size check: least cost PV size",
+        "value": 9000.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "9,000"
+      },
+      {
+        "key": "alt_battery_kwh",
+        "title": "Diesel unit size check: least cost battery",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "alt_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: least cost LCOE",
+        "value": 0.28672033561639504,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.287"
+      },
+      {
+        "key": "alt_saving_pct",
+        "title": "Diesel unit size check: saving against diesel only",
+        "value": 51.744696197029214,
+        "unit": "%",
+        "label": "computed",
+        "text": "51.7"
+      },
+      {
+        "key": "alt_on_grid_edge",
+        "title": "Diesel unit size check: least cost design on the grid edge",
+        "value": true,
+        "unit": "",
+        "label": "computed",
+        "text": "yes"
+      },
+      {
+        "key": "alt_reserve_main_design_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: that design with the reserve units always on",
+        "value": 0.6898462478300994,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.690"
+      },
+      {
+        "key": "alt_reserve_pv_kwp",
+        "title": "Diesel unit size check: reserve case PV size",
+        "value": 2750.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "2,750"
+      },
+      {
+        "key": "alt_reserve_battery_kwh",
+        "title": "Diesel unit size check: reserve case battery",
+        "value": 8000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "8,000"
+      },
+      {
+        "key": "alt_reserve_lcoe_usd_per_kwh",
+        "title": "Diesel unit size check: reserve case LCOE",
+        "value": 0.5645463309669533,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.565"
+      },
+      {
+        "key": "battery_peak_discharge_kw",
+        "title": "Battery power: highest discharge in any hour, main design",
+        "value": 1422.0,
+        "unit": "kW",
+        "label": "computed",
+        "text": "1,422"
+      },
+      {
+        "key": "battery_peak_charge_kw",
+        "title": "Battery power: highest charge in any hour, main design",
+        "value": 4750.0,
+        "unit": "kW",
+        "label": "computed",
+        "text": "4,750"
+      },
+      {
+        "key": "battery_peak_use_pct",
+        "title": "Battery power: highest hour as a share of the power rating",
+        "value": 100.0,
+        "unit": "%",
+        "label": "computed",
+        "text": "100.0"
+      },
+      {
+        "key": "dur_alt_hours",
+        "title": "Battery duration check: other duration (battery kWh per kW)",
+        "value": 8.0,
+        "unit": "h",
+        "label": "assumed",
+        "text": "8.0"
+      },
+      {
+        "key": "dur_alt_pv_kwp",
+        "title": "Battery duration check: least cost PV size",
+        "value": 8500.0,
+        "unit": "kWp",
+        "label": "computed",
+        "text": "8,500"
+      },
+      {
+        "key": "dur_alt_battery_kwh",
+        "title": "Battery duration check: least cost battery",
+        "value": 19000.0,
+        "unit": "kWh",
+        "label": "computed",
+        "text": "19,000"
+      },
+      {
+        "key": "dur_alt_battery_kw",
+        "title": "Battery duration check: battery power rating",
+        "value": 2375.0,
+        "unit": "kW",
+        "label": "computed",
+        "text": "2,375"
+      },
+      {
+        "key": "dur_alt_lcoe_usd_per_kwh",
+        "title": "Battery duration check: least cost LCOE",
+        "value": 0.27738508058847994,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "0.277"
+      },
+      {
+        "key": "dur_alt_change_pct",
+        "title": "Battery duration check: change against the main least cost LCOE",
+        "value": -0.009763078835178796,
+        "unit": "%",
+        "label": "computed",
+        "text": "0.0"
+      },
+      {
+        "key": "dur_alt_on_grid_edge",
+        "title": "Battery duration check: least cost design on the grid edge",
+        "value": false,
+        "unit": "",
+        "label": "computed",
+        "text": "no"
+      },
+      {
+        "key": "capex_break_even_rise_pct",
+        "title": "Island prices: rise in PV and battery capital prices before diesel only is cheaper",
+        "value": 364.5994736767853,
+        "unit": "%",
+        "label": "computed",
+        "text": "364.6"
+      },
+      {
+        "key": "capex_break_even_pv_usd_per_kwp",
+        "title": "Island prices: PV capital price at that point",
+        "value": 5198.868110443227,
+        "unit": "USD/kWp",
+        "label": "computed",
+        "text": "5,199"
+      },
+      {
+        "key": "capex_break_even_battery_usd_per_kwh",
+        "title": "Island prices: battery energy capital price at that point",
+        "value": 1811.9379473394627,
+        "unit": "USD/kWh",
+        "label": "computed",
+        "text": "1,812"
+      },
+      {
+        "key": "best_unserved_kwh_yr",
+        "title": "Least cost design: load not served",
+        "value": 0.0,
+        "unit": "kWh/yr",
+        "label": "computed",
+        "text": "0"
+      },
+      {
+        "key": "best_unserved_hours",
+        "title": "Least cost design: hours with some load not served",
+        "value": 0.0,
+        "unit": "h/yr",
+        "label": "computed",
+        "text": "0"
+      },
+      {
+        "key": "best_battery_cycles_yr",
+        "title": "Least cost design: battery discharge in full battery cycles",
+        "value": 263.11415655980414,
+        "unit": "cycles/yr",
+        "label": "computed",
+        "text": "263"
+      },
+      {
+        "key": "engine_hours_diesel_only",
+        "title": "Diesel engine hours: diesel only (hours times units running)",
+        "value": 8760.0,
+        "unit": "unit h/yr",
+        "label": "computed",
+        "text": "8,760"
+      },
+      {
+        "key": "engine_hours_best",
+        "title": "Diesel engine hours: least cost design",
+        "value": 1080.0,
+        "unit": "unit h/yr",
+        "label": "computed",
+        "text": "1,080"
+      },
+      {
+        "key": "engine_hours_cut_pct",
+        "title": "Diesel engine hours: cut by the least cost design",
+        "value": 87.67123287671232,
+        "unit": "%",
+        "label": "computed",
+        "text": "87.7"
+      },
+      {
+        "key": "sourcing_cost_usd",
+        "title": "Cost of the web search that sourced the inputs",
+        "value": 0.103674466,
+        "unit": "USD",
+        "label": "computed",
+        "text": "0.10367"
+      },
+      {
+        "key": "total_cost_usd",
+        "title": "Total model API cost behind this study",
+        "value": 0.10380296600000001,
+        "unit": "USD",
+        "label": "computed",
+        "text": "0.10380"
+      }
+    ],
+    "out_of_scope": [
+      "Grid stability: frequency and voltage control, grid forming inverters and protection for hours with no diesel running",
+      "Land ownership, permits and the environmental review",
+      "Site layout, shading, soil and access for construction",
+      "Shipping to the island, local labour and construction time",
+      "Financing terms, tariffs, subsidies and who pays",
+      "Demand growth beyond the growth case, and new loads such as electric boats",
+      "Battery ageing beyond the replacement rule, and salt air corrosion",
+      "Diesel price risk beyond the sensitivity table",
+      "Diesel overhaul and engine replacement costs, which grow with engine hours"
+    ],
+    "checks": {
+      "schema": "autosolar.checks/1",
+      "values": {
+        "site_land_ha": {
+          "value": 9.0,
+          "unit": "ha",
+          "label": "press",
+          "note": "PLN Indonesia Power plans about 9 hectares of land on Legon Bajak for the Karimunjawa PV plant (Tribun Jateng, interview with PLN IP engineering; the same article says permits are in process)"
+        },
+        "pv_mwdc_per_ha": {
+          "value": 0.87,
+          "unit": "MWdc/ha",
+          "label": "paper",
+          "note": "Bolinger and Bolinger, Land Requirements for Utility-Scale PV, IEEE Journal of Photovoltaics, doi:10.1109/JPHOTOV.2021.3136805, Section IV: median power density of fixed-tilt US plants; low latitude sites need less row spacing, so this may overstate the land"
+        },
+        "reference_pv_kwp": {
+          "value": 1244.48,
+          "unit": "kWp",
+          "label": "paper",
+          "note": "Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only"
+        },
+        "diesel_must_run_units": {
+          "value": 1,
+          "unit": "units",
+          "label": "assumed",
+          "note": "reserve case: one diesel unit runs in every hour as a spinning reserve"
+        },
+        "near_tie_frac": {
+          "value": 0.01,
+          "unit": "frac",
+          "label": "assumed",
+          "note": "designs whose LCOE is within this share of the least LCOE count as a near tie"
+        },
+        "diesel_unit_kw_alt": {
+          "value": 2700.0,
+          "unit": "kW",
+          "label": "paper",
+          "note": "Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
+        },
+        "battery_duration_h_alt": {
+          "value": 8.0,
+          "unit": "h",
+          "label": "assumed",
+          "note": "check case: battery energy in kWh is 8 times its power rating in kW instead of the main 4, so the power rating is halved; this check reruns the design search with that battery"
+        }
+      }
+    }
+  }
+}
