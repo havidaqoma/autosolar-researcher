@@ -1,0 +1,315 @@
+{
+  "what": "paper check on Hiron 2021 (in-sample): prompt versions v2 to v4, 3 runs each; v4 is FROZEN here, before the out-of-sample paper 2 runs",
+  "frozen": {
+    "prompt_sha256": "e8517bdf125f52f8f735528c13bafc3ae8cd465f322a7fc319315243d0fac866",
+    "schema_sha256": "17df719776e1cde5f73a7ef5b713196ee279a461e782661099df40209811f732",
+    "tool": "tools/paper_check.py",
+    "checks": "autosolar/paper_check.py (T12a, T12a2), frozen checks P1 to P15"
+  },
+  "changes": {
+    "v2": "JSON numbers, unit only, total PV area, PV-to-load column rule (no structured output: 2 of 3 runs broke the JSON)",
+    "v3": "same prompt with structured output (T12b, text.format json_schema)",
+    "v4": "ratings are nameplate sizes, never simulated outputs (v3 took a 0.746 MW transient as the battery rating)"
+  },
+  "runs": {
+    "v3": {
+      "prompt_sha256": "ba7782fae20cc4cd18fa336ec8f6faf283c7c60da53e496de73ea4caebb7cac5",
+      "schema_sha256": "17df719776e1cde5f73a7ef5b713196ee279a461e782661099df40209811f732",
+      "scores": [
+        {
+          "run_id": "paper-20261028T034758-097b6d",
+          "found": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "found_n": 11,
+          "covered_n": 13,
+          "extra_flags": [
+            "P7"
+          ],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P7",
+            "P11",
+            "P15"
+          ],
+          "kept": 75,
+          "dropped": 4,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.012903,
+          "wall_s": 94.1
+        },
+        {
+          "run_id": "paper-20261028T034933-63138c",
+          "found": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "found_n": 9,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P11",
+            "P15"
+          ],
+          "kept": 63,
+          "dropped": 5,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.0117538,
+          "wall_s": 74.2
+        },
+        {
+          "run_id": "paper-20261028T035048-6940a3",
+          "found": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "found_n": 11,
+          "covered_n": 13,
+          "extra_flags": [
+            "P7"
+          ],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P7",
+            "P11",
+            "P15"
+          ],
+          "kept": 76,
+          "dropped": 1,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.0132278,
+          "wall_s": 101.2
+        }
+      ]
+    },
+    "v4": {
+      "prompt_sha256": "e8517bdf125f52f8f735528c13bafc3ae8cd465f322a7fc319315243d0fac866",
+      "schema_sha256": "17df719776e1cde5f73a7ef5b713196ee279a461e782661099df40209811f732",
+      "scores": [
+        {
+          "run_id": "paper-20261028T035325-b646fb",
+          "found": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C10",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "found_n": 11,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P11",
+            "P15"
+          ],
+          "kept": 52,
+          "dropped": 4,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.012949800000000001,
+          "wall_s": 102.3
+        },
+        {
+          "run_id": "paper-20261028T035508-df5396",
+          "found": [
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "found_n": 8,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P11"
+          ],
+          "kept": 47,
+          "dropped": 9,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.0123782,
+          "wall_s": 90.7
+        },
+        {
+          "run_id": "paper-20261028T035639-fb0125",
+          "found": [
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C10",
+            "C11",
+            "C12",
+            "C15",
+            "C16"
+          ],
+          "found_n": 11,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P9",
+            "P11"
+          ],
+          "kept": 74,
+          "dropped": 10,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.004345136,
+          "wall_s": 106.4
+        }
+      ]
+    },
+    "v2": {
+      "prompt_sha256": "ba7782fae20cc4cd18fa336ec8f6faf283c7c60da53e496de73ea4caebb7cac5",
+      "schema_sha256": null,
+      "scores": [
+        {
+          "run_id": "paper-20261028T033333-6db02f",
+          "found": [
+            "C16"
+          ],
+          "found_n": 1,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P11"
+          ],
+          "kept": 0,
+          "dropped": 0,
+          "rejected": 1,
+          "schedule": false,
+          "cost_usd": 0.012728799999999998,
+          "wall_s": 101.7
+        },
+        {
+          "run_id": "paper-20261028T033514-b703d2",
+          "found": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C10",
+            "C12",
+            "C15",
+            "C16"
+          ],
+          "found_n": 10,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P9",
+            "P11",
+            "P15"
+          ],
+          "kept": 56,
+          "dropped": 3,
+          "rejected": 0,
+          "schedule": true,
+          "cost_usd": 0.004427482,
+          "wall_s": 85.7
+        },
+        {
+          "run_id": "paper-20261028T033641-b0a01a",
+          "found": [
+            "C16"
+          ],
+          "found_n": 1,
+          "covered_n": 13,
+          "extra_flags": [],
+          "flags": [
+            "P11"
+          ],
+          "kept": 0,
+          "dropped": 0,
+          "rejected": 1,
+          "schedule": false,
+          "cost_usd": 0.003758682,
+          "wall_s": 157.8
+        }
+      ]
+    }
+  }
+}

@@ -27,7 +27,7 @@ from ask import env_value  # noqa: E402
 from autosolar.cite_check import pdf_pages  # noqa: E402
 from autosolar.ledger import Ledger  # noqa: E402
 from autosolar.meta_client import MetaClient  # noqa: E402
-from autosolar.paper_check import (CHECK_IDS, QUANTITIES, parse_extraction, run_checks, summary,  # noqa: E402
+from autosolar.paper_check import (CHECK_IDS, PLACES, QUANTITIES, parse_extraction, run_checks, summary,  # noqa: E402
                                    verify_extraction)
 
 INDEPENDENT_CASES = ("NASA POWER", "PVGIS-ERA5 TMY", "GSA scaled")
@@ -40,11 +40,11 @@ CHECK_TITLES = {
     "P15": "Daily and annual totals agree",
 }
 QUANTITY_HELP = {
-    "pv_ac_kw": "PV plant AC rating (inverter side), any power unit",
+    "pv_ac_kw": "PV plant AC rating (inverter side), any power unit; a nameplate size, never a power output read from a simulation, figure or time series",
     "pv_dc_kwp": "PV array DC size (kWp, MWp)",
     "diesel_kw": "rated power of the diesel plant or of each diesel unit (use count for 'N x size')",
-    "converter_kw": "converter or inverter rating of the battery system",
-    "battery_kw": "battery power rating",
+    "converter_kw": "converter or inverter rating of the battery system (nameplate size)",
+    "battery_kw": "battery power rating; a nameplate size, never a power output read from a simulation, figure or time series",
     "peak_load_kw": "peak electricity demand",
     "battery_size": "battery capacity in any unit as printed (kWh, MWh, Ah, MAh)",
     "pv_module_wp": "rated power of one PV module (Wp)",
@@ -125,6 +125,29 @@ def site_range_at(lat_deg, lon_deg):
     return (min(vals.values()), max(vals.values())), vals, "site %.4f,%.4f" % (lat_deg, lon_deg)
 
 
+def extraction_format():
+    """JSON Schema for the answer (structured output, T12b): decoding is constrained to it."""
+    num = {"type": "number"}
+    opt = {"type": ["number", "null"]}
+    statement = {"type": "object", "additionalProperties": False,
+                 "required": ["quantity", "value", "count", "unit", "condition", "page", "place", "quote"],
+                 "properties": {"quantity": {"type": "string", "enum": sorted(QUANTITIES)}, "value": num,
+                                "count": {"type": ["integer", "null"]}, "unit": {"type": "string"},
+                                "condition": {"type": "string"}, "page": {"type": "integer"},
+                                "place": {"type": "string", "enum": list(PLACES)}, "quote": {"type": "string"}}}
+    row_keys = ["time", "load_kw", "pv_to_load_kw", "pv_total_kw", "pv_to_battery_kw", "battery_discharge_kw",
+                "diesel_kw", "curtailed_kw"]
+    row = {"type": "object", "additionalProperties": False, "required": row_keys,
+           "properties": dict({"time": {"type": "string"}, "load_kw": num}, **{k: opt for k in row_keys[2:]})}
+    schedule = {"type": "object", "additionalProperties": False, "required": ["page", "label", "period_h", "rows"],
+                "properties": {"page": {"type": "integer"}, "label": {"type": "string"}, "period_h": num,
+                               "rows": {"type": "array", "items": row}}}
+    root = {"type": "object", "additionalProperties": False, "required": ["statements", "schedule"],
+            "properties": {"statements": {"type": "array", "items": statement},
+                           "schedule": {"anyOf": [schedule, {"type": "null"}]}}}
+    return {"type": "json_schema", "name": "paper_numbers", "strict": True, "schema": root}
+
+
 def render(out):
     lines = ["# Paper check: " + out["label"], "",
              "PDF sha256 " + out["pdf_sha256"][:16] + ", " + str(out["pages"]) + " pages. Run " + out["run_id"] + ".",
@@ -173,7 +196,8 @@ def main():
     for _ in range(args.repeat):
         run_id = "paper-" + time.strftime("%Y%m%dT%H%M%S", time.gmtime()) + "-" + uuid.uuid4().hex[:6]
         t0 = time.time()
-        res = client.respond(run_id, "S7_paper_extract", inp, estimate_usd=0.30, reasoning_effort=args.effort)
+        res = client.respond(run_id, "S7_paper_extract", inp, estimate_usd=0.30, reasoning_effort=args.effort,
+                             text_format=extraction_format())
         wall = round(time.time() - t0, 1)
         try:
             parsed = parse_extraction(res.text)
@@ -185,7 +209,9 @@ def main():
                "pdf_name": pdf.name, "pdf_sha256": hashlib.sha256(data).hexdigest(), "pages": len(pages),
                "model": res.model, "usage": res.usage, "cost_usd": res.cost_usd, "wall_s": wall,
                "study": study_hash, "site_ghi_kwh_m2_yr": list(rng), "site_sources": sources,
-               "prompt_sha256": hashlib.sha256(PROMPT.encode("utf-8")).hexdigest(), "raw_text": res.text,
+               "prompt_sha256": hashlib.sha256(PROMPT.encode("utf-8")).hexdigest(),
+               "schema_sha256": hashlib.sha256(json.dumps(extraction_format(), sort_keys=True).encode()).hexdigest(),
+               "raw_text": res.text,
                "verified": verified, "results": [dataclasses.asdict(r) for r in results],
                "summary": summary(results)}
         run_dir = ROOT / "runs" / "paper_checks" / run_id
