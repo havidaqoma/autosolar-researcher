@@ -467,7 +467,7 @@ def test_end_to_end_invented_paper():
         {"quantity": "ghi_kwh_m2_yr", "value": 5.23, "count": None, "unit": "kWh/m2/day", "condition": "",
          "page": 4, "place": "table", "quote": "Site irradiation 5.23 kWh/m2/day at the island"},
         {"quantity": "npc_usd", "value": 9, "count": None, "unit": "million USD", "condition": "", "page": 4,
-         "place": "table", "quote": "a net present cost of 9 million USD"},
+         "place": "text", "quote": "a net present cost of 9 million USD"},
     ], "schedule": {"page": 3, "label": "Table 2", "period_h": 1,
                     "rows": [row("%02d:00" % h, 200, pv_to_load=0, diesel=200) for h in range(24)]}}
     parsed = parse_extraction(json.dumps(ex))
