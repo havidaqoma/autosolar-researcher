@@ -17,6 +17,9 @@ SOURCING_SCHEMA = "autosolar.sourcing/1"
 TARGETS_SCHEMA = "autosolar.sourcing_targets/1"
 TARGET_UNITS = ("USD/kWp", "USD/kW", "USD/kWh", "USD/kWp/yr", "USD/kWh/yr", "USD/L", "frac")
 SEARCH_ESTIMATE_USD = 0.10
+WONDER_MODEL = "muse-wonder-1.0"
+WONDER_JUDGE_STAGE = "S3_judge"
+WONDER_JUDGE_ESTIMATE_USD = 0.25
 GLIMMER_URL = "http://127.0.0.1:8093/v1/chat/completions"
 CHECKED_PREFIX = "S3 checked: "
 CURATED_PREFIX = "S5 curated post hoc: "
@@ -304,6 +307,29 @@ def glimmer_judge(prompt: str, *, post=requests.post, url: str = GLIMMER_URL, ti
     if not isinstance(content, str):
         raise RuntimeError("glimmer answer has no content")
     return content
+
+
+def wonder_judge(prompt: str, *, client, run_id: str) -> str:
+    """Ask Wonder judge once. Output is raw text."""
+    result = client.respond(
+        run_id,
+        WONDER_JUDGE_STAGE,
+        prompt,
+        estimate_usd=WONDER_JUDGE_ESTIMATE_USD,
+        model=WONDER_MODEL,
+        store=False,
+    )
+    text = result.text
+    if not isinstance(text, str) or text.strip() == "":
+        raise RuntimeError("wonder answer has no text")
+    return text
+
+
+def judge_panel(local_fn, wonder_fn) -> tuple:
+    """Build local local wonder panel. Output is judge tuple."""
+    if not callable(local_fn) or not callable(wonder_fn):
+        raise ValueError("judges must be callable")
+    return (local_fn, local_fn, wonder_fn)
 
 
 def source_inputs(

@@ -615,7 +615,23 @@ def support_votes(judge_fn, claim: Claim, context: str, *, source_title=None,
     """Ask judge up to votes times. Output verdict and call count."""
     if isinstance(votes, bool) or not isinstance(votes, int) or votes < 1:
         raise ValueError("votes must be an int >= 1")
-    verdict: Verdict | None = None
+    if isinstance(judge_fn, list):
+        raise ValueError("a judge panel must be a tuple")
+    if isinstance(judge_fn, tuple):
+        if len(judge_fn) != votes or any(not callable(j) for j in judge_fn):
+            raise ValueError("a judge panel must hold votes callables")
+        verdict: Verdict | None = None
+        made = 0
+        for k in range(votes):
+            verdict = support_verdict(judge_fn[k], claim, context,
+                                      source_title=source_title,
+                                      source_url=source_url)
+            made += 1
+            if verdict.supports is not True:
+                break
+        assert verdict is not None
+        return (verdict, made)
+    verdict = None
     made = 0
     for _ in range(votes):
         verdict = support_verdict(judge_fn, claim, context,
