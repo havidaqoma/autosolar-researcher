@@ -183,8 +183,11 @@ class MetaClient:
         allow_standard: bool = False,
         images: int = 0,
         text_format: Any | None = None,
+        store: bool | None = None,
     ) -> Result:
         """One model call with cost checks. Money in USD, images in images."""
+        if store is not None and type(store) is not bool:
+            raise ValueError("store must be a bool")
         if text_format is not None and (
             not isinstance(text_format, dict)
             or text_format.get("type") != "json_schema"
@@ -214,6 +217,8 @@ class MetaClient:
             body["metadata"] = metadata
         if text_format is not None:
             body["text"] = {"format": text_format}
+        if store is not None:
+            body["store"] = store
         resp = self._send(body)
         data = self._read_body(resp)
         searches_int = _count_searches(data)
