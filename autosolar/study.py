@@ -15,6 +15,19 @@ from pathlib import Path
 from autosolar.demand import HIRON_2021_SOURCE, build_demand_cases
 from autosolar.dispatch import Battery, DieselFleet
 from autosolar.econ import CostInputs
+from autosolar.firmness import (
+    CHECK_NAMES,
+    FIRM_CHECK_LABEL,
+    FIRM_SPECS,
+    FIRM_TITLES,
+    OUT_OF_SCOPE,
+    land_check,
+    load_checks,
+    near_tie_band,
+    reference_design,
+    reserve_case,
+    study_cost,
+)
 from autosolar.pv import PVDesign, simulate_pv
 from autosolar.request import Site, StudyRequest, check_request, geocode, parse_question
 from autosolar.sourcing import g6_check, read_sourcing
@@ -259,9 +272,51 @@ def _row_line(cells: list[str]) -> str:
     return "| " + " | ".join(_clean(cell) for cell in cells) + " |"
 
 
+def firm_items(values: dict, checks_raw: dict) -> list[dict]:
+    """One markdown item per FIRM_SPECS row. Values in firmness units, text formatted."""
+    items: list[dict] = []
+    check_entries = checks_raw["values"]
+    for key, unit, label, decimals in FIRM_SPECS:
+        if label == "check":
+            shown = check_entries[FIRM_CHECK_LABEL[key]]["label"]
+        else:
+            shown = label
+        val = values[key]
+        if key == "land_fits":
+            items.append({
+                "key": key,
+                "title": FIRM_TITLES[key],
+                "value": bool(val),
+                "unit": unit,
+                "label": shown,
+                "text": "yes" if val else "no",
+            })
+        elif val is None:
+            items.append({
+                "key": key,
+                "title": FIRM_TITLES[key],
+                "value": None,
+                "unit": unit,
+                "label": shown,
+                "text": "none",
+            })
+        else:
+            num = float(val)
+            items.append({
+                "key": key,
+                "title": FIRM_TITLES[key],
+                "value": num,
+                "unit": unit,
+                "label": shown,
+                "text": fmt_number(num, decimals),
+            })
+    return items
+
+
 def render_markdown(report: dict) -> str:
     """Markdown study report. Ends with one newline."""
     facts = report["facts"]
+    firm = report.get("firmness")
     lines = ["# AutoSolar pre-feasibility study: " + _clean(report["site"]["name"]), ""]
     lines += ["Question: " + _clean(report["question"]), ""]
     lines += [
@@ -285,6 +340,31 @@ def render_markdown(report: dict) -> str:
             + _clean(fact["label"])
             + ")"
         )
+    if firm is not None:
+        lines += ["", "## How firm is the answer", ""]
+        for item in firm["items"]:
+            if item["unit"] == "":
+                lines.append(
+                    "- "
+                    + _clean(item["title"])
+                    + ": "
+                    + _clean(item["text"])
+                    + " ("
+                    + _clean(item["label"])
+                    + ")"
+                )
+            else:
+                lines.append(
+                    "- "
+                    + _clean(item["title"])
+                    + ": "
+                    + _clean(item["text"])
+                    + " "
+                    + _clean(item["unit"])
+                    + " ("
+                    + _clean(item["label"])
+                    + ")"
+                )
     lines += ["", "## Weather sources", ""]
     lines.append(
         "| Case | Year | GHI kWh/m2/yr (measured) | Yield kWh/kWp/yr (computed) | PR (computed) | G3 passed |"
@@ -343,6 +423,10 @@ def render_markdown(report: dict) -> str:
         lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
         for row in s_rows:
             lines.append(_row_line(row["cells"]))
+    if firm is not None:
+        lines += ["", "## Not covered by this study", ""]
+        for line in firm["out_of_scope"]:
+            lines.append("- " + _clean(line))
     lines += ["", "## Sources", ""]
     for source in report["sources"]:
         lines.append("- " + _clean(source))
@@ -369,11 +453,15 @@ def _write_cached_request(req_file: Path, req: StudyRequest, site: Site) -> None
     req_file.write_text(blob, encoding="utf-8")
 
 
-def _run_hash(lat_w: float, lon_w: float, raw: dict, sourcing_rows: object = None) -> str:
+def _run_hash(
+    lat_w: float, lon_w: float, raw: dict, sourcing_rows: object = None, checks: object = None
+) -> str:
     """16 hex chars marking one inputs and weather point choice."""
     payload: dict = {"schema": REPORT_SCHEMA, "weather_coords_deg": [lat_w, lon_w], "inputs": raw}
     if sourcing_rows is not None:
         payload["sourcing"] = [dataclasses.asdict(r) for r in sourcing_rows]  # type: ignore[union-attr]
+    if checks is not None:
+        payload["checks"] = checks
     blob = json.dumps(
         payload,
         sort_keys=True,
@@ -577,12 +665,17 @@ def run_study(
     runs_dir: object,
     run_id: object,
     sourcing_path: object = None,
+    checks_path: object = None,
 ) -> StudyOutput:
     """One checked study in a run folder. Returns run hash, dir, report and markdown."""
     if not isinstance(question, str) or not 1 <= len(question.strip()) <= 2000:
         raise ValueError("question must hold 1 to 2000 characters after strip")
     asked = question.strip()
     values, raw = load_inputs(inputs_path)
+    checks_values: dict | None = None
+    checks_raw: dict | None = None
+    if checks_path is not None:
+        checks_values, checks_raw = load_checks(checks_path)
     s_rows: list | None = None
     s_meta: dict | None = None
     if sourcing_path is not None:
@@ -603,7 +696,7 @@ def run_study(
         raise UnsupportedSite("site outside the Karimunjawa demand source area")
     lat_w = round(float(site.lat_deg), 2)
     lon_w = round(float(site.lon_deg), 2)
-    run_hash = _run_hash(lat_w, lon_w, raw, s_rows)
+    run_hash = _run_hash(lat_w, lon_w, raw, s_rows, checks_raw)
     run_dir = runs_path / run_hash
     done_json = run_dir / "report.json"
     done_md = run_dir / "report.md"
@@ -769,6 +862,80 @@ def run_study(
         else:
             num = float(val)
             facts[key] = {"value": num, "unit": unit, "label": label, "text": fmt_number(num, decimals)}
+    firmness: dict | None = None
+    if checks_raw is not None and checks_values is not None:
+        tie_frac = float(checks_values["near_tie_frac"])
+        site_ha = float(checks_values["site_land_ha"])
+        density_mwdc_per_ha = float(checks_values["pv_mwdc_per_ha"])
+        ref_pv_kwp = float(checks_values["reference_pv_kwp"])
+        must_run_units = int(checks_values["diesel_must_run_units"])
+        band = near_tie_band(table, unserved_max_frac, tie_frac)
+        land = land_check(table, unserved_max_frac, best_pv_kwp, site_ha, density_mwdc_per_ha)
+        reserve = reserve_case(
+            basis_kw,
+            paper_load,
+            pv_grid,
+            battery_grid,
+            battery_hours=battery_hours,
+            battery_template=battery,
+            diesel=diesel,
+            must_run_units=must_run_units,
+            costs=costs,
+            co2_kg_per_l=co2_kg_per_l,
+            unserved_max_frac=unserved_max_frac,
+            main_pv_kwp=best_pv_kwp,
+            main_battery_kwh=best_battery_kwh,
+        )
+        ref_design = reference_design(
+            basis_kw,
+            paper_load,
+            ref_pv_kwp,
+            battery_hours=battery_hours,
+            battery_template=battery,
+            diesel=diesel,
+            costs=costs,
+            co2_kg_per_l=co2_kg_per_l,
+        )
+        firm_cost = study_cost(float(req.cost_usd), s_rows)
+        diesel_run_hours = int(best["diesel_run_hours"])
+        diesel_starts = int(best["diesel_starts"])
+        firm_values: dict[str, object] = {
+            "near_tie_pct": 100.0 * tie_frac,
+            "near_tie_count": band["count"],
+            "near_tie_pv_kwp_min": band["pv_kwp_min"],
+            "near_tie_pv_kwp_max": band["pv_kwp_max"],
+            "near_tie_battery_kwh_min": band["battery_kwh_min"],
+            "near_tie_battery_kwh_max": band["battery_kwh_max"],
+            "best_diesel_run_hours": diesel_run_hours,
+            "best_diesel_starts": diesel_starts,
+            "best_no_diesel_hours": len(best_result.hourly) - diesel_run_hours,
+            "reserve_units": must_run_units,
+            "reserve_pv_kwp": reserve["pv_kwp"],
+            "reserve_battery_kwh": reserve["battery_kwh"],
+            "reserve_lcoe_usd_per_kwh": reserve["lcoe_usd_per_kwh"],
+            "reserve_renewable_pct": reserve["renewable_pct"],
+            "reserve_fuel_l_yr": reserve["fuel_l_yr"],
+            "reserve_main_design_lcoe_usd_per_kwh": reserve["main_design_lcoe_usd_per_kwh"],
+            "land_site_ha": site_ha,
+            "land_pv_mwdc_per_ha": density_mwdc_per_ha,
+            "land_need_ha": land["need_ha"],
+            "land_max_pv_kwp": land["max_pv_kwp"],
+            "land_fits": land["fits"],
+            "land_pv_kwp": land["pv_kwp"],
+            "land_battery_kwh": land["battery_kwh"],
+            "land_lcoe_usd_per_kwh": land["lcoe_usd_per_kwh"],
+            "reference_pv_kwp": ref_pv_kwp,
+            "reference_lcoe_usd_per_kwh": ref_design["lcoe_usd_per_kwh"],
+            "reference_renewable_pct": ref_design["renewable_pct"],
+            "reference_fuel_saved_l_yr": ref_design["fuel_saved_l_yr"],
+            "sourcing_cost_usd": firm_cost["sourcing_cost_usd"],
+            "total_cost_usd": firm_cost["total_cost_usd"],
+        }
+        firmness = {
+            "items": firm_items(firm_values, checks_raw),
+            "out_of_scope": list(OUT_OF_SCOPE),
+            "checks": checks_raw,
+        }
     weather_rows = []
     for name in CASE_NAMES:
         if name not in pv_by_case:
@@ -883,6 +1050,11 @@ def run_study(
             ]
             sourcing_rows_report.append(row_dict)
         sourcing_report = {"meta": s_meta, "rows": sourcing_rows_report}
+    if checks_raw is not None:
+        for name in CHECK_NAMES:
+            entry = checks_raw["values"][name]
+            if entry["label"] in ("press", "paper"):
+                sources.append("Check input " + name + ": " + entry["note"])
     report = {
         "schema": REPORT_SCHEMA,
         "run_hash": run_hash,
@@ -899,6 +1071,7 @@ def run_study(
         "sources": sources,
         "sourcing": sourcing_report,
         "grid": {"pv_kwp": pv_grid, "battery_kwh": battery_grid, "widened": int(widened)},
+        "firmness": firmness,
     }
     markdown = render_markdown(report)
     bad = scan_report_numbers(markdown, report)
