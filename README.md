@@ -5,7 +5,7 @@ weather from four sources, an hourly simulation of PV, battery and diesel for ev
 electricity, the fuel and CO2 saved, cited cost inputs, a check of the published study for the same island, a
 second model's review, and a plain list of what the study does not cover.
 
-Indonesia's state utility plans to replace diesel at hundreds of island sites with solar and batteries (press).
+Indonesia's state utility PLN plans to replace diesel generators at 741 sites with solar and batteries (press).
 Each site needs a first study like this before anyone spends money on a detailed one.
 
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
