@@ -18,5 +18,11 @@ Commit hashes and times (MYT, from git) are listed so the dates can be checked o
 | Satellite test images | Two cloud free Sentinel-2 crops of the island (Copernicus open data) for the SAM 3.1 test | `95c80f9`, Monday 26 Oct 01:09 |
 | Muse Glimmer checks | Fit check on the local GPU, speed test rules, then the speed test run (rules fixed before the run) | `d018c5b`, `05a1b23` (Monday 26 Oct 23:13); run finished 23:57, results committed `98d4d83` at Tuesday 27 Oct 00:02 |
 
-After kickoff the prep repo only received notes and setup checks (API key smoke test, budget update, docs saved);
-all product code is here.
+This repo's first commit, `cff072e` (Monday 26 Oct 00:51), is the `.gitattributes` file that GitHub made with the
+empty repo. It holds no code.
+
+After kickoff the prep repo received notes, decision records, setup checks (API key smoke test, budget update,
+docs saved) and the draft of the demo video script. For the run with curated inputs it also holds copies of the
+source documents, a second read of their table images by OCR, a script that recomputes each curated value and an
+outside review of that script. These stay private because the source copies are copyrighted; the values, their
+sources and how they are used are in `config/curated_inputs.json` and the README. All product code is here.
