@@ -1,0 +1,35 @@
+{
+  "schema": "autosolar.checks/1",
+  "values": {
+    "site_land_ha": {
+      "value": 9.0,
+      "unit": "ha",
+      "label": "press",
+      "note": "PLN Indonesia Power plans about 9 hectares of land on Legon Bajak for the Karimunjawa PV plant (Tribun Jateng, interview with PLN IP engineering; the same article says permits are in process)"
+    },
+    "pv_mwdc_per_ha": {
+      "value": 0.87,
+      "unit": "MWdc/ha",
+      "label": "paper",
+      "note": "Bolinger and Bolinger, Land Requirements for Utility-Scale PV, IEEE Journal of Photovoltaics, doi:10.1109/JPHOTOV.2021.3136805, Section IV: median power density of fixed-tilt US plants; low latitude sites need less row spacing, so this may overstate the land"
+    },
+    "reference_pv_kwp": {
+      "value": 1244.48,
+      "unit": "kWp",
+      "label": "paper",
+      "note": "Hiron 2021 design: 3889 modules of 320 Wp (p11), 0.99 MW AC; its battery size is not stated in kWh, so the check runs PV only"
+    },
+    "diesel_must_run_units": {
+      "value": 1,
+      "unit": "units",
+      "label": "assumed",
+      "note": "reserve case: one diesel unit runs in every hour as a spinning reserve"
+    },
+    "near_tie_frac": {
+      "value": 0.01,
+      "unit": "frac",
+      "label": "assumed",
+      "note": "designs whose LCOE is within this share of the least LCOE count as a near tie"
+    }
+  }
+}
