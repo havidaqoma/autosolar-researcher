@@ -5,7 +5,8 @@ weather from four sources, an hourly simulation of PV, battery and diesel for ev
 electricity, the fuel and CO2 saved, cited cost inputs, a check of the published study for the same island, a
 second model's review, and a plain list of what the study does not cover.
 
-Indonesia's state utility PLN plans to replace diesel generators at 741 sites with solar and batteries (press).
+Indonesia's state utility PLN plans to replace diesel generators at 741 sites with solar and batteries (press,
+[Bloomberg Technoz](https://www.bloombergtechnoz.com/detail-news/105965/pln-bakal-ganti-2-396-pltd-dengan-plts-3-21-gwp-bess-9-03-gwh)).
 Each site needs a first study like this before anyone spends money on a detailed one.
 
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
@@ -13,24 +14,30 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 
 ## For judges
 
+- Scope: one island today. The tool answers for Karimunjawa; the demand model covers sites within 30 km of it and
+  refuses other sites rather than guess. A new site needs its own hourly load.
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
-- One minute tour: open `docs/site/index.html`, then the example study: the answer, how firm it is, the design map,
-  the sensitivity bars, the paper check and the inputs with their quotes. The page of the curated run adds the second
-  model review.
-- Meta tools, each with a job it is checked on:
+- Without cloning: the two pictures below are from the example study. With a clone, open `docs/site/index.html`.
 
-| Tool | Job in the study | How its output is checked |
-|---|---|---|
-| Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
-| Muse Glimmer (open weights, on our own GPU with llama.cpp) | Judge: does the quote support the value? All 3 votes in a new search; votes 1 and 2 in the two-model re-check | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
-| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Every number the review quotes must be in the study files (48 of 48 in the last review, computed) |
-| SAM 3.1 (Meta Model API) | Reads values off chart images | Validated with rules fixed before the test, see "Chart reader"; no study uses it yet |
-| Muse Code (contributor model) | Wrote the product code from short specs | Acceptance tests are written first and must catch planted faults before Muse Code runs (26 of 26 for the last task, computed) |
+![Answer section of the example study](docs/img/answer.png)
+
+![Every design we costed and what moves the cost](docs/img/designs.png)
+
+- Meta tools, when each runs and how its output is checked:
+
+| Tool | Job | When it runs | How its output is checked |
+|---|---|---|---|
+| Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
+| Muse Glimmer (open weights, on our own GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
+| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study 5ee65dcd3350bec1 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes must be in the study files (48 of 48 in the last review, computed) |
+| SAM 3.1 (Meta Model API) | Reads values off chart images | Validation runs only; no study uses it yet | Rules fixed before each test; the first test failed, the second passed (see "Chart reader") |
+| Muse Code (contributor model) | Wrote the product code from short specs | Build time | The orchestrator writes each spec and its acceptance tests first, and checks that the tests catch planted faults (26 of 26 for the last task, computed) |
 
 - Checks: 1,316 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
-  Eleven gates run on every study. What the study cannot source stays "assumed", and the page says so.
+  Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
+  "assumed", and the page says so.
 - Cost: USD 2.94 for every paid model call so far and USD 0.50 for all Muse Code runs (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
