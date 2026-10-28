@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261028T035915-48ee2e",
+  "study": "59eba198a2af900c",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 5995,
+    "cached_tokens": 0,
+    "output_tokens": 13361,
+    "reasoning_tokens": 12393,
+    "search_queries": 0
+  },
+  "cost_usd": 0.2912,
+  "wall_s": 129.8,
+  "report_sha256": "dab88b82ea6553bbcf8ca4bf4e235fec30abf1464c1f11f64293d9af3c2e7ca0",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "Headline '0.251 USD/kWh' and '85.8 %' renewable share are conditional on diesel-off operation: the reserve case puts the same design at '0.414 USD/kWh' and shrinks the least-cost optimum to '1,500 kWp' PV and '1,000 kWh' battery, so the case is not robust to a must-run diesel requirement.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Operating '7,302 h/yr' with no diesel requires the '19,000 kWh' battery to hold a '1,422 kW' peak island grid, but grid-forming control, frequency/voltage regulation, protection, fault current and black-start capability are not demonstrated.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Annual demand '9,568,110 kWh/yr' with peak '1,422 kW' implies a high 76.8% load factor, while the underlying Hiron source is itself flagged for irreconcilable load/energy statements and an impossible PV yield of '4,291 kWh/kWp'; no reconciled metered PLN load series is shown.",
+      "addressed_in": "The published study we used: Hiron 2021 (Energies 14, 8311)"
+    },
+    {
+      "point": "The diesel fleet is modelled as '2' x '1,800 kW' although the same source also prints '2 x 2.7 MW'; at min-load '0.25' that changes one-unit minimum output from 450 kW to 675 kW, while diesel capital is treated as sunk, O&M is a flat '0.03 USD/kWh', and fuel-curve coefficients '0.08' and '0.25' are assumed rather than measured.",
+      "addressed_in": "Inputs"
+    },
+    {
+      "point": "Fuel price '0.848485 USD/L' is derived from '14000 IDR per liter' in a palm-oil-waste article with FX '16500 IDR per USD assumed', not from a Karimunjawa delivered-diesel or PLN transfer price; this drives the diesel-only comparator '0.354 USD/kWh' and the claimed fuel saving of '3,104,445 L/yr'.",
+      "addressed_in": "Sourced inputs"
+    },
+    {
+      "point": "Key costs are transferred without a remote-island delivered-cost build-up: PV capex '1119.0 USD/kWp', PV O&M '24.38 USD/kWp/yr' from a rooftop-mosque study, battery capex '300.0 USD/kWh' assumed, battery O&M '5.0 USD/kWh/yr' assumed, and discount rate '0.08' assumed.",
+      "addressed_in": "Sourced inputs"
+    },
+    {
+      "point": "Battery sizing and efficiency are not independently validated: power '4,750 kW' is forced as '19,000 kWh / 4.0 h' and is 3.3 times peak demand '1,422 kW'; gate G2 reports discharge '4,725,626' kWh exactly equal to stored '4,725,626' kWh despite assumed round-trip efficiency '0.9', and battery life is fixed at '12 yr' despite about 4.73 GWh/yr throughput.",
+      "addressed_in": null
+    },
+    {
+      "point": "Land margin is thin: the main design needs '8.3 ha' of the '9.0 ha' set aside using '0.87 MWdc/ha', leaving little explicit room for battery/inverter areas, access, setbacks and shading, while land ownership and permits remain unresolved.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Reliability is not demonstrated beyond an hourly balance: unserved energy is capped at '0.001' of load, but actual unserved kWh, loss-of-load hours, N-1 diesel or battery outages, sub-hourly cloud ramps and multi-day low-solar events are not reported; the diesel minimum-load margin in G4 is '0.0' kW.",
+      "addressed_in": null
+    },
+    {
+      "point": "The investor cannot audit net present cost '23,591,478 USD' or LCOE '0.251 USD/kWh' from a cash-flow breakdown: no year-by-year schedule is given for fuel, O&M, battery replacement at '12 yr' within a '20 yr' project, PV life '25 yr', salvage value, diesel overhaul or replacement, taxes or financing.",
+      "addressed_in": null
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"Headline '0.251 USD/kWh' and '85.8 %' renewable share are conditional on diesel-off operation: the reserve case puts the same design at '0.414 USD/kWh' and shrinks the least-cost optimum to '1,500 kWp' PV and '1,000 kWh' battery, so the case is not robust to a must-run diesel requirement.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Operating '7,302 h/yr' with no diesel requires the '19,000 kWh' battery to hold a '1,422 kW' peak island grid, but grid-forming control, frequency/voltage regulation, protection, fault current and black-start capability are not demonstrated.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Annual demand '9,568,110 kWh/yr' with peak '1,422 kW' implies a high 76.8% load factor, while the underlying Hiron source is itself flagged for irreconcilable load/energy statements and an impossible PV yield of '4,291 kWh/kWp'; no reconciled metered PLN load series is shown.\", \"addressed_in\": \"The published study we used: Hiron 2021 (Energies 14, 8311)\"}, {\"point\": \"The diesel fleet is modelled as '2' x '1,800 kW' although the same source also prints '2 x 2.7 MW'; at min-load '0.25' that changes one-unit minimum output from 450 kW to 675 kW, while diesel capital is treated as sunk, O&M is a flat '0.03 USD/kWh', and fuel-curve coefficients '0.08' and '0.25' are assumed rather than measured.\", \"addressed_in\": \"Inputs\"}, {\"point\": \"Fuel price '0.848485 USD/L' is derived from '14000 IDR per liter' in a palm-oil-waste article with FX '16500 IDR per USD assumed', not from a Karimunjawa delivered-diesel or PLN transfer price; this drives the diesel-only comparator '0.354 USD/kWh' and the claimed fuel saving of '3,104,445 L/yr'.\", \"addressed_in\": \"Sourced inputs\"}, {\"point\": \"Key costs are transferred without a remote-island delivered-cost build-up: PV capex '1119.0 USD/kWp', PV O&M '24.38 USD/kWp/yr' from a rooftop-mosque study, battery capex '300.0 USD/kWh' assumed, battery O&M '5.0 USD/kWh/yr' assumed, and discount rate '0.08' assumed.\", \"addressed_in\": \"Sourced inputs\"}, {\"point\": \"Battery sizing and efficiency are not independently validated: power '4,750 kW' is forced as '19,000 kWh / 4.0 h' and is 3.3 times peak demand '1,422 kW'; gate G2 reports discharge '4,725,626' kWh exactly equal to stored '4,725,626' kWh despite assumed round-trip efficiency '0.9', and battery life is fixed at '12 yr' despite about 4.73 GWh/yr throughput.\", \"addressed_in\": null}, {\"point\": \"Land margin is thin: the main design needs '8.3 ha' of the '9.0 ha' set aside using '0.87 MWdc/ha', leaving little explicit room for battery/inverter areas, access, setbacks and shading, while land ownership and permits remain unresolved.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Reliability is not demonstrated beyond an hourly balance: unserved energy is capped at '0.001' of load, but actual unserved kWh, loss-of-load hours, N-1 diesel or battery outages, sub-hourly cloud ramps and multi-day low-solar events are not reported; the diesel minimum-load margin in G4 is '0.0' kW.\", \"addressed_in\": null}, {\"point\": \"The investor cannot audit net present cost '23,591,478 USD' or LCOE '0.251 USD/kWh' from a cash-flow breakdown: no year-by-year schedule is given for fuel, O&M, battery replacement at '12 yr' within a '20 yr' project, PV life '25 yr', salvage value, diesel overhaul or replacement, taxes or financing.\", \"addressed_in\": null}]}"
+}
