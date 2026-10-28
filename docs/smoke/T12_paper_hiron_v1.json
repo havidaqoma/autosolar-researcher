@@ -1,0 +1,99 @@
+{
+  "what": "paper check v1 on Hiron 2021 (in-sample), 3 runs, prompt v1 (reconstructed byte for byte; sha256 matches the runs)",
+  "pdf_smoke": {
+    "wall_s": 25.7,
+    "usage": {
+      "input_tokens": 90531,
+      "cached_tokens": 0,
+      "output_tokens": 1981,
+      "reasoning_tokens": 1820,
+      "search_queries": 0
+    },
+    "cost_usd": 0.0094493
+  },
+  "prompt_v1_sha256": "a3defdc3cfd80ac344fc1866a55abf8936124c0986d5c360e1415c6df20edfce",
+  "prompt_v1": "You read a PDF of a design or feasibility study of a power system with PV, batteries or diesel generators. Copy out the numbers listed below exactly as the PDF prints them. Return only JSON, no prose, with exactly two keys: \"statements\" and \"schedule\".\n\nstatements: one entry for EVERY place where a listed quantity is stated: abstract, text, tables, figure captions and conclusion. If the paper states the same quantity in four places, give four entries, also when the values differ. Never fix, convert, add up, multiply or round a number. Each entry is {\"quantity\": a name from the list, \"value\": the number as printed (dot for decimals, no thousands separators), \"count\": the number of identical units when the paper writes for example 2 x 2.7 MW (then value 2.7 and count 2), else null, \"unit\": the unit as printed, \"condition\": \"\" or a few words when the value belongs to a scenario, height, year or case that makes it a different value, \"page\": the page in the PDF file counted from 1, \"place\": one of abstract, text, table, caption, conclusion, \"quote\": the words around the number copied character for character from the PDF, at least 8 words where the text allows, and it must contain the number}.\n\nQuantity names:\n- pv_ac_kw: PV plant AC rating (inverter side), any power unit\n- pv_dc_kwp: PV array DC size (kWp, MWp)\n- diesel_kw: rated power of the diesel plant or of each diesel unit (use count for 'N x size')\n- converter_kw: converter or inverter rating of the battery system\n- battery_kw: battery power rating\n- peak_load_kw: peak electricity demand\n- battery_size: battery capacity in any unit as printed (kWh, MWh, Ah, MAh)\n- pv_module_wp: rated power of one PV module (Wp)\n- pv_module_count: number of PV modules\n- pv_module_area_m2: area of one PV module\n- pv_area_m2: land or roof area used by the PV plant\n- load_kwh_day: electricity demand per day\n- pv_kwh_day: PV energy per day\n- diesel_kwh_day: diesel energy per day\n- load_kwh_yr: electricity demand per year\n- pv_kwh_yr: PV energy per year\n- diesel_kwh_yr: diesel energy per year\n- energy_served_kwh_yr: total electricity served per year\n- ghi_kwh_m2_yr: solar irradiation at the site (per day or per year, unit as printed)\n- wind_m_s: wind speed (put the height in condition)\n- lcoe_usd_per_kwh: levelised cost of energy or cost of energy of the proposed system (put the scenario in condition)\n- base_coe_usd_per_kwh: cost of energy of the system before the project\n- npc_usd: net present cost\n- capex_usd: total initial capital cost\n- annual_cost_usd: total annual cost\n- cost_item_usd: one line of a cost breakdown; condition = npc_usd, capex_usd or annual_cost_usd (the total it belongs to)\n- om_cost_usd: operation and maintenance cost, any form\n- pv_capex_usd_per_kw: PV capital cost per kW or kWp\n- diesel_capex_usd_per_kw: diesel generator capital cost per kW\n- battery_capex_usd_per_kwh: battery capital cost per kWh\n- fuel_price_usd_per_l: diesel fuel price per litre\n- discount_rate_frac: discount or interest rate used in the economics\n- renewable_fraction_frac: renewable share of the energy served\n- battery_rte_frac: battery round trip efficiency\n- project_life_yr: project lifetime\n- fuel_l_yr: diesel fuel used per year\n- co2_kg_yr: CO2 emitted per year\n\nschedule: if the paper prints a table of power flows for one day at a fixed time step (for example hourly), give {\"page\": page in the PDF file, \"label\": the table name, \"period_h\": hours per row, \"rows\": [one object per printed row: {\"time\", \"load_kw\", \"pv_to_load_kw\", \"pv_total_kw\", \"pv_to_battery_kw\", \"battery_discharge_kw\", \"diesel_kw\", \"curtailed_kw\"}]}. Map each printed column to the field it means: pv_to_load_kw is PV power that goes straight to the load, pv_total_kw is all PV output, pv_to_battery_kw is power that charges the battery. Use null for a field the table does not have. Copy every row. If the paper has no such table, schedule is null.",
+  "scores": [
+    {
+      "run_id": "paper-20261028T032011-c5c686",
+      "found": [
+        "C1",
+        "C3",
+        "C4",
+        "C5",
+        "C7",
+        "C11",
+        "C15",
+        "C16"
+      ],
+      "found_n": 8,
+      "covered_n": 13,
+      "extra_flags": [
+        "P7"
+      ],
+      "flags": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P7",
+        "P9",
+        "P11",
+        "P15"
+      ],
+      "kept": 34,
+      "dropped": 24,
+      "rejected": 0,
+      "schedule": true,
+      "cost_usd": 0.012502,
+      "wall_s": 79.2
+    },
+    {
+      "run_id": "paper-20261028T032130-b59acf",
+      "found": [
+        "C3",
+        "C5",
+        "C16"
+      ],
+      "found_n": 3,
+      "covered_n": 13,
+      "extra_flags": [],
+      "flags": [
+        "P2",
+        "P4",
+        "P11"
+      ],
+      "kept": 0,
+      "dropped": 0,
+      "rejected": 67,
+      "schedule": true,
+      "cost_usd": 0.0142656,
+      "wall_s": 113.0
+    },
+    {
+      "run_id": "paper-20261028T032323-d7e83b",
+      "found": [
+        "C16"
+      ],
+      "found_n": 1,
+      "covered_n": 13,
+      "extra_flags": [],
+      "flags": [
+        "P11"
+      ],
+      "kept": 0,
+      "dropped": 0,
+      "rejected": 69,
+      "schedule": false,
+      "cost_usd": 0.0129922,
+      "wall_s": 92.7
+    }
+  ],
+  "notes": [
+    "runs 2 and 3: the model wrote numbers as JSON strings, so the strict parser rejected every statement (67 and 69)",
+    "run 1: table cells dropped because the PDF text layer prints table headers apart from values (fixed by T12a2)",
+    "run 1: the PV column of the hourly table was read as total PV, so P5 (990 kW plant giving 1,990 kW) was not flagged",
+    "scoring rule C9 tightened before the v2 runs to P1 on pv_area_m2 only; run 1 then scores 8 of 13"
+  ]
+}
