@@ -50,15 +50,15 @@ def test_constants():
     assert firm.LABELS == LABELS
     assert len(OUT_OF_SCOPE) == 8 and OUT_OF_SCOPE[0].startswith("Grid stability: frequency and voltage control")
     assert OUT_OF_SCOPE[7] == "Diesel price risk beyond the sensitivity table"
-    assert len(FIRM_SPECS) == 30
+    assert len(FIRM_SPECS) == 41
     assert FIRM_SPECS[0] == ("near_tie_pct", "%", "check", 1)
     assert FIRM_SPECS[12] == ("reserve_lcoe_usd_per_kwh", "USD/kWh", "computed", 3)
     assert FIRM_SPECS[20] == ("land_fits", "", "computed", 0)
-    assert FIRM_SPECS[29] == ("total_cost_usd", "USD", "computed", 5)
+    assert FIRM_SPECS[40] == ("total_cost_usd", "USD", "computed", 5)
     assert KEYS[:2] == ["near_tie_pct", "near_tie_count"] and KEYS[24] == "reference_pv_kwp"
     assert FIRM_CHECK_LABEL == {"near_tie_pct": "near_tie_frac", "reserve_units": "diesel_must_run_units",
                                 "land_site_ha": "site_land_ha", "land_pv_mwdc_per_ha": "pv_mwdc_per_ha",
-                                "reference_pv_kwp": "reference_pv_kwp"}
+                                "reference_pv_kwp": "reference_pv_kwp", "alt_diesel_unit_kw": "diesel_unit_kw_alt"}
     assert {k for k, _, lab, _ in FIRM_SPECS if lab == "check"} == set(FIRM_CHECK_LABEL)
     assert all(lab in LABELS for _, _, lab, _ in FIRM_SPECS if lab != "check")
     assert set(FIRM_TITLES) == set(KEYS)
@@ -77,7 +77,7 @@ def test_firmness_does_not_import_study():
 
 def test_load_checks_default_file():
     values, raw = load_checks(CHECKS)
-    assert raw["schema"] == CHECKS_SCHEMA and set(values) == set(CHECK_NAMES)
+    assert raw["schema"] == CHECKS_SCHEMA and set(values) == set(CHECK_NAMES) | {"diesel_unit_kw_alt"}
     assert values["site_land_ha"] == 9.0 and values["pv_mwdc_per_ha"] == 0.87
     assert values["reference_pv_kwp"] == pytest.approx(3889 * 0.32)
     assert type(values["diesel_must_run_units"]) is int and values["diesel_must_run_units"] == 1
@@ -347,7 +347,7 @@ def test_items_shape(firm_run):
         assert it["title"] == FIRM_TITLES[key] and it["unit"] == unit
         want = craw[FIRM_CHECK_LABEL[key]]["label"] if label == "check" else label
         assert it["label"] == want, key
-        if key == "land_fits":
+        if key in ("land_fits", "alt_on_grid_edge"):
             assert it["value"] in (True, False) and it["text"] == ("yes" if it["value"] else "no")
         elif it["value"] is None:
             assert it["text"] == "none"
@@ -430,8 +430,9 @@ def test_sources_gain_check_lines(firm_run):
     src = firm_run["checked"].report["sources"]
     plain = firm_run["plain"].report["sources"]
     craw = json.loads(CHECKS.read_text(encoding="utf-8"))["values"]
-    extra = ["Check input " + n + ": " + craw[n]["note"] for n in CHECK_NAMES if craw[n]["label"] in ("press", "paper")]
-    assert len(extra) == 3
+    names = list(CHECK_NAMES) + ["diesel_unit_kw_alt"]
+    extra = ["Check input " + n + ": " + craw[n]["note"] for n in names if craw[n]["label"] in ("press", "paper")]
+    assert len(extra) == 4
     assert src == plain + extra
 
 
@@ -444,7 +445,7 @@ def test_markdown_sections(firm_run):
     assert pos == sorted(pos)
     block = md[md.index("## How firm is the answer\n"):md.index("## Weather sources\n")]
     lines = [x for x in block.split("\n")[1:] if x]
-    assert len(lines) == 30
+    assert len(lines) == 41
     for line, item in zip(lines, out.report["firmness"]["items"]):
         if item["unit"] == "":
             assert line == "- " + item["title"] + ": " + item["text"] + " (" + item["label"] + ")"

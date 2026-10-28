@@ -18,7 +18,7 @@ def test_caveats_text(study):
     r = study["report"]
     it = _items(r)
     c = caveats(r)
-    assert len(c) == 5
+    assert len(c) == 6
     assert c[0] == ("Near tie: " + it["near_tie_count"]["text"] + " designs are within " + it["near_tie_pct"]["text"]
                     + "% of the least cost, from " + it["near_tie_pv_kwp_min"]["text"] + " to "
                     + it["near_tie_pv_kwp_max"]["text"] + " kWp of PV.")
@@ -27,11 +27,20 @@ def test_caveats_text(study):
                     + it["reserve_battery_kwh"]["text"] + " kWh at " + it["reserve_lcoe_usd_per_kwh"]["text"]
                     + " USD/kWh, and the main design would cost "
                     + it["reserve_main_design_lcoe_usd_per_kwh"]["text"] + " USD/kWh.")
-    assert c[2] == ("Land: the main design needs " + it["land_need_ha"]["text"] + " ha of the "
+    assert c[2] == ("Diesel unit size: with units of " + it["alt_diesel_unit_kw"]["text"] + " kW instead, diesel only "
+                    "costs " + it["alt_diesel_only_lcoe_usd_per_kwh"]["text"] + " USD/kWh and the least cost design is "
+                    + it["alt_pv_kwp"]["text"] + " kWp with " + it["alt_battery_kwh"]["text"] + " kWh at "
+                    + it["alt_lcoe_usd_per_kwh"]["text"] + " USD/kWh (" + it["alt_saving_pct"]["text"]
+                    + "% below diesel only); if " + it["reserve_units"]["text"] + " diesel unit(s) must run in every hour, "
+                    "that design would cost " + it["alt_reserve_main_design_lcoe_usd_per_kwh"]["text"]
+                    + " USD/kWh and the least cost design is " + it["alt_reserve_pv_kwp"]["text"] + " kWp with "
+                    + it["alt_reserve_battery_kwh"]["text"] + " kWh at " + it["alt_reserve_lcoe_usd_per_kwh"]["text"]
+                    + " USD/kWh.")
+    assert c[3] == ("Land: the main design needs " + it["land_need_ha"]["text"] + " ha of the "
                     + it["land_site_ha"]["text"] + " ha set aside (fits: " + it["land_fits"]["text"] + ").")
-    assert c[3] == ("Published design size: " + it["reference_pv_kwp"]["text"] + " kWp of PV with no battery gives "
+    assert c[4] == ("Published design size: " + it["reference_pv_kwp"]["text"] + " kWp of PV with no battery gives "
                     + it["reference_lcoe_usd_per_kwh"]["text"] + " USD/kWh.")
-    assert c[4] == ("Cost: this study used " + it["total_cost_usd"]["text"] + " USD of model API calls, of which "
+    assert c[5] == ("Cost: this study used " + it["total_cost_usd"]["text"] + " USD of model API calls, of which "
                     + it["sourcing_cost_usd"]["text"] + " USD was the web search that sourced its inputs.")
 
 

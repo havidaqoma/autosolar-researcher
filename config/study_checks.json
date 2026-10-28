@@ -30,6 +30,12 @@
       "unit": "frac",
       "label": "assumed",
       "note": "designs whose LCOE is within this share of the least LCOE count as a near tie"
+    },
+    "diesel_unit_kw_alt": {
+      "value": 2700.0,
+      "unit": "kW",
+      "label": "paper",
+      "note": "Hiron 2021 prints two diesel fleet sizes: 2 x 2.7 MW on p1 and in Table 1, and 2 x 1.8 MW on p7 (the field section, with the feeder voltages); the main study uses 1.8 MW units, and this check reruns the design search with 2.7 MW units"
     }
   }
 }
