@@ -197,7 +197,7 @@ def main():
         run_id = "paper-" + time.strftime("%Y%m%dT%H%M%S", time.gmtime()) + "-" + uuid.uuid4().hex[:6]
         t0 = time.time()
         res = client.respond(run_id, "S7_paper_extract", inp, estimate_usd=0.30, reasoning_effort=args.effort,
-                             text_format=extraction_format())
+                             text_format=extraction_format(), store=False)
         wall = round(time.time() - t0, 1)
         try:
             parsed = parse_extraction(res.text)
