@@ -16,13 +16,16 @@ SITE_CSS = (
     "h1{font-size:1.6em;margin:0.2em 0}h2{font-size:1.25em;margin:1.2em 0 0.4em}"
     "h3{font-size:1em;margin:0.4em 0}"
     ".headline{font-size:1.15em;font-weight:bold}"
-    ".cards{margin:0.6em 0}"
-    ".card{border:1px solid #cfcfcf;background:#fbfbf7;padding:8px 12px;margin:6px 0}"
+    ".cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));"
+    "gap:12px;margin:0.6em 0}"
+    ".card{border:1px solid #cfcfcf;background:#fbfbf7;padding:8px 12px;margin:0}"
+    ".scroll{overflow-x:auto;max-width:100%}"
     "table{border-collapse:collapse;margin:8px 0;max-width:100%}"
     "th,td{border:1px solid #bbb;padding:4px 8px;text-align:left;font-size:0.92em}"
     "th{background:#f0f2ec}tr.flag{background:#fdf0ef}"
     "footer.page-foot{max-width:1000px;margin:0 auto;padding:12px 24px;color:#555}"
     "a{color:#1a4f9c}svg text{font-family:Arial,Helvetica,sans-serif}"
+    "svg{max-width:100%}"
 )
 
 CARD_TITLES = (
@@ -79,6 +82,52 @@ def headline(report: dict) -> str:
     )
 
 
+def caveats(report: dict) -> list[str]:
+    """Five plain lines from firmness items. Empty when no firmness."""
+    firm = report.get("firmness")
+    if firm is None:
+        return []
+    by_key = {it["key"]: it for it in firm.get("items", [])}
+
+    def it(key: str) -> dict:
+        if key not in by_key:
+            raise ValueError("firmness item missing: " + key)
+        return by_key[key]
+
+    first = (
+        "Near tie: " + str(it("near_tie_count")["text"]) + " designs are within "
+        + str(it("near_tie_pct")["text"]) + "% of the least cost, from "
+        + str(it("near_tie_pv_kwp_min")["text"]) + " to "
+        + str(it("near_tie_pv_kwp_max")["text"]) + " kWp of PV."
+    )
+    second = (
+        "Reserve case: if " + str(it("reserve_units")["text"])
+        + " diesel unit(s) must run in every hour, the least cost design is "
+        + str(it("reserve_pv_kwp")["text"]) + " kWp with "
+        + str(it("reserve_battery_kwh")["text"]) + " kWh at "
+        + str(it("reserve_lcoe_usd_per_kwh")["text"])
+        + " USD/kWh, and the main design would cost "
+        + str(it("reserve_main_design_lcoe_usd_per_kwh")["text"]) + " USD/kWh."
+    )
+    third = (
+        "Land: the main design needs " + str(it("land_need_ha")["text"])
+        + " ha of the " + str(it("land_site_ha")["text"]) + " ha set aside (fits: "
+        + str(it("land_fits")["text"]) + ")."
+    )
+    fourth = (
+        "Published design size: " + str(it("reference_pv_kwp")["text"])
+        + " kWp of PV with no battery gives "
+        + str(it("reference_lcoe_usd_per_kwh")["text"]) + " USD/kWh."
+    )
+    fifth = (
+        "Cost: this study used " + str(it("total_cost_usd")["text"])
+        + " USD of model API calls, of which "
+        + str(it("sourcing_cost_usd")["text"])
+        + " USD was the web search that sourced its inputs."
+    )
+    return [first, second, third, fourth, fifth]
+
+
 def _mix_hex(light: tuple, dark: tuple, pos: float) -> str:
     """Blend two RGB colours. pos 0 is light, 1 is dark. Returns hex."""
     if pos < 0.0:
@@ -116,12 +165,16 @@ def heatmap_svg(
     top = 16.0
     right = 16.0
     bottom = 64.0
+    limit_frac = float(unserved_max_frac)
+    has_infeasible = any(float(r["unserved_frac"]) > limit_frac for _, r in table.iterrows())
+    legend_rows = 3 if has_infeasible else 2
+    legend_top = top + plot_h + bottom + 8.0
     nx = len(pv_vals)
     ny = len(bat_vals)
     cell_w = plot_w / nx
     cell_h = plot_h / ny
     width = left + plot_w + right
-    height = top + plot_h + bottom
+    height = legend_top + legend_rows * 18.0 + 12.0
     pv_pos = {v: i for i, v in enumerate(pv_vals)}
     bat_pos = {v: i for i, v in enumerate(bat_vals)}
     parts = [
@@ -181,9 +234,40 @@ def heatmap_svg(
         '<text x="%.1f" y="%.1f" font-size="12" text-anchor="middle">PV kWp</text>'
         % (left + plot_w / 2, top + plot_h + 44)
     )
+    mid_y = top + plot_h / 2
     parts.append(
-        '<text x="%.1f" y="%.1f" font-size="12" text-anchor="middle">Battery kWh</text>' % (14.0, top + plot_h / 2)
+        '<text x="%.1f" y="%.1f" transform="rotate(-90 %.1f %.1f)" '
+        'font-size="12" text-anchor="middle">Battery kWh</text>' % (14.0, mid_y, 14.0, mid_y)
     )
+    if top_lcoe == low_lcoe:
+        fill_lo = _mix_hex(light, dark, 0.5)
+        fill_hi = fill_lo
+    else:
+        fill_lo = _mix_hex(light, dark, (top_lcoe - low_lcoe) / (top_lcoe - low_lcoe))
+        fill_hi = _mix_hex(light, dark, (top_lcoe - top_lcoe) / (top_lcoe - low_lcoe))
+    parts.append('<g class="legend">')
+    parts.append(
+        '<rect x="%.1f" y="%.1f" width="14" height="14" fill="%s" stroke="#ffffff" stroke-width="1"></rect>'
+        % (left, legend_top - 12.0, fill_lo)
+    )
+    parts.append(
+        '<text x="%.1f" y="%.1f" font-size="11">lowest %s USD/kWh</text>'
+        % (left + 20.0, legend_top, fmt(low_lcoe, 3))
+    )
+    parts.append(
+        '<rect x="%.1f" y="%.1f" width="14" height="14" fill="%s" stroke="#ffffff" stroke-width="1"></rect>'
+        % (left, legend_top + 18.0 - 12.0, fill_hi)
+    )
+    parts.append(
+        '<text x="%.1f" y="%.1f" font-size="11">highest %s USD/kWh</text>'
+        % (left + 20.0, legend_top + 18.0, fmt(top_lcoe, 3))
+    )
+    if has_infeasible:
+        parts.append(
+            '<text x="%.1f" y="%.1f" font-size="11">grey: unserved energy above the limit</text>'
+            % (left, legend_top + 36.0)
+        )
+    parts.append("</g>")
     parts.append("</svg>")
     return "".join(parts)
 
@@ -281,7 +365,7 @@ def weather_svg(rows: list[dict]) -> str:
 
 def _table(headers: list[str], rows: list[list[str]]) -> str:
     """One HTML table from header and cell strings. Returns str."""
-    parts = ["<table><thead><tr>"]
+    parts = ['<div class="scroll"><table><thead><tr>']
     for head in headers:
         parts.append("<th>" + esc(head) + "</th>")
     parts.append("</tr></thead><tbody>")
@@ -290,7 +374,7 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
         for cell in cells:
             parts.append("<td>" + esc(cell) + "</td>")
         parts.append("</tr>")
-    parts.append("</tbody></table>")
+    parts.append("</tbody></table></div>")
     return "".join(parts)
 
 
@@ -339,6 +423,12 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     out.append('<section id="answer"><h2>Answer</h2>')
     out.append('<p class="question">' + esc(report["question"]) + "</p>")
     out.append('<p class="headline">' + esc(headline(report)) + "</p>")
+    caveat_lines = caveats(report)
+    if caveat_lines:
+        out.append('<ul class="caveats">')
+        for line in caveat_lines:
+            out.append("<li>" + esc(line) + "</li>")
+        out.append("</ul>")
     out.append('<div class="cards">')
     for key, title in CARD_TITLES:
         fact = facts[key]
@@ -351,13 +441,13 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
         out.append(_table(["Item", "Value", "Unit", "Label"], rows))
         out.append("</section>")
     out.append('<section id="designs"><h2>Every design we costed</h2>')
-    out.append(heatmap_svg(table, best_pv, best_bat, unserved))
+    out.append('<div class="scroll">' + heatmap_svg(table, best_pv, best_bat, unserved) + "</div>")
     out.append("</section>")
     out.append('<section id="sensitivity"><h2>What moves the cost</h2>')
-    out.append(tornado_svg(report["sensitivity_table"], best_lcoe))
+    out.append('<div class="scroll">' + tornado_svg(report["sensitivity_table"], best_lcoe) + "</div>")
     out.append("</section>")
     out.append('<section id="weather"><h2>Sunshine from four sources</h2>')
-    out.append(weather_svg(report["weather_table"]))
+    out.append('<div class="scroll">' + weather_svg(report["weather_table"]) + "</div>")
     out.append("</section>")
     out.append('<section id="range"><h2>Range of the answer</h2>')
     out.append(
@@ -380,7 +470,8 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
             + esc(summary["not_checkable"])
             + "</p>"
         )
-        out.append("<table><thead><tr><th>Check</th><th>Status</th><th>Pages</th><th>Detail</th></tr></thead><tbody>")
+        out.append('<div class="scroll"><table><thead><tr><th>Check</th><th>Status</th>'
+                   "<th>Pages</th><th>Detail</th></tr></thead><tbody>")
         for res in paper_check["results"]:
             pages = ", ".join(str(p) for p in res.get("pages", []))
             cls = ' class="flag"' if res.get("status") == "flag" else ""
@@ -395,7 +486,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
                 + esc(res.get("detail", ""))
                 + "</td></tr>"
             )
-        out.append("</tbody></table>")
+        out.append("</tbody></table></div>")
         out.append(
             "<p>A flag means our checks could not reconcile the numbers as printed; "
             "it is not a finding about the authors.</p>"
