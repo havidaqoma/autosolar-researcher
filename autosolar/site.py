@@ -83,7 +83,7 @@ def headline(report: dict) -> str:
 
 
 def caveats(report: dict) -> list[str]:
-    """Five plain lines from firmness items. Empty when no firmness."""
+    """Five or six plain lines from firmness items. Empty when no firmness."""
     firm = report.get("firmness")
     if firm is None:
         return []
@@ -109,6 +109,34 @@ def caveats(report: dict) -> list[str]:
         + " USD/kWh, and the main design would cost "
         + str(it("reserve_main_design_lcoe_usd_per_kwh")["text"]) + " USD/kWh."
     )
+    if "alt_diesel_unit_kw" in by_key:
+        head = (
+            "Diesel unit size: with units of " + str(it("alt_diesel_unit_kw")["text"])
+            + " kW instead, diesel only costs " + str(it("alt_diesel_only_lcoe_usd_per_kwh")["text"])
+            + " USD/kWh"
+        )
+        if it("alt_lcoe_usd_per_kwh")["value"] is None:
+            alt_line = head + " and no design in the grid meets the unserved limit."
+        else:
+            alt_line = (
+                head
+                + " and the least cost design is " + str(it("alt_pv_kwp")["text"])
+                + " kWp with " + str(it("alt_battery_kwh")["text"])
+                + " kWh at " + str(it("alt_lcoe_usd_per_kwh")["text"])
+                + " USD/kWh (" + str(it("alt_saving_pct")["text"])
+                + "% below diesel only); if " + str(it("reserve_units")["text"])
+                + " diesel unit(s) must run in every hour, that design would cost "
+                + str(it("alt_reserve_main_design_lcoe_usd_per_kwh")["text"]) + " USD/kWh"
+            )
+            if it("alt_reserve_lcoe_usd_per_kwh")["value"] is None:
+                alt_line = alt_line + " and no design in the grid meets the unserved limit."
+            else:
+                alt_line = (
+                    alt_line
+                    + " and the least cost design is " + str(it("alt_reserve_pv_kwp")["text"])
+                    + " kWp with " + str(it("alt_reserve_battery_kwh")["text"])
+                    + " kWh at " + str(it("alt_reserve_lcoe_usd_per_kwh")["text"]) + " USD/kWh."
+                )
     third = (
         "Land: the main design needs " + str(it("land_need_ha")["text"])
         + " ha of the " + str(it("land_site_ha")["text"]) + " ha set aside (fits: "
@@ -125,6 +153,8 @@ def caveats(report: dict) -> list[str]:
         + str(it("sourcing_cost_usd")["text"])
         + " USD was the web search that sourced its inputs."
     )
+    if "alt_diesel_unit_kw" in by_key:
+        return [first, second, alt_line, third, fourth, fifth]
     return [first, second, third, fourth, fifth]
 
 

@@ -16,11 +16,13 @@ from autosolar.demand import HIRON_2021_SOURCE, build_demand_cases
 from autosolar.dispatch import Battery, DieselFleet
 from autosolar.econ import CostInputs
 from autosolar.firmness import (
+    ALT_KEYS,
     CHECK_NAMES,
     FIRM_CHECK_LABEL,
     FIRM_SPECS,
     FIRM_TITLES,
     OUT_OF_SCOPE,
+    diesel_size_case,
     land_check,
     load_checks,
     near_tie_band,
@@ -276,13 +278,16 @@ def firm_items(values: dict, checks_raw: dict) -> list[dict]:
     """One markdown item per FIRM_SPECS row. Values in firmness units, text formatted."""
     items: list[dict] = []
     check_entries = checks_raw["values"]
+    alt_present = "diesel_unit_kw_alt" in check_entries
     for key, unit, label, decimals in FIRM_SPECS:
+        if key in ALT_KEYS and not alt_present:
+            continue
         if label == "check":
             shown = check_entries[FIRM_CHECK_LABEL[key]]["label"]
         else:
             shown = label
         val = values[key]
-        if key == "land_fits":
+        if key in ("land_fits", "alt_on_grid_edge"):
             items.append({
                 "key": key,
                 "title": FIRM_TITLES[key],
@@ -931,6 +936,34 @@ def run_study(
             "sourcing_cost_usd": firm_cost["sourcing_cost_usd"],
             "total_cost_usd": firm_cost["total_cost_usd"],
         }
+        if "diesel_unit_kw_alt" in checks_values:
+            alt = diesel_size_case(
+                basis_kw,
+                paper_load,
+                pv_grid,
+                battery_grid,
+                battery_hours=battery_hours,
+                battery_template=battery,
+                diesel=diesel,
+                unit_kw=float(checks_values["diesel_unit_kw_alt"]),
+                must_run_units=must_run_units,
+                costs=costs,
+                co2_kg_per_l=co2_kg_per_l,
+                unserved_max_frac=unserved_max_frac,
+            )
+            firm_values["alt_diesel_unit_kw"] = checks_values["diesel_unit_kw_alt"]
+            firm_values["alt_diesel_only_lcoe_usd_per_kwh"] = alt["diesel_only_lcoe_usd_per_kwh"]
+            firm_values["alt_pv_kwp"] = alt["pv_kwp"]
+            firm_values["alt_battery_kwh"] = alt["battery_kwh"]
+            firm_values["alt_lcoe_usd_per_kwh"] = alt["lcoe_usd_per_kwh"]
+            firm_values["alt_saving_pct"] = alt["saving_pct"]
+            firm_values["alt_on_grid_edge"] = alt["on_grid_edge"]
+            firm_values["alt_reserve_main_design_lcoe_usd_per_kwh"] = alt[
+                "reserve_main_design_lcoe_usd_per_kwh"
+            ]
+            firm_values["alt_reserve_pv_kwp"] = alt["reserve_pv_kwp"]
+            firm_values["alt_reserve_battery_kwh"] = alt["reserve_battery_kwh"]
+            firm_values["alt_reserve_lcoe_usd_per_kwh"] = alt["reserve_lcoe_usd_per_kwh"]
         firmness = {
             "items": firm_items(firm_values, checks_raw),
             "out_of_scope": list(OUT_OF_SCOPE),
@@ -1055,6 +1088,10 @@ def run_study(
             entry = checks_raw["values"][name]
             if entry["label"] in ("press", "paper"):
                 sources.append("Check input " + name + ": " + entry["note"])
+        if "diesel_unit_kw_alt" in checks_raw["values"]:
+            entry = checks_raw["values"]["diesel_unit_kw_alt"]
+            if entry["label"] in ("press", "paper"):
+                sources.append("Check input diesel_unit_kw_alt: " + entry["note"])
     report = {
         "schema": REPORT_SCHEMA,
         "run_hash": run_hash,
