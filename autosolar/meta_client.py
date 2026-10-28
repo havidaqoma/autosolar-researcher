@@ -182,8 +182,16 @@ class MetaClient:
         metadata: Any | None = None,
         allow_standard: bool = False,
         images: int = 0,
+        text_format: Any | None = None,
     ) -> Result:
         """One model call with cost checks. Money in USD, images in images."""
+        if text_format is not None and (
+            not isinstance(text_format, dict)
+            or text_format.get("type") != "json_schema"
+            or not isinstance(text_format.get("name"), str)
+            or not isinstance(text_format.get("schema"), dict)
+        ):
+            raise ValueError("text_format must be a json_schema dict")
         if model in STANDARD_SPARK_MODELS and not allow_standard:
             raise ValueError("standard model needs allow_standard: " + str(model))
         if model not in PRICES:
@@ -204,6 +212,8 @@ class MetaClient:
             body["include"] = include
         if metadata is not None:
             body["metadata"] = metadata
+        if text_format is not None:
+            body["text"] = {"format": text_format}
         resp = self._send(body)
         data = self._read_body(resp)
         searches_int = _count_searches(data)
