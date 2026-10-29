@@ -385,3 +385,20 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - Gallery: 6 studies; the two new ones carry the load check (`figure_check` in `config/gallery.json`). README
   screenshots taken from b4a44fc6d4c32339, plus `docs/img/load_check.png`.
 - Spend so far (ledgers): API USD 3.27, Muse Code USD 0.56.
+
+## T19: the judge panel by default, and a plain refusal (Thursday 29 Oct)
+
+- Why: AI judge round 2 (all three judges) said a new search still used one model for all 3 votes, against the
+  T17 argument; two asked to see a refusal. Both are tool changes (`tools/source.py`, `tools/ask.py`), not engine
+  changes, so the orchestrator wrote them; no Muse Code run.
+- Order: spec `docs/specs/T19_panel_default_and_refusal.md` and `tests/test_tools_t19.py` (30 tests, 29 failing
+  before the code) committed first (d497b9a); smoke rules committed before the runs (6e62633); then the code.
+- Planted faults: 20 of 20 caught by the new tests (default mode, panel order, panel name, local mode, unknown
+  mode, vote log errors and cuts, refusal tuple, distance line, thousands comma, eager CAMS read, exit code, load
+  line, hash without strip, lat and lon swapped, period, distance only for far sites, wrong address passed).
+- `tools/ask.py` reads the CAMS address only when weather is fetched, so the demo commands (a reused study and a
+  refusal) need only the model key.
+- Smoke results in `docs/smoke/T19_SMOKE_RULES.md`: Bawean refused at 247 km (USD 0.000134, measured); the replay
+  made no model call. One panel search for the diesel minimum load: checked at 0.3 with votes local yes, local
+  yes, Wonder yes (USD 0.046, measured). Neither output is used by a study.
+- Spend so far (ledgers): API USD 3.32, Muse Code USD 0.56, all Meta USD 3.88.

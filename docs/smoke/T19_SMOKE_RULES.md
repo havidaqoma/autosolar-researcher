@@ -26,6 +26,29 @@ as it comes out.
 - Pass for the smoke: the run finishes, G6 passes on its file, the meta says `judge_mode` panel, and the votes in
   the meta follow the panel order (local, local, then Wonder) for every candidate that reached the judge.
 
-## Results
+## Results (added after the runs, Thursday 29 Oct)
 
-(Added after the runs.)
+### 1. Refusal: as expected
+
+First run, one Muse Spark parse call (`study-20261029T151022-f8ca34`, USD 0.000134, measured), exit code 2:
+
+```
+No study: site outside the Karimunjawa demand source area.
+Pulau Bawean (Pulau Bawean, Dayasawah, Gresik, Jawa Timur, 61181, Indonesia) is 247 km from Karimunjawa; the demand model covers sites within 30 km (computed).
+The hourly load comes from one published study of Karimunjawa. A new site needs its own hourly load.
+```
+
+The second run printed the same three lines with exit code 2 and added no row to the ledger (measured: one parse
+row for both runs). With the same tool, the Karimunjawa question with the example study's sourcing file printed
+`run b4a44fc6d4c32339 reused` in 0.0 s with no CAMS address set and no new ledger row (measured).
+
+### 2. New search with the judge panel: pass
+
+`sourcing-20261029T151048-c7fb3e`, 106 s, judge mode `panel`, G6 passed (1 of 1 sourced inputs checked).
+
+- diesel_min_load_frac: checked, 0.3 frac (docs), quote found exactly, page 15 of a microgrid symposium PDF ("Design
+  and Control of Energy Storage System for Stand-alone ..."), as written "30 % of the generator rating".
+- Votes in the meta, in order: local yes (10.1 s), local yes (35.8 s), Wonder yes (4.5 s), each with its reason.
+- Cost (ledger, measured): web search USD 0.036662, Wonder vote USD 0.009796, together USD 0.046.
+
+This file is not used by any study and replaces no input.

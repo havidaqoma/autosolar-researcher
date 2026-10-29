@@ -13,13 +13,17 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 `PRE_EVENT.md`.
 
 What it cost (measured ledgers): Muse Code wrote the engine, all 9,405 lines of `autosolar/` (19 files, `wc -l`),
-for USD 0.56. One full study, with a fresh web search for its prices, costs about USD 0.50 in Meta model calls. All
-Meta model spending for the whole hackathon, smoke tests, chart reader tests and reviews included: USD 3.83.
+for USD 0.56. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
+and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
+search for its prices, costs about USD 0.50 in Meta model calls. All Meta model spending for the whole hackathon,
+smoke tests, chart reader tests and reviews included: USD 3.88.
 
 ## For judges
 
 - Scope: one island today. The tool answers for Karimunjawa; the demand model covers sites within 30 km of it and
-  refuses other sites rather than guess. A new site needs its own hourly load.
+  refuses other sites rather than guess. A new site needs its own hourly load. Asked about Bawean, another diesel
+  island in the Java Sea, it answers "No study" and says the site is 247 km away (computed,
+  `docs/smoke/T19_SMOKE_RULES.md`).
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
@@ -36,16 +40,16 @@ Meta model spending for the whole hackathon, smoke tests, chart reader tests and
 | Tool | Job | When it runs | How its output is checked |
 |---|---|---|---|
 | Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
-| Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
-| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study b4a44fc6d4c32339 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes is looked up in the study files (64 of 65 in the last review; the other is the reviewer's own product of two of them, and it is right, computed) |
+| Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
+| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (64 of 65 in the last review; the other is the reviewer's own product of two of them, and it is right, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
-| Muse Code (contributor model) | Wrote the product code from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (29 of 29 for the last two tasks, computed) |
+| Muse Code (contributor model) | Wrote the engine (`autosolar/`) from short specs. It did not write the specs, the tests or the run tools in `tools/` | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (29 of 29 for the last two engine tasks, computed) |
 
-- Checks: 1,425 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,455 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
 - Cost: Muse Code USD 0.56 (39 runs, 3.0 hours; it read 49 million tokens, 93% from cache, and wrote 0.65
-  million). Meta Model API USD 3.27 (176 calls, 438 web searches). USD 3.83 in all (measured ledgers).
+  million). Meta Model API USD 3.32 (179 calls, 451 web searches). USD 3.88 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
@@ -161,8 +165,9 @@ each value are kept with the build files.
   must not judge them. So the 4 checked values were judged again: Muse Glimmer (local) gives votes 1 and 2, Muse
   Wonder gives vote 3, and any no or error sends the value back to its assumed value. The rule was committed before
   the run (`docs/specs/T17_judge_panel.md`). Wonder said yes to all 4 (measured, 4 calls, USD 0.085), so nothing
-  changed. New searches (`tools/source.py`) still use the local judge for all 3 votes; the two-model check is
-  `tools/rejudge.py --panel`.
+  changed. Since T19 a new search (`tools/source.py`) uses the same panel by default; `--judge local` keeps the
+  old rule for repeating earlier runs. One smoke search with the default (one input, USD 0.046, measured) checked
+  the diesel minimum load at 30% with the votes local yes, local yes, Wonder yes (`docs/smoke/T19_SMOKE_RULES.md`).
 - Paper check, in sample: on Hiron 2021 (Energies 14, 8311, the paper that gives the island's hourly load) the
   frozen checks cover 13 of the 14 items a hand audit could not reconcile. With the frozen prompt the tool found 11,
   8 and 11 of them in 3 runs (measured), with no extra flags, including a 990 kW PV plant that delivers 1,990 kW at
@@ -179,7 +184,7 @@ each value are kept with the build files.
   the axis span (measured), so read these as about 30%, 17% and 9%. For Table 6 to come from the December curve the
   growth would have to be about 10.6% a year. So the load the study uses may be too high, by more than the demand
   swing it tests. The study still uses Table 6: changing an input after seeing the answer would be shopping for
-  numbers. The page shows the check next to the answer instead.
+  numbers. The study page shows the check in its own section instead, on the same page as the answer.
 - Second model review, curated run, latest build (review-20261029T060800-acbbb2): Muse Wonder raised 10 points; 2
   are not answered by the report: why the 8 h battery case costs the same although half the battery power is
   cheaper, and reliability beyond the hourly energy balance (no forced outages, loss of the largest unit or
@@ -212,7 +217,7 @@ page says so.
 
 ```
 uv sync
-uv run pytest                     # 1,425 tests, no network
+uv run pytest                     # 1,455 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -226,13 +231,13 @@ other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.27, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge
-  and one load check.
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.32, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge,
+  one load check, one smoke search with the judge panel and one refused question.
 - `ledger/build_usage.jsonl`: 39 Muse Code runs (35 that wrote the product, 4 sandbox smoke runs), USD 0.56 and
   3.0 hours in total. Muse Code read 49.1 million input tokens (93% from cache) and wrote 0.65 million output
   tokens.
-- All Meta model spending: USD 3.83.
+- All Meta model spending: USD 3.88.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013, a load check USD 0.01 and a review USD 0.25 to 0.33.
 
@@ -251,7 +256,9 @@ above.
 
 Every task has a spec in `docs/specs/` and acceptance tests written before the code. Before Muse Code ran, each
 test file was checked against a reference build and against planted faults (recorded at the end of each spec).
-Muse Code then wrote the code in a sandbox and ran the tests itself. The log of what was decided and why is
+Muse Code then wrote the code in a sandbox and ran the tests itself. Muse Code did not write the specs, the tests
+or the run tools in `tools/` (T19 changed two of those tools, with its own spec and tests first). The log of what
+was decided and why is
 `docs/implementation-notes.md`.
 
 ## Acknowledgements
