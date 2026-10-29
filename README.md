@@ -61,6 +61,10 @@ stay in the gallery. Raw run files are under `docs/site/data/`.
 
 ## The Karimunjawa answer (study b4a44fc6d4c32339, same numbers as 5ee65dcd3350bec1; computed unless labelled)
 
+"Computed" says where a number comes from: the code calculated it from the inputs. It is only as good as those
+inputs, and many of them are assumed, among them all battery prices, the discount rate and the diesel fuel curve.
+The "Inputs" table on each page labels every one, and "What moves the cost" shows how much 9 of them matter.
+
 | | |
 |---|---|
 | Answer | Yes. Solar plus battery cuts the cost of electricity from 0.354 to 0.251 USD/kWh (-29.1%). With the larger diesel units the source paper also prints, the cut is from 0.410 to 0.260 USD/kWh (-36.7%) |
@@ -147,8 +151,8 @@ each value are kept with the build files.
 
 ## Checks
 
-- Eleven gates on every study (G1 energy balance, G2 battery, G3 PV physics per weather source, G4 diesel minimum
-  load, G5 weather spread, G6 sourced inputs match the inputs file, G7 grid edge, G8 two LCOE formulas agree).
+- Eleven gate checks on every study: 8 gates, with G3 run once for each of the 4 weather sources (G1 energy
+  balance, G2 battery, G3 PV physics, G4 diesel minimum load, G5 weather spread, G6 sourced inputs match the inputs file, G7 grid edge, G8 two LCOE formulas agree).
 - Citations: a value is "checked" only with a found quote, a resolving DOI when one is given, and 3 yes votes.
   Otherwise it keeps its assumed value and the report says why. 4 of 7 inputs are checked in the example; battery
   capex, battery O&M and the discount rate are still assumed. The post hoc run above replaces 7 inputs by hand from
@@ -162,7 +166,8 @@ each value are kept with the build files.
 - Paper check, in sample: on Hiron 2021 (Energies 14, 8311, the paper that gives the island's hourly load) the
   frozen checks cover 13 of the 14 items a hand audit could not reconcile. With the frozen prompt the tool found 11,
   8 and 11 of them in 3 runs (measured), with no extra flags, including a 990 kW PV plant that delivers 1,990 kW at
-  11:00. The prompt was tuned on this paper, so this shows the tool can find what a careful reader finds.
+  11:00. The prompt was tuned on this paper, so this shows only that the tool can be set up to find what a careful
+  reader found. It is not evidence that it works on other papers; the next point tests that.
 - Paper check, out of sample: on a second paper with a published correction (Mathematics 11, 1248, original
   version) the tool flagged none of the 3 corrected numbers and raised no flag a person could confirm (measured,
   3 runs). So the claim that the checks find errors in papers they were not written for is NOT supported yet. The
@@ -170,7 +175,8 @@ each value are kept with the build files.
 - Load check (SAM 3.1, rules fixed before the run in `docs/smoke/FIGURE_CHECK_RULES.md`): the paper says its 2022
   load is the December 2018 curve grown by 3.48% a year. SAM 3.1 read the three 2018 days of its Figure 7 (22 of 24
   hours read and validated, 4 SAM calls, USD 0.01, measured). Table 6 scaled back is 30.4% above the 31 Dec 2018
-  curve, 16.7% above 27 Oct and 9.4% above 28 Sep (computed). For Table 6 to come from the December curve the
+  curve, 16.7% above 27 Oct and 9.4% above 28 Sep (computed). The reader's error in its test was at most 1.32% of
+  the axis span (measured), so read these as about 30%, 17% and 9%. For Table 6 to come from the December curve the
   growth would have to be about 10.6% a year. So the load the study uses may be too high, by more than the demand
   swing it tests. The study still uses Table 6: changing an input after seeing the answer would be shopping for
   numbers. The page shows the check next to the answer instead.
