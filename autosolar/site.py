@@ -479,8 +479,148 @@ def _unserved_max_frac(report: dict) -> float:
     raise ValueError("inputs_table holds no unserved_max_frac row")
 
 
+def figure_check_svg(result: dict) -> str:
+    """Line chart of the read curves and the scaled table. Loads in kWh. Returns svg."""
+    reading = result.get("reading")
+    comparison = result.get("comparison")
+    if not isinstance(reading, dict) or not isinstance(comparison, dict):
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60"></svg>'
+    values = reading.get("values", {})
+    scaled_kw = comparison.get("table_at_figure_year_kw", [])
+    if not isinstance(values, dict) or len(values) == 0:
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60"></svg>'
+    names = list(values)
+    palette = ["#1f6fb2", "#7a3fa0", "#c0392b", "#0f7a3d", "#b26a00", "#555555"]
+    width_px = 720.0
+    height_px = 360.0
+    left_px = 64.0
+    right_px = 16.0
+    top_px = 16.0
+    bottom_px = 48.0
+    plot_w_px = width_px - left_px - right_px
+    plot_h_px = height_px - top_px - bottom_px
+    nums_kwh: list[float] = []
+    for name in names:
+        for item in values[name]:
+            if item is not None:
+                nums_kwh.append(float(item))
+    for item in scaled_kw:
+        if item is not None:
+            nums_kwh.append(float(item))
+    if not nums_kwh:
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60"></svg>'
+    top_kwh = max(nums_kwh)
+    low_kwh = min(nums_kwh)
+    if top_kwh == low_kwh:
+        top_kwh = low_kwh + 1.0
+
+    def x_px(hour: int) -> float:
+        return left_px + float(hour) / 23.0 * plot_w_px
+
+    def y_px(value_kwh: float) -> float:
+        return top_px + (top_kwh - float(value_kwh)) / (top_kwh - low_kwh) * plot_h_px
+
+    parts = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" role="img">'
+             % (int(width_px), int(height_px))]
+    parts.append('<text x="%.1f" y="%.1f" font-size="12" text-anchor="middle">Hour</text>'
+                 % (left_px + plot_w_px / 2, height_px - 8.0))
+    parts.append('<text x="%.1f" y="%.1f" font-size="12" text-anchor="middle">kWh</text>'
+                 % (16.0, top_px + 8.0))
+    for pos, name in enumerate(names):
+        color = palette[pos % len(palette)]
+        pts = ["%.1f,%.1f" % (x_px(h), y_px(float(values[name][h])))
+               for h in range(24) if values[name][h] is not None]
+        if not pts:
+            continue
+        parts.append('<polyline points="' + " ".join(pts) + '" fill="none" stroke="' + color
+                     + '" stroke-width="2"><title>' + esc(name) + "</title></polyline>")
+    table_pts = ["%.1f,%.1f" % (x_px(h), y_px(float(scaled_kw[h]))) for h in range(24)
+                 if h < len(scaled_kw) and scaled_kw[h] is not None]
+    if table_pts:
+        parts.append('<polyline points="' + " ".join(table_pts) + '" fill="none" stroke="#333333"'
+                     + ' stroke-width="2" stroke-dasharray="6,3"><title>Study load, scaled back</title>'
+                     + "</polyline>")
+    legend_y = top_px + 4.0
+    for pos, name in enumerate(names):
+        color = palette[pos % len(palette)]
+        parts.append('<rect x="%.1f" y="%.1f" width="14" height="10" fill="%s"></rect>'
+                     % (left_px + 8.0, legend_y - 10.0, color))
+        parts.append('<text x="%.1f" y="%.1f" font-size="11">%s</text>'
+                     % (left_px + 26.0, legend_y, esc(name)))
+        legend_y += 16.0
+    parts.append('<rect x="%.1f" y="%.1f" width="14" height="10" fill="#333333"></rect>'
+                 % (left_px + 8.0, legend_y - 10.0))
+    parts.append('<text x="%.1f" y="%.1f" font-size="11">Study load, scaled back</text>'
+                 % (left_px + 26.0, legend_y))
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def _figure_check_section(result: dict) -> str:
+    """One figure check section for the study page. Loads in kW and kWh. Returns str."""
+    plan = result.get("plan", {})
+    compare_plan = plan.get("compare", {})
+    comparison = result.get("comparison")
+    reading = result.get("reading")
+    parts = ['<section id="figure-check"><h2>Second read of the load: SAM 3.1 reads the paper chart</h2>']
+    parts.append("<p>" + esc(plan.get("figure", "")) + " of " + esc(plan.get("paper", ""))
+                 + ". SAM 3.1 found each curve in the image and Muse Spark read the axis labels; "
+                 + "the values below were read off the image, not typed in.</p>")
+    if not isinstance(reading, dict) or reading is None:
+        parts.append("<p>Not checkable: " + esc(result.get("reason", "")) + "</p>")
+        parts.append("</section>")
+        return "".join(parts)
+    parts.append('<div class="scroll">' + figure_check_svg(result) + "</div>")
+    if not isinstance(comparison, dict) or comparison is None or result.get("verdict") == "not checkable":
+        reason = str(result.get("reason", ""))
+        if not reason and isinstance(comparison, dict) and comparison is not None:
+            reason = str(comparison.get("reason", ""))
+        parts.append("<p>Not checkable: " + esc(reason) + "</p>")
+        parts.append("</section>")
+        return "".join(parts)
+    headers = ["Day", "Energy over the hours used (kWh)", "Peak (kWh)", "Study load scaled back, against this day"]
+    rows: list[list[str]] = []
+    for row in comparison["series"]:
+        ratio_cell = fmt(row["ratio"], 2) if row["ratio"] is not None else ""
+        rows.append([str(row["name"]), fmt(row["kwh"], 0), fmt(row["peak_kwh"], 0), ratio_cell])
+    hours = list(comparison["hours"])
+    scaled_kw = list(comparison["table_at_figure_year_kw"])
+    peak_scaled_kwh = max(float(scaled_kw[h]) for h in hours) if hours else 0.0
+    rows.append(["Study load, scaled back", fmt(comparison["table_kwh"], 0), fmt(peak_scaled_kwh, 0), ""])
+    parts.append(_table(headers, rows))
+    years = int(comparison["years"])
+    growth_pct = float(compare_plan.get("growth_frac_per_yr", 0.0)) * 100.0
+    band_pct = float(comparison.get("band_frac", 0.0)) * 100.0
+    diff_pct = float(comparison["diff_pct"])
+    direction = "above" if diff_pct >= 0.0 else "below"
+    inside = "inside" if comparison["verdict"] == "inside band" else "outside"
+    first = ("The study's load (" + str(compare_plan.get("table", "")) + "), scaled back " + str(years)
+             + " years at " + fmt(growth_pct, 2) + "% a year, is " + fmt(abs(diff_pct), 1) + "% " + direction
+             + " the " + str(comparison["basis_series"]) + " curve. " + str(compare_plan.get("basis_note", ""))
+             + " That is " + inside + " the +/-" + fmt(band_pct, 0)
+             + "% demand swing of the sensitivity table.")
+    parts.append("<p>" + esc(first) + "</p>")
+    mean_ratio = float(comparison["mean_ratio"])
+    mean_direction = "above" if mean_ratio >= 1.0 else "below"
+    second = ("Over all " + str(len(comparison["series"])) + " days the study's load is "
+              + fmt(abs(100.0 * (mean_ratio - 1.0)), 1) + "% " + mean_direction + " their mean.")
+    parts.append("<p>" + esc(second) + "</p>")
+    third = ("Hours used: " + str(len(hours)) + " of 24 (read and validated in every curve; the first and "
+             + "last hour of a chart are not validated).")
+    parts.append("<p>" + esc(third) + "</p>")
+    validation = result.get("validation", {})
+    real_pct = float(validation.get("real_figure_max_err_frac", 0.0)) * 100.0
+    synth_pct = float(validation.get("synthetic_inner_max_err_frac", 0.0)) * 100.0
+    fourth = ("Reader error in the chart reader test (measured): at most " + fmt(real_pct, 2)
+              + "% of the axis span on a real figure and " + fmt(synth_pct, 2)
+              + "% on synthetic charts, away from the first and last point.")
+    parts.append("<p>" + esc(fourth) + "</p>")
+    parts.append("</section>")
+    return "".join(parts)
+
+
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
-                      review: dict | None = None) -> str:
+                      review: dict | None = None, figure_check: dict | None = None) -> str:
     """Full study page for one report and design table. Returns ASCII str."""
     site = str(report["site"]["name"])
     facts = report["facts"]
@@ -570,6 +710,8 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
             "it is not a finding about the authors.</p>"
         )
         out.append("</section>")
+    if figure_check is not None:
+        out.append(_figure_check_section(figure_check))
     if review is not None:
         out.append('<section id="review"><h2>Second model review</h2>')
         out.append("<p>" + esc(review["model"]) + "</p><ul>")
