@@ -299,24 +299,19 @@ def test_tornado_plain_labels_and_layout():
             assert float(x) < 20.0 and len(t) <= 52, t
 
 
-def test_page_explains_the_bars():
-    report, table = ts_report()
+@pytest.fixture(scope="module")
+def page_report(tmp_path_factory):
+    """A finished report and design table from the synthetic study."""
+    import json
+    import pandas as pd
+    tmp = tmp_path_factory.mktemp("t18a_page")
+    out = study.run_study(ts.QUESTION, client=ts.FakeClient(), http_get=ts.FakeGet(), weather_fn=ts.WeatherFn(),
+                          inputs_path=ts.small_inputs(tmp), runs_dir=tmp / "runs", run_id="t18a-page")
+    return json.loads(json.dumps(out.report)), pd.read_csv(out.run_dir / "design_table.csv")
+
+
+def test_page_explains_the_bars(page_report):
+    report, table = page_report
     page = render_study_html(report, table)
     sec = page.split('<section id="sensitivity">', 1)[1].split("</section>", 1)[0]
     assert "Each bar moves one input down and up by the swing in the inputs table" in sec
-
-
-def ts_report():
-    """A finished report from the synthetic study, cached on the function."""
-    if not hasattr(ts_report, "cache"):
-        import json
-        import pathlib
-        import tempfile
-        tmp = pathlib.Path(tempfile.mkdtemp(prefix="t18a_"))
-        out = study.run_study(ts.QUESTION, client=ts.FakeClient(), http_get=ts.FakeGet(),
-                              weather_fn=ts.WeatherFn(), inputs_path=ts.small_inputs(tmp), runs_dir=tmp / "runs",
-                              run_id="t18a-page")
-        import pandas as pd
-        report = json.loads(json.dumps(out.report))
-        ts_report.cache = (report, pd.read_csv(out.run_dir / "design_table.csv"))
-    return ts_report.cache

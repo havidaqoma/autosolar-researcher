@@ -335,21 +335,23 @@ def test_run_refuses_bad_table_before_reading(monkeypatch, plan):
 
 # ---------- site ----------
 
-def result(monkeypatch=None, fail=None):
+@pytest.fixture(scope="module")
+def fig_plan(tmp_path_factory):
+    return load_plan(write_plan(tmp_path_factory.mktemp("t18b_plan"), plan_dict()))
+
+
+def result(plan, fail=None):
     import autosolar.figure_check as mod
     keep = mod.read_chart
     mod.read_chart = FakeRead(fail=fail)
     try:
-        import tempfile
-        import pathlib
-        d = pathlib.Path(tempfile.mkdtemp(prefix="t18b_"))
-        return run_figure_check(load_plan(write_plan(d, plan_dict())), PNG, TABLE, seg, lab)
+        return run_figure_check(plan, PNG, TABLE, seg, lab)
     finally:
         mod.read_chart = keep
 
 
-def test_svg():
-    svg = figure_check_svg(result())
+def test_svg(fig_plan):
+    svg = figure_check_svg(result(fig_plan))
     assert svg.startswith("<svg") and svg.rstrip().endswith("</svg>")
     lines = re.findall(r"<polyline [^>]*>", svg)
     assert len(lines) == 4
@@ -360,12 +362,10 @@ def test_svg():
 
 
 @pytest.fixture(scope="module")
-def page_parts():
-    import tempfile
-    import pathlib
+def page_parts(tmp_path_factory):
     import test_study as ts
     from autosolar.study import run_study
-    tmp = pathlib.Path(tempfile.mkdtemp(prefix="t18b_page_"))
+    tmp = tmp_path_factory.mktemp("t18b_page")
     out = run_study(ts.QUESTION, client=ts.FakeClient(), http_get=ts.FakeGet(), weather_fn=ts.WeatherFn(),
                     inputs_path=ts.small_inputs(tmp), runs_dir=tmp / "runs", run_id="t18b")
     return out.report, pd.read_csv(out.run_dir / "design_table.csv")
@@ -376,14 +376,14 @@ def section(page):
     return page.split('<section id="figure-check">', 1)[1].split("</section>", 1)[0]
 
 
-def test_page_section(page_parts):
+def test_page_section(page_parts, fig_plan):
     report, table = page_parts
-    page = render_study_html(report, table, figure_check=result())
+    page = render_study_html(report, table, figure_check=result(fig_plan))
     sec = section(page)
     assert "<h2>Second read of the load: SAM 3.1 reads the paper chart</h2>" in sec
     assert "Figure 7, Daily power consumption (page 9)" in sec and "Hiron et al. 2021, Energies 14, 8311" in sec
     assert "<svg" in sec
-    c = result()["comparison"]
+    c = result(fig_plan)["comparison"]
     assert "%.1f%% above the 31 Dec 2018 curve" % c["diff_pct"] in sec
     assert "That is inside the +/-20% demand swing of the sensitivity table." in sec
     assert "The paper grows the December 2018 curve by 3.48% a year (page 11)." in sec
@@ -397,9 +397,9 @@ def test_page_section(page_parts):
     page.encode("ascii")
 
 
-def test_page_section_outside_and_below(page_parts, monkeypatch):
+def test_page_section_outside_and_below(page_parts, fig_plan):
     report, table = page_parts
-    r = result()
+    r = result(fig_plan)
     r["comparison"] = compare_load(*reading(basis=1300.0), TABLE, **dict(KW, band_frac=0.1))
     r["verdict"] = r["comparison"]["verdict"]
     sec = section(render_study_html(report, table, figure_check=r))
@@ -407,9 +407,9 @@ def test_page_section_outside_and_below(page_parts, monkeypatch):
     assert "That is outside the +/-10% demand swing of the sensitivity table." in sec
 
 
-def test_page_section_not_checkable(page_parts):
+def test_page_section_not_checkable(page_parts, fig_plan):
     report, table = page_parts
-    sec = section(render_study_html(report, table, figure_check=result(fail="empty plot")))
+    sec = section(render_study_html(report, table, figure_check=result(fig_plan, fail="empty plot")))
     assert "Not checkable: chart not read: empty plot" in sec
     assert "<svg" not in sec
 
@@ -421,14 +421,14 @@ def test_page_without_figure_check_has_no_section(page_parts):
     assert page == render_study_html(report, table, figure_check=None)
 
 
-def test_section_comes_after_paper_section(page_parts):
+def test_section_comes_after_paper_section(page_parts, fig_plan):
     report, table = page_parts
     paper = {"summary": {"flags": 1, "passes": 2, "not_checkable": 3},
              "results": [{"check_id": "P1", "status": "pass", "pages": [1], "detail": "d"}]}
     review = {"model": "m", "points": [{"point": "p", "addressed_in": None}]}
-    page = render_study_html(report, table, paper_check=paper, review=review, figure_check=result())
+    page = render_study_html(report, table, paper_check=paper, review=review, figure_check=result(fig_plan))
     assert page.index('<section id="paper">') < page.index('<section id="figure-check">')
     assert page.index('<section id="figure-check">') < page.index('<section id="review">')
-    page = render_study_html(report, table, review=review, figure_check=result())
+    page = render_study_html(report, table, review=review, figure_check=result(fig_plan))
     assert page.index('<section id="range">') < page.index('<section id="figure-check">')
     assert page.index('<section id="figure-check">') < page.index('<section id="review">')
