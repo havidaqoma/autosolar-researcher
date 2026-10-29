@@ -37,7 +37,7 @@ spending for the whole hackathon, smoke tests, chart reader tests and reviews in
 | Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
 | Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study 5ee65dcd3350bec1 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes must be in the study files (48 of 48 in the last review, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images | Validation runs only; no study uses it yet | Rules fixed before each test; the first test failed, the second passed (see "Chart reader") |
-| Muse Code (contributor model) | Wrote the product code from short specs | Build time | The orchestrator writes each spec and its acceptance tests first, and checks that the tests catch planted faults (26 of 26 for the last task, computed) |
+| Muse Code (contributor model) | Wrote the product code from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (26 of 26 for the last task, computed) |
 
 - Checks: 1,316 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
@@ -82,7 +82,7 @@ depends on it: if a unit must spin and the units are the larger ones, solar bare
 The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
 3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
 it comes from a palm oil article that gives one rupiah price, converted at an assumed exchange rate. After
-pre-registration the build agent replaced these 7 values by hand, the checked diesel price included,
+pre-registration these 7 values were replaced by hand, the checked diesel price included,
 with values from named documents (`config/curated_inputs.json`, applied by `tools/curate.py`). Each one is marked
 "curated post hoc" in the report and on the page. The first study stays as it is.
 
@@ -130,7 +130,7 @@ each value are kept with the build files.
 | S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks | Muse Spark native PDF input and structured output |
 | S8 report | Markdown, JSON and a static HTML page with charts; every number in the text must appear in the report data | |
 | S9 review | a second model lists what it would question and where the report answers it | Muse Wonder |
-| Build | Muse Code wrote the code from short specs; an orchestrator agent wrote the specs and acceptance tests | Muse Code (contributor) |
+| Build | Muse Code wrote the code from short specs, with acceptance tests written before the code | Muse Code (contributor) |
 
 SAM 3.1 is wired in as a chart reader and passed its second validation (see below), but no study uses it yet.
 
@@ -219,9 +219,10 @@ less reliable, so every report marks them "edge, not validated".
 
 ## How it was built
 
-Every task has a spec in `docs/specs/` and acceptance tests written before the code. Before Muse Code ran, the
-orchestrator checked each test file against its own reference and against planted faults (each spec ends with
-"Test check by the orchestrator"). The log of what was decided and why is `docs/implementation-notes.md`.
+Every task has a spec in `docs/specs/` and acceptance tests written before the code. Before Muse Code ran, each
+test file was checked against a reference build and against planted faults (recorded at the end of each spec).
+Muse Code then wrote the code in a sandbox and ran the tests itself. The log of what was decided and why is
+`docs/implementation-notes.md`.
 
 ## Acknowledgements
 
