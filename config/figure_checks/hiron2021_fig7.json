@@ -1,0 +1,60 @@
+{
+  "schema": "autosolar.figure_plan/1",
+  "paper": "Hiron et al. 2021, Energies 14, 8311, doi:10.3390/en14248311 (CC BY 4.0)",
+  "figure": "Figure 7, Daily power consumption (page 9)",
+  "image": "docs/figures/hiron2021_fig7.png",
+  "image_sha256": "7ffd38f0cf28343f3348a3bc9b94a64d611e2f0e7c6e8f25987fbd7b9df57bd4",
+  "series": [
+    {
+      "name": "31 Dec 2018",
+      "prompt": "blue area"
+    },
+    {
+      "name": "27 Oct 2018",
+      "prompt": "purple area"
+    },
+    {
+      "name": "28 Sep 2018",
+      "prompt": "red area"
+    }
+  ],
+  "x_kind": "clock",
+  "y_kind": "number",
+  "y_unit": "kWh",
+  "x_values": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "stacking": "overlap",
+  "compare": {
+    "table": "Hiron et al. 2021, Table 6 (the hourly load this study uses)",
+    "basis_series": "31 Dec 2018",
+    "basis_note": "The paper says its 2022 load comes from the December 2018 load curve grown by 3.48% a year (page 11).",
+    "table_year": 2022,
+    "figure_year": 2018,
+    "growth_frac_per_yr": 0.0348,
+    "band_frac": 0.2
+  }
+}

@@ -3,7 +3,8 @@
   uv run python tools/make_site.py
 
 config/gallery.json lists the runs to publish: {"studies": [{"run": "<study hash>", "paper": "<paper check run id or
-null>", "review": "<review run id or null>", "note": "<optional short text for the gallery card>"}]}. Each study page is self contained (inline CSS and SVG, no script).
+null>", "review": "<review run id or null>", "figure_check": "<optional figure check run id>", "note": "<optional short
+text for the gallery card>"}]}. Each study page is self contained (inline CSS and SVG, no script).
 The run folders stay out of git; the pages and a copy of each run's report.json, paper_check.json and review.json
 under docs/site/data/ are the committed record.
 """
@@ -34,7 +35,7 @@ def main():
         run_dir = ROOT / "runs" / "studies" / entry["run"]
         report = load(run_dir / "report.json")
         table = pd.read_csv(run_dir / "design_table.csv")
-        paper = review = None
+        paper = review = figure = None
         data = OUT / "data" / entry["run"]
         data.mkdir(exist_ok=True)
         shutil.copy(run_dir / "report.json", data / "report.json")
@@ -48,7 +49,12 @@ def main():
             p = ROOT / "runs" / "reviews" / entry["review"] / "review.json"
             review = load(p)
             shutil.copy(p, data / "review.json")
-        page = render_study_html(report, table, paper_check=paper, review=review)
+        if entry.get("figure_check"):
+            p = ROOT / "runs" / "figure_checks" / entry["figure_check"] / "figure_check.json"
+            figure = load(p)
+            shutil.copy(p, data / "figure_check.json")
+        kw = {"figure_check": figure} if figure is not None else {}
+        page = render_study_html(report, table, paper_check=paper, review=review, **kw)
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")
         cards.append({"href": name, "site": report["site"]["name"], "question": report["question"],

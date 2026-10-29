@@ -66,7 +66,8 @@ TITLES = {
 OVERHAUL = "Diesel overhaul and engine replacement costs, which grow with engine hours"
 PV_GRID = [0.0, 500.0, 1000.0]
 B_GRID = [0.0, 1000.0, 2000.0]
-DUR_RESULT = {"hours", "pv_kwp", "battery_kwh", "battery_kw", "lcoe_usd_per_kwh", "change_pct", "on_grid_edge"}
+DUR_RESULT = {"hours", "pv_kwp", "battery_kwh", "battery_kw", "lcoe_usd_per_kwh", "change_pct", "on_grid_edge",
+              "widened"}  # widened since T18a
 BE_RESULT = {"factor", "rise_pct", "pv_capex_usd_per_kwp", "battery_capex_usd_per_kwh"}
 
 
@@ -590,7 +591,9 @@ def test_duration_values_match_direct(runs):
     main = runs["dur"].report["facts"]["best_lcoe_usd_per_kwh"]["value"]
     r = duration_case(d["basis_kw"], d["load"], d["grid"]["pv_kwp"], d["grid"]["battery_kwh"], battery_hours=8.0,
                       battery_template=d["bat"], diesel=d["fleet"], costs=d["costs"], co2_kg_per_l=d["co2"],
-                      unserved_max_frac=d["umax"], main_lcoe_usd_per_kwh=main)
+                      unserved_max_frac=d["umax"], main_lcoe_usd_per_kwh=main,
+                      pv_step_kwp=float(d["values"]["pv_kwp_step"]),
+                      battery_step_kwh=float(d["values"]["battery_kwh_step"]), widen_max=2)  # since T18a
     assert r["lcoe_usd_per_kwh"] is not None
     assert it["dur_alt_hours"]["value"] == 8.0 and it["dur_alt_hours"]["label"] == "assumed"
     assert it["dur_alt_hours"]["text"] == "8.0" and it["dur_alt_hours"]["unit"] == "h"

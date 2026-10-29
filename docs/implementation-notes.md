@@ -346,3 +346,21 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - Gallery: 4 studies, newest first, each card with a short note on its inputs and judges (`config/gallery.json`
   `note`, read by `tools/make_site.py`).
 - Spend so far (ledgers): API USD 2.94, Muse Code USD 0.50.
+
+## More sensitivity bars and SAM 3.1 reads the paper's load chart (T18a, T18b)
+
+- Why: an AI judge round (three outside models scoring the entry, prep repo) said SAM 3.1 is listed but no study
+  uses it, and two said the curated diesel unit size check sits on the grid edge at 9,000 kWp. The Muse Wonder
+  review had already left the diesel fuel curve and O&M open. Havid chose one rebuild over wording fixes only.
+- T18a (`docs/specs/T18a_more_sensitivity.md`): diesel O&M, diesel idle fuel, diesel fuel per kWh and battery hours
+  join the sensitivity table (9 inputs, 18 rows); the diesel unit size and battery duration checks widen their grid
+  up to 2 times like the main search; plain bar labels. `REPORT_SCHEMA` is now `autosolar.report/2`. Five old tests
+  changed for this spec (listed at the end of the spec).
+- T18b (`docs/specs/T18b_figure_check.md`): `autosolar/figure_check.py` reads Hiron Figure 7 (three measured days
+  of 2018) with the chart reader and compares it with Table 6 scaled back 4 years at the paper's 3.48% a year; the
+  study page shows the result. Image `docs/figures/hiron2021_fig7.png` (CC BY 4.0 paper), plan
+  `config/figure_checks/hiron2021_fig7.json`, run rules `docs/smoke/FIGURE_CHECK_RULES.md` (fixed before the run,
+  including what was seen by eye before it). Orchestrator tool: `tools/figure_check.py`; `tools/make_site.py`
+  reads an optional `figure_check` run id per gallery entry.
+- Test check: reference in scratch, 34 new tests for T18a and 75 for T18b, full suite 1,425 of 1,425, 29 of 29
+  planted faults caught (the first pass missed one, the section order after the review; a test was added).

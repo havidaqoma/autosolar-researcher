@@ -124,9 +124,9 @@ def test_tornado():
     assert svg.startswith("<svg") and svg.rstrip().endswith("</svg>")
     bars = re.findall(r'<g class="bar">(.*?)</g>', svg, flags=re.S)
     assert len(bars) == 3
-    assert "fuel_price_usd_per_l" in bars[0] and "0.231 to 0.271" in bars[0]
-    assert "battery_capex_usd_per_kwh" in bars[1] and "0.240 to 0.262" in bars[1]
-    assert "pv_capex_usd_per_kwp" in bars[2] and "0.245 to 0.257" in bars[2]
+    assert "Diesel price" in bars[0] and "0.231 to 0.271" in bars[0]  # plain labels since T18a
+    assert "Battery price" in bars[1] and "0.240 to 0.262" in bars[1]
+    assert "PV price" in bars[2] and "0.245 to 0.257" in bars[2]
     assert "lonely_input" not in svg
     assert "<line" in svg
     ascii_ok(svg)

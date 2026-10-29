@@ -129,7 +129,7 @@ def run(tmp_path_factory):
 # ---------- constants and helpers ----------
 
 def test_constants():
-    assert REPORT_SCHEMA == "autosolar.report/1"
+    assert REPORT_SCHEMA == "autosolar.report/2"  # T18a
     assert LABELS == ("measured", "computed", "assumed", "press", "paper", "paper (abstract)", "docs")
     assert KARIMUNJAWA_DEG == (-5.85, 110.43) and DEMAND_RADIUS_KM == 30.0
     raw = json.loads(DEFAULT_INPUTS.read_text(encoding="utf-8"))
@@ -385,11 +385,12 @@ def test_range_row_recomputed_for_tmy_index(run):
 def test_sensitivity_and_gates(run):
     r = run["out"].report
     sens = r["sensitivity_table"]
-    assert len(sens) == 10 and [x["input"] for x in sens][::2] == [
-        "pv_capex_usd_per_kwp", "battery_capex_usd_per_kwh", "fuel_price_usd_per_l", "discount_rate_frac", "demand"]
+    assert len(sens) == 18 and [x["input"] for x in sens][::2] == [
+        "pv_capex_usd_per_kwp", "battery_capex_usd_per_kwh", "fuel_price_usd_per_l", "discount_rate_frac", "demand",
+        "diesel_om_usd_per_kwh", "fuel_intercept_l_per_h_per_kw_rated", "fuel_slope_l_per_kwh", "battery_duration_h"]
     assert all(isinstance(x["same_design"], bool) and len(x["cells"]) == 8 for x in sens)
     saved = pd.read_csv(run["out"].run_dir / "sensitivity.csv")
-    assert len(saved) == 10
+    assert len(saved) == 18
     gates = r["gates"]
     assert [g["gate"] for g in gates] == ["G3 PV physics"] * 4 + ["G1 energy balance", "G2 battery", "G4 diesel",
                                                                   "G5 weather spread", "G7 grid edge",

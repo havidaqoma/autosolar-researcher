@@ -170,13 +170,15 @@ def sens():
 
 def test_sensitivity_shape(sens):
     assert SENSITIVITY_INPUTS == ("pv_capex_usd_per_kwp", "battery_capex_usd_per_kwh", "fuel_price_usd_per_l",
-                                  "discount_rate_frac", "demand")
+                                  "discount_rate_frac", "demand", "diesel_om_usd_per_kwh",
+                                  "fuel_intercept_l_per_h_per_kw_rated", "fuel_slope_l_per_kwh",
+                                  "battery_duration_h")  # T18a added the last four
     assert SENSITIVITY_COLUMNS == ("input", "factor", "base_design_lcoe_usd_per_kwh", "least_cost_pv_kwp",
                                    "least_cost_battery_kwh", "least_cost_lcoe_usd_per_kwh", "same_design", "note")
-    assert tuple(sens.columns) == SENSITIVITY_COLUMNS and len(sens) == 10
+    assert tuple(sens.columns) == SENSITIVITY_COLUMNS and len(sens) == 18
     assert isinstance(sens.index, pd.RangeIndex)
     assert sens.input.tolist() == [n for n in SENSITIVITY_INPUTS for _ in (0, 1)]
-    assert sens.factor.tolist() == pytest.approx([0.8, 1.2] * 5)
+    assert sens.factor.tolist() == pytest.approx([0.8, 1.2] * 9)
     assert (sens.note == "").all()
 
 
@@ -185,6 +187,8 @@ def test_sensitivity_values(points, table, sens):
     i_base = int(base.name)
     for k, (name, factor) in enumerate(zip(sens.input, sens.factor)):
         row = sens.iloc[k]
+        if name in ("fuel_intercept_l_per_h_per_kw_rated", "fuel_slope_l_per_kwh", "battery_duration_h"):
+            continue  # T18a rows, checked in test_t18a.py
         if name == "demand":
             pts = dispatch_grid(PV1, LOAD * factor, PV_GRID, BAT_GRID, **KW)
             t = cost_table(pts, COSTS, 2.68)

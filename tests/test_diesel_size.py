@@ -48,7 +48,7 @@ TITLES = {
 RESERVE_KEYS = ("reserve_main_design_lcoe_usd_per_kwh", "reserve_pv_kwp", "reserve_battery_kwh",
                 "reserve_lcoe_usd_per_kwh")
 RESULT_KEYS = {"unit_kw", "diesel_only_lcoe_usd_per_kwh", "pv_kwp", "battery_kwh", "lcoe_usd_per_kwh", "saving_pct",
-               "on_grid_edge"} | set(RESERVE_KEYS)
+               "on_grid_edge", "widened"} | set(RESERVE_KEYS)  # widened since T18a
 PV_GRID = [0.0, 500.0, 1000.0]
 B_GRID = [0.0, 1000.0, 2000.0]
 
@@ -297,7 +297,9 @@ def test_alt_values_match_direct(runs):
     r = diesel_size_case(basis_kw, load, grid["pv_kwp"], grid["battery_kwh"],
                          battery_hours=float(values["battery_duration_h"]), battery_template=bat, diesel=fleet,
                          unit_kw=2700.0, must_run_units=units, costs=c, co2_kg_per_l=float(values["co2_kg_per_l"]),
-                         unserved_max_frac=float(values["unserved_max_frac"]))
+                         unserved_max_frac=float(values["unserved_max_frac"]),
+                         pv_step_kwp=float(values["pv_kwp_step"]), battery_step_kwh=float(values["battery_kwh_step"]),
+                         widen_max=2)  # the study widens the alt grid since T18a
     assert it["alt_diesel_unit_kw"]["value"] == 2700.0 and it["alt_diesel_unit_kw"]["label"] == "paper"
     assert it["alt_diesel_unit_kw"]["text"] == "2,700" and it["alt_diesel_unit_kw"]["unit"] == "kW"
     for key, _, _, _ in ROWS[1:]:
