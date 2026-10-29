@@ -12,9 +12,9 @@ Each site needs a first study like this before anyone spends money on a detailed
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
-What it cost (measured ledgers): Muse Code wrote the engine, all 8,835 lines of `autosolar/`, for USD 0.50. One
-full study, with a fresh web search for its prices, costs about USD 0.50 in Meta model calls. All Meta model
-spending for the whole hackathon, smoke tests, chart reader tests and reviews included: USD 3.44.
+What it cost (measured ledgers): Muse Code wrote the engine, all 9,405 lines of `autosolar/` (19 files, `wc -l`),
+for USD 0.56. One full study, with a fresh web search for its prices, costs about USD 0.50 in Meta model calls. All
+Meta model spending for the whole hackathon, smoke tests, chart reader tests and reviews included: USD 3.83.
 
 ## For judges
 
@@ -23,11 +23,13 @@ spending for the whole hackathon, smoke tests, chart reader tests and reviews in
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
-- Without cloning: the two pictures below are from the example study. With a clone, open `docs/site/index.html`.
+- Without cloning: the three pictures below are from the example study. With a clone, open `docs/site/index.html`.
 
 ![Answer section of the example study](docs/img/answer.png)
 
 ![Every design we costed and what moves the cost](docs/img/designs.png)
+
+![SAM 3.1 reads the paper's load chart: a second read of the load](docs/img/load_check.png)
 
 - Meta tools, when each runs and how its output is checked:
 
@@ -35,27 +37,29 @@ spending for the whole hackathon, smoke tests, chart reader tests and reviews in
 |---|---|---|---|
 | Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
 | Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search: all 3 votes | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
-| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study 5ee65dcd3350bec1 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes must be in the study files (48 of 48 in the last review, computed) |
-| SAM 3.1 (Meta Model API) | Reads values off chart images | Validation runs only; no study uses it yet | Rules fixed before each test; the first test failed, the second passed (see "Chart reader") |
-| Muse Code (contributor model) | Wrote the product code from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (26 of 26 for the last task, computed) |
+| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | The re-check tool (`tools/rejudge.py --panel`), where Glimmer casts votes 1 and 2, and the review tool; both run after a search or study. The example study b4a44fc6d4c32339 uses re-checked inputs; the curated run starts from the same file | Every number the review quotes is looked up in the study files (64 of 65 in the last review; the other is the reviewer's own product of two of them, and it is right, computed) |
+| SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
+| Muse Code (contributor model) | Wrote the product code from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (29 of 29 for the last two tasks, computed) |
 
-- Checks: 1,316 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,425 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
-- Cost: Muse Code USD 0.50 (37 runs, 2.4 hours; it read 44 million tokens, 93% from cache, and wrote 0.6
-  million). Meta Model API USD 2.94 (170 calls, 438 web searches). USD 3.44 in all (measured ledgers).
+- Cost: Muse Code USD 0.56 (39 runs, 3.0 hours; it read 49 million tokens, 93% from cache, and wrote 0.65
+  million). Meta Model API USD 3.27 (176 calls, 438 web searches). USD 3.83 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/5ee65dcd3350bec1.html`; the run with curated inputs (post hoc) is `docs/site/4a0c0eedd47b2672.html`, with
+`docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`, with
 the latest Muse Wonder review. Both start from the input file whose 4 checked values were re-judged by two models
-(see Checks; the curated run then replaces 7 values by hand, the diesel price among them) and give the same numbers as the
-earlier runs f86df9819fa150a7 and 579f414386fe2d58, which stay in the gallery. Raw run files are under
-`docs/site/data/`.
+(see Checks; the curated run then replaces 7 values by hand, the diesel price among them). They come from the latest
+build. Every number matches the earlier runs 5ee65dcd3350bec1 and 4a0c0eedd47b2672 (and f86df9819fa150a7 and
+579f414386fe2d58 before them), except that "What moves the cost" now has 9 inputs and the curated diesel unit size
+check no longer sits on the grid edge (computed, a script compared every fact, gate and table row). The earlier runs
+stay in the gallery. Raw run files are under `docs/site/data/`.
 
-## The Karimunjawa answer (study 5ee65dcd3350bec1, same numbers as f86df9819fa150a7; computed unless labelled)
+## The Karimunjawa answer (study b4a44fc6d4c32339, same numbers as 5ee65dcd3350bec1; computed unless labelled)
 
 | | |
 |---|---|
@@ -69,15 +73,19 @@ earlier runs f86df9819fa150a7 and 579f414386fe2d58, which stay in the gallery. R
 | Island prices | PV and battery capital prices could rise 189% together (to 3,239 USD/kWp and 868 USD/kWh) before diesel only is cheaper. Shipping and labour, which the study leaves out, would have to nearly triple them to change the answer |
 | Reliability and wear | The least cost design leaves 0 kWh of load not served in the simulated year and cycles the battery 249 times a year. Diesel engine hours fall from 8,760 to 1,458 unit hours a year (-83.4%), so the overhaul costs left out would favour solar |
 | Land | The main design needs 8.3 ha of the 9 ha set aside (press), at 0.87 MWdc per ha (paper) |
+| What moves the cost | 9 inputs, each moved 20% down and up. The discount rate, PV price and battery price move the chosen design's cost most (0.233 to 0.269 USD/kWh). The diesel fuel curve and diesel O&M, which are assumed, move it less than the diesel price does (0.245 to 0.257 against 0.241 to 0.261 USD/kWh) |
+| Load check (SAM 3.1) | The study's hourly load (Hiron Table 6) is 30.4% above the paper's own December 2018 curve, once scaled back by the paper's 3.48% a year, and 18.2% above the mean of the three days the paper plots. That is outside the +/-20% demand swing. At 0.8 times the demand, the nearest case in the table, the chosen design costs 0.278 USD/kWh and the least cost design is 6,000 kWp and 15,000 kWh at 0.256 USD/kWh |
 | Published design size | 1,244 kWp of PV (paper), no battery: 0.336 USD/kWh |
 | Model API cost behind the study | USD 0.43, almost all of it the web search that sourced the inputs, plus USD 0.085 for the two-model re-judge (measured, ledger) |
 
-What this means for PLN: solar pays at every size we tried. How big to build depends on one engineering question
-the study cannot answer: can the island grid run on inverters alone for 7,302 hours a year (computed), or must a
-diesel unit always spin? The first answer holds with either diesel unit size in the source paper. The second one
-depends on it: if a unit must spin and the units are the larger ones, solar barely pays.
+What this means for PLN: solar plus battery pays if the batteries and inverters can carry the grid on their own.
+That is one engineering question the study cannot answer: can the island grid run on inverters alone for 7,302
+hours a year (computed), or must a diesel unit always spin? If one must, the main design costs more than diesel
+only (0.414 against 0.354 USD/kWh), the best design shrinks to 1,500 kWp, and with the larger diesel units it is
+only 2.4% below diesel only. The load check adds a second caution: if the island uses less power than Table 6
+says, the right design is smaller.
 
-## Second run with curated inputs (post hoc, study 4a0c0eedd47b2672, same numbers as 579f414386fe2d58)
+## Second run with curated inputs (post hoc, study 107477f112e5d92c, same numbers as 4a0c0eedd47b2672)
 
 The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
 3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
@@ -107,16 +115,20 @@ with values from named documents (`config/curated_inputs.json`, applied by `tool
 | One diesel unit must always run | best 0.336 USD/kWh, 5.1% below diesel only | best 0.461 USD/kWh (4,250 kWp, 11,000 kWh), 9.9% below diesel only |
 | Land at 0.87 MWdc per ha (paper) | 8.3 ha, fits the 9 ha | 9.8 ha, does not fit; the largest design that fits (7,750 kWp) costs 0.279 USD/kWh |
 
-The answer gets stronger, not weaker: the higher fuel price raises diesel only far more than the dearer battery
-raises the solar design. At the high discount rate in the sensitivity table (0.081, 1.2 times) the least cost design
+The cut against diesel only grows (45.7% against 29.1%) because the higher fuel price raises diesel only far more
+than the dearer battery raises the solar design. Not all of it is better news: the least cost design no longer
+fits the land (row above), and if one diesel unit must always run, the main design costs 0.533 USD/kWh, more than
+diesel only (0.511). At the high discount rate in the sensitivity table (0.081, 1.2 times) the least cost design
 costs 0.297 USD/kWh, still far below diesel only. Three limits of the curated values: the fuel price is a depot
 price before tax and sea transport, so the island price is higher (this would favour solar further); the battery
 prices are at the catalogue's price level of 2022 and battery prices have fallen since (also favouring solar); and
 the discount rate is a solar PV rate applied to the battery as well (the IEA says battery finance costs more). The
 catalogue's own land density for Indonesia (9.1 thousand m2 per MWp, docs) would fit the main design in 7.7 ha; we
 kept the US median because changing a check value after seeing the answer would loosen the check. With the larger
-2.7 MW diesel units the least cost design sits on the edge of the design grid (9,000 kWp), so the best size there
-may be larger. Copies of the source pages, a second read of the table images by OCR and a script that recomputes
+2.7 MW diesel units the least cost design is 9,000 kWp and 19,000 kWh at 0.287 USD/kWh. That check now widens its
+grid like the main search does, and 9,000 kWp is no longer on the edge (computed). Four cases in "What moves the
+cost" (PV price down, diesel price up, demand up, fuel per kWh up) still pick 9,000 kWp at the edge of their grid;
+the page marks each one. Copies of the source pages, a second read of the table images by OCR and a script that recomputes
 each value are kept with the build files.
 
 ## How it works
@@ -128,11 +140,10 @@ each value are kept with the build files.
 | S3 inputs | web search with citations for 7 cost inputs; each quote must be found in the fetched source, the DOI must resolve, and the judges must say the quote supports the value 3 times in a row | Muse Spark web search; Muse Glimmer (open weights, local) votes 1 and 2, Muse Wonder vote 3 |
 | S4 to S6 | pvlib PV model, hourly dispatch with diesel minimum load, LCOE two ways, a grid of 925 designs, sensitivity and range tables | |
 | S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks | Muse Spark native PDF input and structured output |
+| S7b load check | SAM 3.1 finds each load curve in a chart of the same paper, Muse Spark reads the axis labels, and a script compares the read curves with the load the study uses | SAM 3.1, Muse Spark |
 | S8 report | Markdown, JSON and a static HTML page with charts; every number in the text must appear in the report data | |
 | S9 review | a second model lists what it would question and where the report answers it | Muse Wonder |
 | Build | Muse Code wrote the code from short specs, with acceptance tests written before the code | Muse Code (contributor) |
-
-SAM 3.1 is wired in as a chart reader and passed its second validation (see below), but no study uses it yet.
 
 ## Checks
 
@@ -156,11 +167,21 @@ SAM 3.1 is wired in as a chart reader and passed its second validation (see belo
   version) the tool flagged none of the 3 corrected numbers and raised no flag a person could confirm (measured,
   3 runs). So the claim that the checks find errors in papers they were not written for is NOT supported yet. The
   corrected items were in a figure and a paragraph about existing power plants, which no frozen check looks at.
-- Second model review, curated run: Muse Wonder raised 10 points; 3 are not answered by the report: the diesel
-  fuel curve and diesel O&M are assumed and not in the sensitivity table; the Hiron load data are used although our
-  own check flags that paper; and reliability is an hourly energy balance only (no forced outages, loss of the
-  largest unit, start costs or sub-hourly ramps). Every number the review quotes was found in the study files
-  (computed check, 48 of 48). The other 7 points name sections where the report answers them.
+- Load check (SAM 3.1, rules fixed before the run in `docs/smoke/FIGURE_CHECK_RULES.md`): the paper says its 2022
+  load is the December 2018 curve grown by 3.48% a year. SAM 3.1 read the three 2018 days of its Figure 7 (22 of 24
+  hours read and validated, 4 SAM calls, USD 0.01, measured). Table 6 scaled back is 30.4% above the 31 Dec 2018
+  curve, 16.7% above 27 Oct and 9.4% above 28 Sep (computed). For Table 6 to come from the December curve the
+  growth would have to be about 10.6% a year. So the load the study uses may be too high, by more than the demand
+  swing it tests. The study still uses Table 6: changing an input after seeing the answer would be shopping for
+  numbers. The page shows the check next to the answer instead.
+- Second model review, curated run, latest build (review-20261029T060800-acbbb2): Muse Wonder raised 10 points; 2
+  are not answered by the report: why the 8 h battery case costs the same although half the battery power is
+  cheaper, and reliability beyond the hourly energy balance (no forced outages, loss of the largest unit or
+  sub-hourly ramps). The earlier review's point that the diesel fuel curve and O&M are not in the sensitivity table
+  is gone now that both are. 64 of the 65 numbers the review quotes are in the study files; the other, 783,750 USD,
+  is the reviewer's own product of two of them (2,375 kW x 330 USD/kW), and it is right (computed).
+- Second model review, curated run, earlier build: 10 points, 3 open (the fuel curve and O&M, the flagged Hiron
+  load data, reliability).
 - Second model review, example study (earlier): Muse Wonder raised 10 points; 2 are not answered by the report (a
   bankable yield and reliability case behind the 0 kWh not served, and an expansion path for demand growth). They
   are shown as open. The review before the last build left 6 open; the last build answered four of them with new
@@ -177,18 +198,20 @@ financing and tariffs, demand growth beyond the growth case, battery ageing beyo
 price risk beyond the sensitivity table, diesel overhaul and engine replacement, and reliability beyond the hourly
 energy balance (forced outages, loss of the largest unit, sub-hourly ramps). Left out against diesel:
 sea transport and taxes on fuel, and the lower heating value of B40 biodiesel. Left out against solar: PV
-degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs). The hourly load comes from the Hiron paper, which our own check flags; the
-report says so.
+degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs). The hourly load comes from the Hiron paper,
+which our own check flags, and the SAM 3.1 load check finds it 30.4% above the paper's own December 2018 curve; the
+page says so.
 
 ## Run it
 
 ```
 uv sync
-uv run pytest                     # 1,316 tests, no network
+uv run pytest                     # 1,425 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
 uv run python tools/review.py runs/studies/<hash> --paper runs/paper_checks/<id>
+uv run python tools/figure_check.py config/figure_checks/hiron2021_fig7.json
 uv run python tools/make_site.py
 ```
 
@@ -197,15 +220,15 @@ other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 2.94, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, four reviews and the two-model
-  re-judge.
-- `ledger/build_usage.jsonl`: 37 Muse Code runs (33 that wrote the product, 4 sandbox smoke runs), USD 0.50 and
-  2.4 hours in total. Muse Code read 43.7 million input tokens (93% from cache) and wrote 0.61 million output
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.27, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge
+  and one load check.
+- `ledger/build_usage.jsonl`: 39 Muse Code runs (35 that wrote the product, 4 sandbox smoke runs), USD 0.56 and
+  3.0 hours in total. Muse Code read 49.1 million input tokens (93% from cache) and wrote 0.65 million output
   tokens.
-- All Meta model spending: USD 3.44.
+- All Meta model spending: USD 3.83.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
-  about USD 0.013 and a review USD 0.25 to 0.33.
+  about USD 0.013, a load check USD 0.01 and a review USD 0.25 to 0.33.
 
 ## Chart reader: how far it can be trusted
 
@@ -215,7 +238,8 @@ plain colour prompt found no hatched area, and a mask placement bug of ours brok
 fixed (the prompt now names the fill pattern). The second test passed on six new synthetic charts and on a real
 paper figure it had never seen (Hiron et al. 2021, Figure 16 against the paper's Table 4). Away from the ends of a
 series the read values were within 1.3% of the axis span (median 0.17%). The first and last point of a series were
-less reliable, so every report marks them "edge, not validated".
+less reliable, so every report marks them "edge, not validated". Since then it has one real job: the load check
+above.
 
 ## How it was built
 
@@ -228,7 +252,8 @@ Muse Code then wrote the code in a sandbox and ran the tests itself. The log of 
 
 This project uses SAM Materials from Meta: the SAM 3.1 model through the Meta Model API and the `meta-sam-parser`
 package (installed as a dependency, not copied here), both under the SAM License. The example page quotes short
-passages of Hiron et al. 2021 (Energies, CC BY 4.0) in its paper check.
+passages of Hiron et al. 2021 (Energies, CC BY 4.0) in its paper check and shows its Figure 7 as read by SAM
+3.1; the figure image is in `docs/figures/`, with credit in the plan file.
 
 ## Licence
 

@@ -364,3 +364,24 @@ the values are marked post hoc everywhere and the first study stays as it is.
   reads an optional `figure_check` run id per gallery entry.
 - Test check: reference in scratch, 34 new tests for T18a and 75 for T18b, full suite 1,425 of 1,425, 29 of 29
   planted faults caught (the first pass missed one, the section order after the review; a test was added).
+- T18a (Muse Code, first attempt, 976 s, 34 calls, USD 0.0354 computed): Muse Code ran the 34 acceptance tests;
+  the orchestrator reran them and the full suite of that commit in a copy (1,350 of 1,350). The test helpers then
+  moved from `tempfile.mkdtemp` to pytest temp folders: folders made inside the sandbox kept an access list that
+  stops anyone else removing them (two empty ones are left in the repo root, untracked).
+- T18b (Muse Code, first attempt, 900 s, 24 calls, USD 0.0185 computed): Muse Code ran the 75 acceptance tests and
+  1,351 others; orchestrator full suite 1,425 of 1,425 (commit 3c4aad1).
+- Load check, one run by the fixed rules (`figure-20261029T053942-12137f`, 4 SAM 3.1 calls and 1 Muse Spark label
+  call, 33 s, USD 0.0103 measured): outside band. Table 6 scaled back to 2018 is 30.4% above the 31 Dec 2018 curve
+  (16.7% above 27 Oct, 9.4% above 28 Sep), 22 of 24 hours. Results under "Results" in
+  `docs/smoke/FIGURE_CHECK_RULES.md`; copy in `docs/smoke/figure_check_hiron2021_fig7.json`.
+- Studies on the same two input files, weather from the cache of the earlier runs: b4a44fc6d4c32339 (805 s, 11 of
+  11 gates) and curated 107477f112e5d92c (767 s, 11 of 11 gates). A script compared every fact, gate and table row
+  with 5ee65dcd3350bec1 and 4a0c0eedd47b2672: only the 8 new sensitivity rows differ, and in the curated run
+  `alt_on_grid_edge` went from yes to no (same 9,000 kWp and 19,000 kWh at 0.287 USD/kWh, now inside a wider grid).
+- Muse Wonder review of the curated run (review-20261029T060800-acbbb2, 133 s, USD 0.319 measured): 10 points, 2
+  open (the 8 h battery case costs the same with half the battery power; reliability). The fuel curve point is
+  gone. A script found 64 of the 65 numbers it quotes in the study and paper check files; the other is its own
+  product 2,375 x 330 = 783,750.
+- Gallery: 6 studies; the two new ones carry the load check (`figure_check` in `config/gallery.json`). README
+  screenshots taken from b4a44fc6d4c32339, plus `docs/img/load_check.png`.
+- Spend so far (ledgers): API USD 3.27, Muse Code USD 0.56.

@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261029T060800-acbbb2",
+  "study": "107477f112e5d92c",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 9116,
+    "cached_tokens": 0,
+    "output_tokens": 14125,
+    "reasoning_tokens": 13090,
+    "search_queries": 0
+  },
+  "cost_usd": 0.318964,
+  "wall_s": 132.8,
+  "report_sha256": "444380d1e4cc1816213ac56d977bbfe68445ef9f04ad9d098cc1063faf6ce331",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "Headline design is not land-feasible: 8,500 kWp needs 9.8 ha against 9.0 ha set aside and a 7,830 kWp land limit, so the advertised 0.277 USD/kWh design cannot be built as stated; the fallback given is 7,750 kWp at 0.279 USD/kWh.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Economics reverse under spinning reserve: with 1 diesel unit running every hour, the main design is 0.533 USD/kWh versus 0.511 USD/kWh diesel-only, and the reserve optimum falls to 4,250 kWp, 11,000 kWh and 49.3 % renewable share versus the headline 89.6 %.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "The 0.277 USD/kWh case relies on 7,680 h/yr with PV and battery holding the grid with no diesel, yet frequency and voltage control, grid-forming inverters and protection for those hours are excluded, so operability of the 89.6 % renewable design is unproven.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Battery-duration check is internally unexplained: halving battery power from 4,750 kW to 2,375 kW at 330 USD/kW should remove about 783,750 USD of power capex, yet least-cost LCOE is unchanged at 0.277 USD/kWh with a 0.0 % change and the same 8,500 kWp and 19,000 kWh sizes.",
+      "addressed_in": null
+    },
+    {
+      "point": "Input provenance is weak for a bankable estimate: only 3 of 10 inputs were web-checked, 7 were curated post hoc with battery values read by eye from a table, PV O&M of 24.38 USD/kWp/yr comes from a rooftop mosque study, and diesel fuel-curve values 0.08 L/h per kW rated and 0.25 L/kWh remain assumed while driving 3,653,468 L/yr diesel-only use.",
+      "addressed_in": "Sourced inputs"
+    },
+    {
+      "point": "Demand and diesel inputs rest on an internally inconsistent published study: it flags PV yield 4,291 kWh/kWp versus a physically allowed 1,187 to 1,844 kWh/kWp, 1.8 MW versus 2.7 MW diesel units and load totals 2.648e+07 versus 2.621e+04 kWh, yet this study still uses 9,568,110 kWh/yr demand, 1,422 kW peak and 1,800 kW units without reconciling which printed values are trustworthy.",
+      "addressed_in": "The published study we used: Hiron 2021 (Energies 14, 8311)"
+    },
+    {
+      "point": "A single point LCOE hides material weather and demand-case spread: sunshine spread is 18.4 %, GHI ranges 1,731 to 2,049 kWh/m2/yr, alternative-weather optima give 0.233 to 0.277 USD/kWh, and the growth case reaches the grid edge at 9,000 kWp with 0.289 USD/kWh for the main design.",
+      "addressed_in": "Range of the answer"
+    },
+    {
+      "point": "Upfront cost 18,489,000 USD appears to cover only PV and battery nameplate components, while shipping to the island, local labour, construction access/time, land/permits, network and grid-forming equipment and financing are excluded; even the 1.26 USD/L diesel price is described as a loco-depot floor before taxes and sea transport, so delivered island system cost is not shown.",
+      "addressed_in": "Not covered by this study"
+    },
+    {
+      "point": "Reliability is deterministic: the model reports 0 kWh/yr and 0 h/yr unserved from hourly balances with battery_soc_min_frac 0.1, but gives no tested allowance for forecast error, sub-hourly cloud or load swings, forced outages or a failed battery or diesel unit, so 0 unserved energy is not a demonstrated service level.",
+      "addressed_in": null
+    },
+    {
+      "point": "The optimum is flat, oversized and partly grid-bound: within the assumed 1.0 % near-tie there are 8 designs spanning 7,500 to 9,000 kWp, the 8,500 kWp choice is about six times the 1,422 kW peak and curtails 20.7 % of PV, and several sensitivity optima sit on the grid edge at 9,000 kWp, so quoting 0.277 USD/kWh to three decimals overstates precision.",
+      "addressed_in": "How firm is the answer"
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"Headline design is not land-feasible: 8,500 kWp needs 9.8 ha against 9.0 ha set aside and a 7,830 kWp land limit, so the advertised 0.277 USD/kWh design cannot be built as stated; the fallback given is 7,750 kWp at 0.279 USD/kWh.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Economics reverse under spinning reserve: with 1 diesel unit running every hour, the main design is 0.533 USD/kWh versus 0.511 USD/kWh diesel-only, and the reserve optimum falls to 4,250 kWp, 11,000 kWh and 49.3 % renewable share versus the headline 89.6 %.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"The 0.277 USD/kWh case relies on 7,680 h/yr with PV and battery holding the grid with no diesel, yet frequency and voltage control, grid-forming inverters and protection for those hours are excluded, so operability of the 89.6 % renewable design is unproven.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Battery-duration check is internally unexplained: halving battery power from 4,750 kW to 2,375 kW at 330 USD/kW should remove about 783,750 USD of power capex, yet least-cost LCOE is unchanged at 0.277 USD/kWh with a 0.0 % change and the same 8,500 kWp and 19,000 kWh sizes.\", \"addressed_in\": null}, {\"point\": \"Input provenance is weak for a bankable estimate: only 3 of 10 inputs were web-checked, 7 were curated post hoc with battery values read by eye from a table, PV O&M of 24.38 USD/kWp/yr comes from a rooftop mosque study, and diesel fuel-curve values 0.08 L/h per kW rated and 0.25 L/kWh remain assumed while driving 3,653,468 L/yr diesel-only use.\", \"addressed_in\": \"Sourced inputs\"}, {\"point\": \"Demand and diesel inputs rest on an internally inconsistent published study: it flags PV yield 4,291 kWh/kWp versus a physically allowed 1,187 to 1,844 kWh/kWp, 1.8 MW versus 2.7 MW diesel units and load totals 2.648e+07 versus 2.621e+04 kWh, yet this study still uses 9,568,110 kWh/yr demand, 1,422 kW peak and 1,800 kW units without reconciling which printed values are trustworthy.\", \"addressed_in\": \"The published study we used: Hiron 2021 (Energies 14, 8311)\"}, {\"point\": \"A single point LCOE hides material weather and demand-case spread: sunshine spread is 18.4 %, GHI ranges 1,731 to 2,049 kWh/m2/yr, alternative-weather optima give 0.233 to 0.277 USD/kWh, and the growth case reaches the grid edge at 9,000 kWp with 0.289 USD/kWh for the main design.\", \"addressed_in\": \"Range of the answer\"}, {\"point\": \"Upfront cost 18,489,000 USD appears to cover only PV and battery nameplate components, while shipping to the island, local labour, construction access/time, land/permits, network and grid-forming equipment and financing are excluded; even the 1.26 USD/L diesel price is described as a loco-depot floor before taxes and sea transport, so delivered island system cost is not shown.\", \"addressed_in\": \"Not covered by this study\"}, {\"point\": \"Reliability is deterministic: the model reports 0 kWh/yr and 0 h/yr unserved from hourly balances with battery_soc_min_frac 0.1, but gives no tested allowance for forecast error, sub-hourly cloud or load swings, forced outages or a failed battery or diesel unit, so 0 unserved energy is not a demonstrated service level.\", \"addressed_in\": null}, {\"point\": \"The optimum is flat, oversized and partly grid-bound: within the assumed 1.0 % near-tie there are 8 designs spanning 7,500 to 9,000 kWp, the 8,500 kWp choice is about six times the 1,422 kW peak and curtails 20.7 % of PV, and several sensitivity optima sit on the grid edge at 9,000 kWp, so quoting 0.277 USD/kWh to three decimals overstates precision.\", \"addressed_in\": \"How firm is the answer\"}]}"
+}

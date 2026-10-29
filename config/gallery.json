@@ -1,28 +1,42 @@
 {
   "studies": [
     {
+      "run": "107477f112e5d92c",
+      "paper": "paper-20261028T035325-b646fb",
+      "review": "review-20261029T060800-acbbb2",
+      "figure_check": "figure-20261029T053942-12137f",
+      "note": "Curated inputs (post hoc). Latest build: 9 inputs in What moves the cost, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
+    },
+    {
+      "run": "b4a44fc6d4c32339",
+      "paper": "paper-20261028T035325-b646fb",
+      "review": null,
+      "figure_check": "figure-20261029T053942-12137f",
+      "note": "Pre-registered inputs. Latest build: 9 inputs in What moves the cost, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
+    },
+    {
       "run": "4a0c0eedd47b2672",
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261028T151531-231e0b",
-      "note": "Curated inputs (post hoc). Judge: local model twice, then Muse Wonder."
+      "note": "Earlier build. Curated inputs (post hoc). Judge: local model twice, then Muse Wonder."
     },
     {
       "run": "5ee65dcd3350bec1",
       "paper": "paper-20261028T035325-b646fb",
       "review": null,
-      "note": "Pre-registered inputs. Judge: local model twice, then Muse Wonder."
+      "note": "Earlier build. Pre-registered inputs. Judge: local model twice, then Muse Wonder."
     },
     {
       "run": "f86df9819fa150a7",
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261028T110232-c01b38",
-      "note": "Pre-registered inputs. Judge: local model only (earlier run, same numbers as run 5ee65dcd3350bec1)."
+      "note": "Earlier build. Pre-registered inputs. Judge: local model only (earlier run, same numbers as run 5ee65dcd3350bec1)."
     },
     {
       "run": "579f414386fe2d58",
       "paper": "paper-20261028T035325-b646fb",
       "review": null,
-      "note": "Curated inputs (post hoc). Judge: local model only (earlier run, same numbers as run 4a0c0eedd47b2672)."
+      "note": "Earlier build. Curated inputs (post hoc). Judge: local model only (earlier run, same numbers as run 4a0c0eedd47b2672)."
     }
   ]
 }

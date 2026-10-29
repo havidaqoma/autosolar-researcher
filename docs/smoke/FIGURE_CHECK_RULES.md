@@ -37,6 +37,20 @@ Written by the orchestrator before the run. Spec: `docs/specs/T18b_figure_check.
   band". The band and the basis curve were fixed from the sensitivity table and the paper text, not from this
   look, and they do not change after the run.
 
-## Results
+## Results (added after the run, Thursday 29 Oct)
 
-(Added after the run.)
+- One run, `figure-20261029T053942-12137f` (copy: `docs/smoke/figure_check_hiron2021_fig7.json`): 4 SAM 3.1 calls
+  and 1 Muse Spark label call, 33 s, USD 0.0103 (measured, ledger). No error, no retry.
+- Axis fits: 6 of 6 time labels and 8 of 8 kWh labels used, none dropped. 22 of 24 hours read and validated in all
+  three curves (the first and last hour are never validated).
+- Verdict by the rule: **outside band.** Table 6 scaled back 4 years at 3.48% a year gives 20,837 kWh over the 22
+  hours; the 31 Dec 2018 curve gives 15,980 kWh. The study's load is 30.4% above the curve the paper says it grew
+  from (computed). It is 16.7% above 27 Oct 2018, 9.4% above 28 Sep 2018 and 18.2% above the mean of the three
+  days. Peak: 1,240 kWh scaled back against 1,000 kWh read on 31 Dec 2018.
+- For Table 6 to come from the 31 Dec 2018 curve, the growth would have to be about 10.6% a year, not 3.48%
+  (computed).
+- By eye the read values follow the image (for example 31 Dec 2018 reads 1,000 kWh at 19:00 and 601 kWh at 8:00).
+  Where a curve is hidden behind the one in front, the reader returns the front curve's top, so a hidden value is
+  read as at most that.
+- What it means: the load the study uses may be about 30% too high if the paper's own method is right. That is
+  more than the +/-20% demand swing in the sensitivity table, and the study pages now say so.

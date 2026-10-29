@@ -1,0 +1,1081 @@
+{
+  "schema": "autosolar.paper_check/1",
+  "run_id": "paper-20261028T035325-b646fb",
+  "label": "Hiron 2021 (Energies 14, 8311)",
+  "pdf_name": "hiron2021_energies_14_8311.pdf",
+  "pdf_sha256": "0fdb94865ac99e8a4d697b33de3953f6be86b5050476b83faced559261033fec",
+  "pages": 24,
+  "model": "muse-spark-1.3-contributor",
+  "usage": {
+    "input_tokens": 91572,
+    "cached_tokens": 0,
+    "output_tokens": 18963,
+    "reasoning_tokens": 12609,
+    "search_queries": 0
+  },
+  "cost_usd": 0.012949800000000001,
+  "wall_s": 102.3,
+  "study": "59eba198a2af900c",
+  "site_ghi_kwh_m2_yr": [
+    1825.84221,
+    2049.20852
+  ],
+  "site_sources": {
+    "NASA POWER": 1825.84221,
+    "PVGIS-ERA5 TMY": 2049.20852,
+    "GSA scaled": 1829.3125
+  },
+  "prompt_sha256": "e8517bdf125f52f8f735528c13bafc3ae8cd465f322a7fc319315243d0fac866",
+  "schema_sha256": "17df719776e1cde5f73a7ef5b713196ee279a461e782661099df40209811f732",
+  "raw_text": "{\"schedule\": {\"label\": \"Table 6. Mapping hybrid operational schedule.\", \"page\": 19, \"period_h\": 1, \"rows\": [{\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1126, \"load_kw\": 1126, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"0:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1105, \"load_kw\": 1105, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"1:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1052, \"load_kw\": 1052, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"2:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1031, \"load_kw\": 1031, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"3:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1044, \"load_kw\": 1044, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"4:00\"}, {\"battery_discharge_kw\": 1104, \"curtailed_kw\": null, \"diesel_kw\": 1104, \"load_kw\": 1104, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"5:00\"}, {\"battery_discharge_kw\": 1178.8, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 1152, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 310, \"pv_total_kw\": null, \"time\": \"6:00\"}, {\"battery_discharge_kw\": 1027, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 1004, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 846, \"pv_total_kw\": null, \"time\": \"7:00\"}, {\"battery_discharge_kw\": 1000, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 995, \"pv_to_battery_kw\": 353, \"pv_to_load_kw\": 995, \"pv_total_kw\": null, \"time\": \"8:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 976, \"pv_to_battery_kw\": 745, \"pv_to_load_kw\": 976, \"pv_total_kw\": null, \"time\": \"9:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 942, \"pv_to_battery_kw\": 1013, \"pv_to_load_kw\": 942, \"pv_total_kw\": null, \"time\": \"10:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 936, \"pv_to_battery_kw\": 1054, \"pv_to_load_kw\": 936, \"pv_total_kw\": null, \"time\": \"11:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 949, \"pv_to_battery_kw\": 964, \"pv_to_load_kw\": 949, \"pv_total_kw\": null, \"time\": \"12:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 985, \"pv_to_battery_kw\": 746, \"pv_to_load_kw\": 985, \"pv_total_kw\": null, \"time\": \"13:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 974, \"pv_to_battery_kw\": 421, \"pv_to_load_kw\": 974, \"pv_total_kw\": null, \"time\": \"14:00\"}, {\"battery_discharge_kw\": 950, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 934, \"pv_to_battery_kw\": 11, \"pv_to_load_kw\": 934, \"pv_total_kw\": null, \"time\": \"15:00\"}, {\"battery_discharge_kw\": 950, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 926, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 423, \"pv_total_kw\": null, \"time\": \"16:00\"}, {\"battery_discharge_kw\": 1003, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 1003, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"17:00\"}, {\"battery_discharge_kw\": 1367, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 1367, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"18:00\"}, {\"battery_discharge_kw\": 1422, \"curtailed_kw\": null, \"diesel_kw\": 0, \"load_kw\": 1422, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"19:00\"}, {\"battery_discharge_kw\": 1390, \"curtailed_kw\": null, \"diesel_kw\": 1377, \"load_kw\": 1377, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"20:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1351, \"load_kw\": 1351, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"21:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1264, \"load_kw\": 1264, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"22:00\"}, {\"battery_discharge_kw\": 0, \"curtailed_kw\": null, \"diesel_kw\": 1195, \"load_kw\": 1195, \"pv_to_battery_kw\": 0, \"pv_to_load_kw\": 0, \"pv_total_kw\": null, \"time\": \"23:00\"}]}, \"statements\": [{\"condition\": \"\", \"count\": 2, \"page\": 1, \"place\": \"text\", \"quantity\": \"diesel_kw\", \"quote\": \"Currently, all electricity production on Karimunjawa Island is supplied from the Diesel Power Plant (DPP) system with a capacity of 2 \\u00d7 2.7 MW.\", \"unit\": \"MW\", \"value\": 2.7}, {\"condition\": \"\", \"count\": null, \"page\": 1, \"place\": \"text\", \"quantity\": \"base_coe_usd_per_kwh\", \"quote\": \"The increasing price of diesel fuel causes the cost of production to be very high, reaching 0.464 $/kWh.\", \"unit\": \"$/kWh\", \"value\": 0.464}, {\"condition\": \"2014\", \"count\": null, \"page\": 3, \"place\": \"text\", \"quantity\": \"pv_capex_usd_per_kw\", \"quote\": \"Many researchers have estimated the decrease of PV system plan cost, from the initial cost of 1329 $USD/kWp in 2014 to 362 $USD/kWp in 2050\", \"unit\": \"$USD/kWp\", \"value\": 1329}, {\"condition\": \"2050\", \"count\": null, \"page\": 3, \"place\": \"text\", \"quantity\": \"pv_capex_usd_per_kw\", \"quote\": \"from the initial cost of 1329 $USD/kWp in 2014 to 362 $USD/kWp in 2050, or a decrease in installation costs 40% to 75%\", \"unit\": \"$USD/kWp\", \"value\": 362}, {\"condition\": \"\", \"count\": 2, \"page\": 7, \"place\": \"text\", \"quantity\": \"diesel_kw\", \"quote\": \"The location of the DPP system is Legon Bajak in the north of Karimunjawa Island [39], as seen in Figure 5, with a capacity of 2 \\u00d7 1.8 MW/20 kV.\", \"unit\": \"MW\", \"value\": 1.8}, {\"condition\": \"\", \"count\": 2, \"page\": 7, \"place\": \"text\", \"quantity\": \"diesel_kw\", \"quote\": \"It appears that the DPP system capacity is 2 \\u00d7 1.8 MW/20 kV to supply power to Feeder 1 (19.87 kV) and Feeder 2 (19.86 kV).\", \"unit\": \"MW\", \"value\": 1.8}, {\"condition\": \"\", \"count\": null, \"page\": 7, \"place\": \"text\", \"quantity\": \"pv_ac_kw\", \"quote\": \"the configuration of the PV system is made of 2 clusters with a capacity of 0.99 MW/20.09 kV (see: Figure 6), with the aim that when a disturbance\", \"unit\": \"MW\", \"value\": 0.99}, {\"condition\": \"\", \"count\": null, \"page\": 10, \"place\": \"text\", \"quantity\": \"peak_load_kw\", \"quote\": \"Therefore, we propose a PV system to handle the load of 1.4 MW, and the land area for the PV system is calculated using Equation (9).\", \"unit\": \"MW\", \"value\": 1.4}, {\"condition\": \"\", \"count\": null, \"page\": 10, \"place\": \"text\", \"quantity\": \"pv_ac_kw\", \"quote\": \"The PV system was planned to produce a power of 0.99 MW. The battery capacity was 3.3 Mah, computed using Equation (4)\", \"unit\": \"MW\", \"value\": 0.99}, {\"condition\": \"\", \"count\": null, \"page\": 10, \"place\": \"text\", \"quantity\": \"battery_size\", \"quote\": \"The PV system was planned to produce a power of 0.99 MW. The battery capacity was 3.3 Mah, computed using Equation (4), and Figure 10 also shows\", \"unit\": \"Mah\", \"value\": 3.3}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"peak_load_kw\", \"quote\": \"In this development, the Karimunjawa system reached a peak load of 1.4 MW. At low load conditions, no loading and stress limits are exceeded.\", \"unit\": \"MW\", \"value\": 1.4}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_ac_kw\", \"quote\": \"It appears that with the presence of a PV system with a capacity of 0.99 MW/20.09 kV (Figure 6), the performance of the power system in Karimunjawa has decreased losses.\", \"unit\": \"MW\", \"value\": 0.99}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_module_wp\", \"quote\": \"our proposed PV is polycrystalline type with Pmpp = 320 Wp, Vmpp = 37.1 V, Imp = 8.63 A, Voc, 45.8 V, Isc = 9.1 A, Efficiency = 16.51%.\", \"unit\": \"Wp\", \"value\": 320}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_module_count\", \"quote\": \"Finally, we can calculate the total number of PV modules needed for solar fields is 16 \\u00d7 196 \\u00d7 1.24 = 3889 pieces of PV modules.\", \"unit\": \"\", \"value\": 3889}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_module_area_m2\", \"quote\": \"and the area of PV modules (APV) as according to the manufacture specifications is 1.92 m2, then through Equation (14), the required land area for solar fields is 1.41 ha.\", \"unit\": \"m2\", \"value\": 1.92}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_area_m2\", \"quote\": \"and the area of PV modules (APV) as according to the manufacture specifications is 1.92 m2, then through Equation (14), the required land area for solar fields is 1.41 ha.\", \"unit\": \"ha\", \"value\": 1.41}, {\"condition\": \"\", \"count\": null, \"page\": 11, \"place\": \"text\", \"quantity\": \"pv_dc_kwp\", \"quote\": \"where Pplts = 0.99 \\u2248 1 MW, and PA = 1.24 MWp, then NArray = 1.24 array.\", \"unit\": \"MWp\", \"value\": 1.24}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"text\", \"quantity\": \"load_kwh_day\", \"quote\": \"Using Equation (4), where the energy requirement in one day is 26,479 MWh and with a power factor = 0.8, then the battery capacity is 3.3 Mah.\", \"unit\": \"MWh\", \"value\": 26479}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"peak_load_kw\", \"quote\": \"Total Load (MW) 1.41\", \"unit\": \"MW\", \"value\": 1.41}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"pv_area_m2\", \"quote\": \"PV Field Area (m2) 11.300\", \"unit\": \"m2\", \"value\": 11300}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"pv_ac_kw\", \"quote\": \"PV System (MW) 0.99\", \"unit\": \"MW\", \"value\": 0.99}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"battery_size\", \"quote\": \"Battery (MAh) 4.1\", \"unit\": \"MAh\", \"value\": 4.1}, {\"condition\": \"\", \"count\": 2, \"page\": 12, \"place\": \"table\", \"quantity\": \"diesel_kw\", \"quote\": \"DPP System (MW) 2 \\u00d7 2.7\", \"unit\": \"MW\", \"value\": 2.7}, {\"condition\": \"100% penetration\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"LCOE ($/kWh) 257.770\", \"unit\": \"$/kWh\", \"value\": 257.77}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"table\", \"quantity\": \"wind_m_s\", \"quote\": \"V Wind (m/s) 18\", \"unit\": \"m/s\", \"value\": 18}, {\"condition\": \"\", \"count\": null, \"page\": 12, \"place\": \"text\", \"quantity\": \"ghi_kwh_m2_yr\", \"quote\": \"As Figure 10 shows, it appears that Karimunjawa Island gets quite a lot of irradiation for a whole year with an average of 5.23 kWh/m2/day and an average clearness index of 53%.\", \"unit\": \"kWh/m2/day\", \"value\": 5.23}, {\"condition\": \"10 m\", \"count\": null, \"page\": 13, \"place\": \"text\", \"quantity\": \"wind_m_s\", \"quote\": \"At 10 m above of land surface, the average wind speed is 3.67 m/s (see Figure 13a), at 50 m above of land surface, the average wind speed is 4.37\", \"unit\": \"m/s\", \"value\": 3.67}, {\"condition\": \"50 m\", \"count\": null, \"page\": 13, \"place\": \"text\", \"quantity\": \"wind_m_s\", \"quote\": \"at 50 m above of land surface, the average wind speed is 4.37 (Figure 13b), and at 100 m above of land surface, the average wind speed is average 4.76 m/s\", \"unit\": \"m/s\", \"value\": 4.37}, {\"condition\": \"100 m\", \"count\": null, \"page\": 13, \"place\": \"text\", \"quantity\": \"wind_m_s\", \"quote\": \"and at 100 m above of land surface, the average wind speed is average 4.76 m/s (Figure 13c).\", \"unit\": \"m/s\", \"value\": 4.76}, {\"condition\": \"50 m\", \"count\": null, \"page\": 14, \"place\": \"text\", \"quantity\": \"wind_m_s\", \"quote\": \"taken from 50 m above the land surface. The result shows that the average wind speed was 4.71 m/s. The characteristics of the average wind speed trends for one full year are shown\", \"unit\": \"m/s\", \"value\": 4.71}, {\"condition\": \"100% penetration\", \"count\": null, \"page\": 15, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Therefore, it can be concluded that the lowest LCOE value is at 100% penetration with an EPC value of 0.26601 USD/kWh and the highest EPC occurs at 10% PV penetration\", \"unit\": \"USD/kWh\", \"value\": 0.26601}, {\"condition\": \"10% penetration\", \"count\": null, \"page\": 15, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"and the highest EPC occurs at 10% PV penetration with a value of 0.309129 USD/kWh.\", \"unit\": \"USD/kWh\", \"value\": 0.309129}, {\"condition\": \"\", \"count\": null, \"page\": 16, \"place\": \"text\", \"quantity\": \"annual_cost_usd\", \"quote\": \"The total investment, operational, and maintenance costs for one year are 302,732 USD. In comparison, the total energy generated in 1 year at 100% penetration reaches 966,474 MWh.\", \"unit\": \"USD\", \"value\": 302732}, {\"condition\": \"\", \"count\": null, \"page\": 16, \"place\": \"text\", \"quantity\": \"energy_served_kwh_yr\", \"quote\": \"In comparison, the total energy generated in 1 year at 100% penetration reaches 966,474 MWh. The cost contribution to the three main items in the LCOE is Investment\", \"unit\": \"MWh\", \"value\": 966474}, {\"condition\": \"\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"capex_usd\", \"quote\": \"It = Investation (USD) 288.33\", \"unit\": \"USD\", \"value\": 288.33}, {\"condition\": \"\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"om_cost_usd\", \"quote\": \"Mt = OM Cost (USD) 9.59\", \"unit\": \"USD\", \"value\": 9.59}, {\"condition\": \"\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"energy_served_kwh_yr\", \"quote\": \"Et = Energy produced (MWh) 966.47\", \"unit\": \"MWh\", \"value\": 966.47}, {\"condition\": \"10% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 10 LCOE = EPC ($/MWh) 299.554\", \"unit\": \"$/MWh\", \"value\": 299.554}, {\"condition\": \"20% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 20 LCOE = EPC ($/MWh) 294.911\", \"unit\": \"$/MWh\", \"value\": 294.911}, {\"condition\": \"30% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 30 LCOE = EPC ($/MWh) 290.269\", \"unit\": \"$/MWh\", \"value\": 290.269}, {\"condition\": \"40% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 40 LCOE = EPC ($/MWh) 285.626\", \"unit\": \"$/MWh\", \"value\": 285.626}, {\"condition\": \"50% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 50 LCOE = EPC ($/MWh) 280.983\", \"unit\": \"$/MWh\", \"value\": 280.983}, {\"condition\": \"60% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 60 LCOE = EPC ($/MWh) 276.340\", \"unit\": \"$/MWh\", \"value\": 276.34}, {\"condition\": \"70% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 70 LCOE = EPC ($/MWh) 271.697\", \"unit\": \"$/MWh\", \"value\": 271.697}, {\"condition\": \"80% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 80 LCOE = EPC ($/MWh) 265.827\", \"unit\": \"$/MWh\", \"value\": 265.827}, {\"condition\": \"90% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 90 LCOE = EPC ($/MWh) 261.184\", \"unit\": \"$/MWh\", \"value\": 261.184}, {\"condition\": \"100% penetration\", \"count\": null, \"page\": 16, \"place\": \"table\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"Penetration (%) 100 LCOE = EPC ($/MWh) 257.770\", \"unit\": \"$/MWh\", \"value\": 257.77}, {\"condition\": \"10% penetration\", \"count\": null, \"page\": 17, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"meaning that in conditions where 10% PV is active, then LCOE increases by 299,554 $/MWh. When the PV module is 100% was achieved, LCOE decreases to 257,770 $/MWh.\", \"unit\": \"$/MWh\", \"value\": 299.554}, {\"condition\": \"100% penetration\", \"count\": null, \"page\": 17, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"When the PV module is 100% was achieved, LCOE decreases to 257,770 $/MWh. Our observation of the LCOE results is that the ideal penetration considering the LCOE is 70%\", \"unit\": \"$/MWh\", \"value\": 257.77}, {\"condition\": \"70% to 100% penetration\", \"count\": null, \"page\": 17, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"This result means that the PV system becomes optimal at the penetration value between 271,697 $/MWh to 257,770 $/MWh.\", \"unit\": \"$/MWh\", \"value\": 271.697}, {\"condition\": \"\", \"count\": null, \"page\": 17, \"place\": \"text\", \"quantity\": \"lcoe_usd_per_kwh\", \"quote\": \"when penetration 100%, the energy production cost was filled the minimum value 260 $/MWh. So we conclude that the range of LCOE the system proposed is 260 $/MWh to 299.554 $/MWh.\", \"unit\": \"$/MWh\", \"value\": 260}, {\"condition\": \"\", \"count\": null, \"page\": 18, \"place\": \"text\", \"quantity\": \"peak_load_kw\", \"quote\": \"As the energy demand forecasting in Figure 8 shows, the peak load reaches 1.4 MW. The average daily electricity load is 0.9 MW, so from a general point of view\", \"unit\": \"MW\", \"value\": 1.4}, {\"condition\": \"\", \"count\": null, \"page\": 20, \"place\": \"conclusion\", \"quantity\": \"base_coe_usd_per_kwh\", \"quote\": \"However, because the essential cost of generation is relatively high, namely 0.445 USD/kWh, the solution to reduce EPC is carried out by penetrating the PV System.\", \"unit\": \"USD/kWh\", \"value\": 0.445}, {\"condition\": \"\", \"count\": null, \"page\": 20, \"place\": \"conclusion\", \"quantity\": \"pv_module_count\", \"quote\": \"The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.\", \"unit\": \"\", \"value\": 3889}, {\"condition\": \"\", \"count\": null, \"page\": 20, \"place\": \"conclusion\", \"quantity\": \"pv_area_m2\", \"quote\": \"The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.\", \"unit\": \"ha\", \"value\": 1.41}, {\"condition\": \"\", \"count\": null, \"page\": 20, \"place\": \"conclusion\", \"quantity\": \"battery_size\", \"quote\": \"The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.\", \"unit\": \"MAh\", \"value\": 3.3}]}",
+  "verified": {
+    "statements": [
+      {
+        "condition": "",
+        "count": 2,
+        "page": 1,
+        "place": "text",
+        "quantity": "diesel_kw",
+        "quote": "Currently, all electricity production on Karimunjawa Island is supplied from the Diesel Power Plant (DPP) system with a capacity of 2 \u00d7 2.7 MW.",
+        "unit": "MW",
+        "value": 2.7,
+        "found_page": 1,
+        "quote_kind": "near"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 1,
+        "place": "text",
+        "quantity": "base_coe_usd_per_kwh",
+        "quote": "The increasing price of diesel fuel causes the cost of production to be very high, reaching 0.464 $/kWh.",
+        "unit": "$/kWh",
+        "value": 0.464,
+        "found_page": 1,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "2014",
+        "count": null,
+        "page": 3,
+        "place": "text",
+        "quantity": "pv_capex_usd_per_kw",
+        "quote": "Many researchers have estimated the decrease of PV system plan cost, from the initial cost of 1329 $USD/kWp in 2014 to 362 $USD/kWp in 2050",
+        "unit": "$USD/kWp",
+        "value": 1329,
+        "found_page": 3,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "2050",
+        "count": null,
+        "page": 3,
+        "place": "text",
+        "quantity": "pv_capex_usd_per_kw",
+        "quote": "from the initial cost of 1329 $USD/kWp in 2014 to 362 $USD/kWp in 2050, or a decrease in installation costs 40% to 75%",
+        "unit": "$USD/kWp",
+        "value": 362,
+        "found_page": 3,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": 2,
+        "page": 7,
+        "place": "text",
+        "quantity": "diesel_kw",
+        "quote": "The location of the DPP system is Legon Bajak in the north of Karimunjawa Island [39], as seen in Figure 5, with a capacity of 2 \u00d7 1.8 MW/20 kV.",
+        "unit": "MW",
+        "value": 1.8,
+        "found_page": 6,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": 2,
+        "page": 7,
+        "place": "text",
+        "quantity": "diesel_kw",
+        "quote": "It appears that the DPP system capacity is 2 \u00d7 1.8 MW/20 kV to supply power to Feeder 1 (19.87 kV) and Feeder 2 (19.86 kV).",
+        "unit": "MW",
+        "value": 1.8,
+        "found_page": 6,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 7,
+        "place": "text",
+        "quantity": "pv_ac_kw",
+        "quote": "the configuration of the PV system is made of 2 clusters with a capacity of 0.99 MW/20.09 kV (see: Figure 6), with the aim that when a disturbance",
+        "unit": "MW",
+        "value": 0.99,
+        "found_page": 7,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 10,
+        "place": "text",
+        "quantity": "peak_load_kw",
+        "quote": "Therefore, we propose a PV system to handle the load of 1.4 MW, and the land area for the PV system is calculated using Equation (9).",
+        "unit": "MW",
+        "value": 1.4,
+        "found_page": 10,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 10,
+        "place": "text",
+        "quantity": "pv_ac_kw",
+        "quote": "The PV system was planned to produce a power of 0.99 MW. The battery capacity was 3.3 Mah, computed using Equation (4)",
+        "unit": "MW",
+        "value": 0.99,
+        "found_page": 10,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 10,
+        "place": "text",
+        "quantity": "battery_size",
+        "quote": "The PV system was planned to produce a power of 0.99 MW. The battery capacity was 3.3 Mah, computed using Equation (4), and Figure 10 also shows",
+        "unit": "Mah",
+        "value": 3.3,
+        "found_page": 10,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "peak_load_kw",
+        "quote": "In this development, the Karimunjawa system reached a peak load of 1.4 MW. At low load conditions, no loading and stress limits are exceeded.",
+        "unit": "MW",
+        "value": 1.4,
+        "found_page": 11,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_ac_kw",
+        "quote": "It appears that with the presence of a PV system with a capacity of 0.99 MW/20.09 kV (Figure 6), the performance of the power system in Karimunjawa has decreased losses.",
+        "unit": "MW",
+        "value": 0.99,
+        "found_page": 11,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_module_wp",
+        "quote": "our proposed PV is polycrystalline type with Pmpp = 320 Wp, Vmpp = 37.1 V, Imp = 8.63 A, Voc, 45.8 V, Isc = 9.1 A, Efficiency = 16.51%.",
+        "unit": "Wp",
+        "value": 320,
+        "found_page": 11,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_module_count",
+        "quote": "Finally, we can calculate the total number of PV modules needed for solar fields is 16 \u00d7 196 \u00d7 1.24 = 3889 pieces of PV modules.",
+        "unit": "",
+        "value": 3889,
+        "found_page": 11,
+        "quote_kind": "near"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_module_area_m2",
+        "quote": "and the area of PV modules (APV) as according to the manufacture specifications is 1.92 m2, then through Equation (14), the required land area for solar fields is 1.41 ha.",
+        "unit": "m2",
+        "value": 1.92,
+        "found_page": 11,
+        "quote_kind": "near"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_area_m2",
+        "quote": "and the area of PV modules (APV) as according to the manufacture specifications is 1.92 m2, then through Equation (14), the required land area for solar fields is 1.41 ha.",
+        "unit": "ha",
+        "value": 1.41,
+        "found_page": 11,
+        "quote_kind": "near"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 11,
+        "place": "text",
+        "quantity": "pv_dc_kwp",
+        "quote": "where Pplts = 0.99 \u2248 1 MW, and PA = 1.24 MWp, then NArray = 1.24 array.",
+        "unit": "MWp",
+        "value": 1.24,
+        "found_page": 11,
+        "quote_kind": "near"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "text",
+        "quantity": "load_kwh_day",
+        "quote": "Using Equation (4), where the energy requirement in one day is 26,479 MWh and with a power factor = 0.8, then the battery capacity is 3.3 Mah.",
+        "unit": "MWh",
+        "value": 26479,
+        "found_page": 12,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "table",
+        "quantity": "peak_load_kw",
+        "quote": "Total Load (MW) 1.41",
+        "unit": "MW",
+        "value": 1.41,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "table",
+        "quantity": "pv_ac_kw",
+        "quote": "PV System (MW) 0.99",
+        "unit": "MW",
+        "value": 0.99,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "table",
+        "quantity": "battery_size",
+        "quote": "Battery (MAh) 4.1",
+        "unit": "MAh",
+        "value": 4.1,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": 2,
+        "page": 12,
+        "place": "table",
+        "quantity": "diesel_kw",
+        "quote": "DPP System (MW) 2 \u00d7 2.7",
+        "unit": "MW",
+        "value": 2.7,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "100% penetration",
+        "count": null,
+        "page": 12,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "LCOE ($/kWh) 257.770",
+        "unit": "$/kWh",
+        "value": 257.77,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "table",
+        "quantity": "wind_m_s",
+        "quote": "V Wind (m/s) 18",
+        "unit": "m/s",
+        "value": 18,
+        "found_page": 12,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 12,
+        "place": "text",
+        "quantity": "ghi_kwh_m2_yr",
+        "quote": "As Figure 10 shows, it appears that Karimunjawa Island gets quite a lot of irradiation for a whole year with an average of 5.23 kWh/m2/day and an average clearness index of 53%.",
+        "unit": "kWh/m2/day",
+        "value": 5.23,
+        "found_page": 12,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "10 m",
+        "count": null,
+        "page": 13,
+        "place": "text",
+        "quantity": "wind_m_s",
+        "quote": "At 10 m above of land surface, the average wind speed is 3.67 m/s (see Figure 13a), at 50 m above of land surface, the average wind speed is 4.37",
+        "unit": "m/s",
+        "value": 3.67,
+        "found_page": 13,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "50 m",
+        "count": null,
+        "page": 13,
+        "place": "text",
+        "quantity": "wind_m_s",
+        "quote": "at 50 m above of land surface, the average wind speed is 4.37 (Figure 13b), and at 100 m above of land surface, the average wind speed is average 4.76 m/s",
+        "unit": "m/s",
+        "value": 4.37,
+        "found_page": 13,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "100 m",
+        "count": null,
+        "page": 13,
+        "place": "text",
+        "quantity": "wind_m_s",
+        "quote": "and at 100 m above of land surface, the average wind speed is average 4.76 m/s (Figure 13c).",
+        "unit": "m/s",
+        "value": 4.76,
+        "found_page": 13,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "50 m",
+        "count": null,
+        "page": 14,
+        "place": "text",
+        "quantity": "wind_m_s",
+        "quote": "taken from 50 m above the land surface. The result shows that the average wind speed was 4.71 m/s. The characteristics of the average wind speed trends for one full year are shown",
+        "unit": "m/s",
+        "value": 4.71,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "100% penetration",
+        "count": null,
+        "page": 15,
+        "place": "text",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Therefore, it can be concluded that the lowest LCOE value is at 100% penetration with an EPC value of 0.26601 USD/kWh and the highest EPC occurs at 10% PV penetration",
+        "unit": "USD/kWh",
+        "value": 0.26601,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "10% penetration",
+        "count": null,
+        "page": 15,
+        "place": "text",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "and the highest EPC occurs at 10% PV penetration with a value of 0.309129 USD/kWh.",
+        "unit": "USD/kWh",
+        "value": 0.309129,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 16,
+        "place": "text",
+        "quantity": "annual_cost_usd",
+        "quote": "The total investment, operational, and maintenance costs for one year are 302,732 USD. In comparison, the total energy generated in 1 year at 100% penetration reaches 966,474 MWh.",
+        "unit": "USD",
+        "value": 302732,
+        "found_page": 16,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 16,
+        "place": "text",
+        "quantity": "energy_served_kwh_yr",
+        "quote": "In comparison, the total energy generated in 1 year at 100% penetration reaches 966,474 MWh. The cost contribution to the three main items in the LCOE is Investment",
+        "unit": "MWh",
+        "value": 966474,
+        "found_page": 16,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "capex_usd",
+        "quote": "It = Investation (USD) 288.33",
+        "unit": "USD",
+        "value": 288.33,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "om_cost_usd",
+        "quote": "Mt = OM Cost (USD) 9.59",
+        "unit": "USD",
+        "value": 9.59,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "energy_served_kwh_yr",
+        "quote": "Et = Energy produced (MWh) 966.47",
+        "unit": "MWh",
+        "value": 966.47,
+        "found_page": 14,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "10% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 10 LCOE = EPC ($/MWh) 299.554",
+        "unit": "$/MWh",
+        "value": 299.554,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "20% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 20 LCOE = EPC ($/MWh) 294.911",
+        "unit": "$/MWh",
+        "value": 294.911,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "30% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 30 LCOE = EPC ($/MWh) 290.269",
+        "unit": "$/MWh",
+        "value": 290.269,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "40% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 40 LCOE = EPC ($/MWh) 285.626",
+        "unit": "$/MWh",
+        "value": 285.626,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "50% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 50 LCOE = EPC ($/MWh) 280.983",
+        "unit": "$/MWh",
+        "value": 280.983,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "60% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 60 LCOE = EPC ($/MWh) 276.340",
+        "unit": "$/MWh",
+        "value": 276.34,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "70% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 70 LCOE = EPC ($/MWh) 271.697",
+        "unit": "$/MWh",
+        "value": 271.697,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "80% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 80 LCOE = EPC ($/MWh) 265.827",
+        "unit": "$/MWh",
+        "value": 265.827,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "90% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 90 LCOE = EPC ($/MWh) 261.184",
+        "unit": "$/MWh",
+        "value": 261.184,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "100% penetration",
+        "count": null,
+        "page": 16,
+        "place": "table",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "Penetration (%) 100 LCOE = EPC ($/MWh) 257.770",
+        "unit": "$/MWh",
+        "value": 257.77,
+        "found_page": 16,
+        "quote_kind": "table number"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 17,
+        "place": "text",
+        "quantity": "lcoe_usd_per_kwh",
+        "quote": "when penetration 100%, the energy production cost was filled the minimum value 260 $/MWh. So we conclude that the range of LCOE the system proposed is 260 $/MWh to 299.554 $/MWh.",
+        "unit": "$/MWh",
+        "value": 260,
+        "found_page": 16,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 18,
+        "place": "text",
+        "quantity": "peak_load_kw",
+        "quote": "As the energy demand forecasting in Figure 8 shows, the peak load reaches 1.4 MW. The average daily electricity load is 0.9 MW, so from a general point of view",
+        "unit": "MW",
+        "value": 1.4,
+        "found_page": 18,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 20,
+        "place": "conclusion",
+        "quantity": "base_coe_usd_per_kwh",
+        "quote": "However, because the essential cost of generation is relatively high, namely 0.445 USD/kWh, the solution to reduce EPC is carried out by penetrating the PV System.",
+        "unit": "USD/kWh",
+        "value": 0.445,
+        "found_page": 20,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 20,
+        "place": "conclusion",
+        "quantity": "pv_module_count",
+        "quote": "The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.",
+        "unit": "",
+        "value": 3889,
+        "found_page": 20,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 20,
+        "place": "conclusion",
+        "quantity": "pv_area_m2",
+        "quote": "The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.",
+        "unit": "ha",
+        "value": 1.41,
+        "found_page": 20,
+        "quote_kind": "exact"
+      },
+      {
+        "condition": "",
+        "count": null,
+        "page": 20,
+        "place": "conclusion",
+        "quantity": "battery_size",
+        "quote": "The number of PV modules is 3889 units, and the required land area is 1.41 ha. Type PV is polycrystalline, and battery capacity is 3.3 MAh.",
+        "unit": "MAh",
+        "value": 3.3,
+        "found_page": 20,
+        "quote_kind": "exact"
+      }
+    ],
+    "schedule": {
+      "label": "Table 6. Mapping hybrid operational schedule.",
+      "page": 19,
+      "period_h": 1,
+      "rows": [
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1126,
+          "load_kw": 1126,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "0:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1105,
+          "load_kw": 1105,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "1:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1052,
+          "load_kw": 1052,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "2:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1031,
+          "load_kw": 1031,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "3:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1044,
+          "load_kw": 1044,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "4:00"
+        },
+        {
+          "battery_discharge_kw": 1104,
+          "curtailed_kw": null,
+          "diesel_kw": 1104,
+          "load_kw": 1104,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "5:00"
+        },
+        {
+          "battery_discharge_kw": 1178.8,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 1152,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 310,
+          "pv_total_kw": null,
+          "time": "6:00"
+        },
+        {
+          "battery_discharge_kw": 1027,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 1004,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 846,
+          "pv_total_kw": null,
+          "time": "7:00"
+        },
+        {
+          "battery_discharge_kw": 1000,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 995,
+          "pv_to_battery_kw": 353,
+          "pv_to_load_kw": 995,
+          "pv_total_kw": null,
+          "time": "8:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 976,
+          "pv_to_battery_kw": 745,
+          "pv_to_load_kw": 976,
+          "pv_total_kw": null,
+          "time": "9:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 942,
+          "pv_to_battery_kw": 1013,
+          "pv_to_load_kw": 942,
+          "pv_total_kw": null,
+          "time": "10:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 936,
+          "pv_to_battery_kw": 1054,
+          "pv_to_load_kw": 936,
+          "pv_total_kw": null,
+          "time": "11:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 949,
+          "pv_to_battery_kw": 964,
+          "pv_to_load_kw": 949,
+          "pv_total_kw": null,
+          "time": "12:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 985,
+          "pv_to_battery_kw": 746,
+          "pv_to_load_kw": 985,
+          "pv_total_kw": null,
+          "time": "13:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 974,
+          "pv_to_battery_kw": 421,
+          "pv_to_load_kw": 974,
+          "pv_total_kw": null,
+          "time": "14:00"
+        },
+        {
+          "battery_discharge_kw": 950,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 934,
+          "pv_to_battery_kw": 11,
+          "pv_to_load_kw": 934,
+          "pv_total_kw": null,
+          "time": "15:00"
+        },
+        {
+          "battery_discharge_kw": 950,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 926,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 423,
+          "pv_total_kw": null,
+          "time": "16:00"
+        },
+        {
+          "battery_discharge_kw": 1003,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 1003,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "17:00"
+        },
+        {
+          "battery_discharge_kw": 1367,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 1367,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "18:00"
+        },
+        {
+          "battery_discharge_kw": 1422,
+          "curtailed_kw": null,
+          "diesel_kw": 0,
+          "load_kw": 1422,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "19:00"
+        },
+        {
+          "battery_discharge_kw": 1390,
+          "curtailed_kw": null,
+          "diesel_kw": 1377,
+          "load_kw": 1377,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "20:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1351,
+          "load_kw": 1351,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "21:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1264,
+          "load_kw": 1264,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "22:00"
+        },
+        {
+          "battery_discharge_kw": 0,
+          "curtailed_kw": null,
+          "diesel_kw": 1195,
+          "load_kw": 1195,
+          "pv_to_battery_kw": 0,
+          "pv_to_load_kw": 0,
+          "pv_total_kw": null,
+          "time": "23:00"
+        }
+      ],
+      "numbers_found_frac": 1.0
+    },
+    "dropped": [
+      {
+        "what": "pv_area_m2",
+        "page": 12,
+        "reason": "table number not found on its page"
+      },
+      {
+        "what": "lcoe_usd_per_kwh",
+        "page": 17,
+        "reason": "value not in the quote"
+      },
+      {
+        "what": "lcoe_usd_per_kwh",
+        "page": 17,
+        "reason": "value not in the quote"
+      },
+      {
+        "what": "lcoe_usd_per_kwh",
+        "page": 17,
+        "reason": "value not in the quote"
+      }
+    ],
+    "rejected": []
+  },
+  "results": [
+    {
+      "check_id": "P1",
+      "status": "flag",
+      "detail": "energy_served_kwh_yr []: differ 9.665e+05 MWh (p16 text), 966.5 MWh (p16 table); wind_m_s [50 m]: differ 4.37 m/s (p13 text), 4.71 m/s (p14 text); lcoe_usd_per_kwh [100% penetration]: differ 257.8 $/kWh (p12 table), 0.266 USD/kWh (p15 text), 257.8 $/MWh (p16 table); lcoe_usd_per_kwh [10% penetration]: differ 0.3091 USD/kWh (p15 text), 299.6 $/MWh (p16 table); base_coe_usd_per_kwh []: differ 0.464 $/kWh (p1 text), 0.445 USD/kWh (p20 conclusion)",
+      "pages": [
+        1,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        18,
+        20
+      ]
+    },
+    {
+      "check_id": "P2",
+      "status": "flag",
+      "detail": "7 of 24 rows fail: 5:00 2,208 kW vs 1,104 kW; 6:00 1,489 kW vs 1,152 kW; 7:00 1,873 kW vs 1,004 kW; 8:00 1,995 kW vs 995 kW; 15:00 1,884 kW vs 934 kW; 16:00 1,373 kW vs 926 kW; 20:00 2,767 kW vs 1,377 kW",
+      "pages": [
+        19
+      ]
+    },
+    {
+      "check_id": "P3",
+      "status": "flag",
+      "detail": "yield from schedule pv day 1.458e+04 kWh x 365 over pv_dc_kwp 1.24 MWp (p11 text); pv 5.321e+06 kWh/yr over 1,240 kWp = 4,291 kWh/kWp; site 1,826 to 2,049 allows 1,187 to 1,844",
+      "pages": [
+        11,
+        19
+      ]
+    },
+    {
+      "check_id": "P4",
+      "status": "flag",
+      "detail": "out 1.139e+04 kWh vs in 5,307 kWh x 0.95 = 5,042 kWh",
+      "pages": [
+        19
+      ]
+    },
+    {
+      "check_id": "P5",
+      "status": "flag",
+      "detail": "pv_ac_kw: worst hour 11:00 1,990 kW above rating 990 kW",
+      "pages": [
+        1,
+        6,
+        7,
+        10,
+        11,
+        12,
+        19
+      ]
+    },
+    {
+      "check_id": "P6",
+      "status": "flag",
+      "detail": "battery_size []: differ 3.3 Mah (p10 text), 4.1 MAh (p12 table), 3.3 MAh (p20 conclusion); diesel_kw []: differ 2.7 MW (p1 text), 1.8 MW (p7 text), 1.8 MW (p7 text), 2.7 MW (p12 table)",
+      "pages": [
+        1,
+        6,
+        7,
+        10,
+        11,
+        12,
+        20
+      ]
+    },
+    {
+      "check_id": "P7",
+      "status": "pass",
+      "detail": "1.41 ha (p11 text) ratio 1.888; 1.41 ha (p20 conclusion) ratio 1.888",
+      "pages": [
+        11,
+        20
+      ]
+    },
+    {
+      "check_id": "P8",
+      "status": "pass",
+      "detail": "all 1 GHI within 1,588 to 2,357 kWh/m2/yr: 5.23 kWh/m2/day (p12 text)",
+      "pages": [
+        12
+      ]
+    },
+    {
+      "check_id": "P9",
+      "status": "not checkable",
+      "detail": "no total has both items and statements",
+      "pages": []
+    },
+    {
+      "check_id": "P10",
+      "status": "not checkable",
+      "detail": "npc, discount rate, life, energy and LCOE needed",
+      "pages": []
+    },
+    {
+      "check_id": "P11",
+      "status": "flag",
+      "detail": "not reproducible: missing discount_rate_frac, project_life_yr, battery_capex_usd_per_kwh, diesel_capex_usd_per_kw, fuel_price_usd_per_l",
+      "pages": [
+        3,
+        14
+      ]
+    },
+    {
+      "check_id": "P12",
+      "status": "not checkable",
+      "detail": "fuel litres and diesel kWh both needed",
+      "pages": []
+    },
+    {
+      "check_id": "P13",
+      "status": "not checkable",
+      "detail": "diesel kWh, served kWh and a share all needed",
+      "pages": []
+    },
+    {
+      "check_id": "P14",
+      "status": "not checkable",
+      "detail": "CO2 kg and fuel litres both needed",
+      "pages": []
+    },
+    {
+      "check_id": "P15",
+      "status": "flag",
+      "detail": "load_kwh_day vs schedule: 2.648e+07 vs 2.621e+04 kWh",
+      "pages": [
+        12,
+        19
+      ]
+    }
+  ],
+  "summary": {
+    "flags": 8,
+    "passes": 2,
+    "not_checkable": 5,
+    "flagged_ids": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P11",
+      "P15"
+    ]
+  }
+}
