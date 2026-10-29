@@ -12,6 +12,10 @@ Each site needs a first study like this before anyone spends money on a detailed
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
+What it cost (measured ledgers): Muse Code wrote the engine, all 8,835 lines of `autosolar/`, for USD 0.50. One
+full study, with a fresh web search for its prices, costs about USD 0.50 in Meta model calls. All Meta model
+spending for the whole hackathon, smoke tests, chart reader tests and reviews included: USD 3.44.
+
 ## For judges
 
 - Scope: one island today. The tool answers for Karimunjawa; the demand model covers sites within 30 km of it and
@@ -38,7 +42,8 @@ Built during the Meta Global AI Developer Hackathon. What was prepared before th
 - Checks: 1,316 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
-- Cost: USD 2.94 for every paid model call so far and USD 0.50 for all Muse Code runs (measured ledgers).
+- Cost: Muse Code USD 0.50 (37 runs, 2.4 hours; it read 44 million tokens, 93% from cache, and wrote 0.6
+  million). Meta Model API USD 2.94 (170 calls, 438 web searches). USD 3.44 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
@@ -77,7 +82,7 @@ depends on it: if a unit must spin and the units are the larger ones, solar bare
 The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
 3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
 it comes from a palm oil article that gives one rupiah price, converted at an assumed exchange rate. After
-pre-registration the build agent (Hermes) replaced these 7 values by hand, the checked diesel price included,
+pre-registration the build agent replaced these 7 values by hand, the checked diesel price included,
 with values from named documents (`config/curated_inputs.json`, applied by `tools/curate.py`). Each one is marked
 "curated post hoc" in the report and on the page. The first study stays as it is.
 
@@ -125,7 +130,7 @@ each value are kept with the build files.
 | S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks | Muse Spark native PDF input and structured output |
 | S8 report | Markdown, JSON and a static HTML page with charts; every number in the text must appear in the report data | |
 | S9 review | a second model lists what it would question and where the report answers it | Muse Wonder |
-| Build | Muse Code wrote the code from short specs; the orchestrator (Hermes) wrote the specs and acceptance tests | Muse Code (contributor) |
+| Build | Muse Code wrote the code from short specs; an orchestrator agent wrote the specs and acceptance tests | Muse Code (contributor) |
 
 SAM 3.1 is wired in as a chart reader and passed its second validation (see below), but no study uses it yet.
 
@@ -196,7 +201,9 @@ other sites are refused rather than guessed.
   smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, four reviews and the two-model
   re-judge.
 - `ledger/build_usage.jsonl`: 37 Muse Code runs (33 that wrote the product, 4 sandbox smoke runs), USD 0.50 and
-  2.4 hours in total.
+  2.4 hours in total. Muse Code read 43.7 million input tokens (93% from cache) and wrote 0.61 million output
+  tokens.
+- All Meta model spending: USD 3.44.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013 and a review USD 0.25 to 0.33.
 
