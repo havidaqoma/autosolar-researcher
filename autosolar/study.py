@@ -48,10 +48,12 @@ from autosolar.sweep import (
     least_cost,
     on_grid_edge,
     sensitivity_table,
+    size_grid,
+    widen_grid,
 )
 from autosolar.weather import CASE_NAMES
 
-REPORT_SCHEMA = "autosolar.report/1"
+REPORT_SCHEMA = "autosolar.report/2"
 LABELS = ("measured", "computed", "assumed", "press", "paper", "paper (abstract)", "docs")
 KARIMUNJAWA_DEG = (-5.85, 110.43)
 DEMAND_RADIUS_KM = 30.0
@@ -525,15 +527,12 @@ def _design_objects(values: dict) -> tuple[CostInputs, Battery, DieselFleet, flo
 
 def _size_grid(step: float, top: float) -> list[float]:
     """Grid from 0 to top in kWp, kWh or kW steps."""
-    count = round(float(top) / float(step))
-    return [float(idx * float(step)) for idx in range(count + 1)]
+    return size_grid(step, top)
 
 
 def _widen_grid(grid: list[float], step: float) -> list[float]:
     """Grid stretched by 1.5 times, snapped up to a whole step in kWp or kWh."""
-    top = max(grid)
-    grown = math.ceil(top * 1.5 / step - 1e-9) * step
-    return _size_grid(step, grown)
+    return widen_grid(grid, step)
 
 
 def _opt(value: object, decimals: int) -> str:
@@ -985,6 +984,9 @@ def run_study(
                 co2_kg_per_l=co2_kg_per_l,
                 unserved_max_frac=unserved_max_frac,
                 main_lcoe_usd_per_kwh=best_lcoe,
+                pv_step_kwp=pv_step,
+                battery_step_kwh=batt_step,
+                widen_max=2,
             )
             firm_values["dur_alt_hours"] = dur["hours"]
             firm_values["dur_alt_pv_kwp"] = dur["pv_kwp"]
@@ -1007,6 +1009,9 @@ def run_study(
                 costs=costs,
                 co2_kg_per_l=co2_kg_per_l,
                 unserved_max_frac=unserved_max_frac,
+                pv_step_kwp=pv_step,
+                battery_step_kwh=batt_step,
+                widen_max=2,
             )
             firm_values["alt_diesel_unit_kw"] = checks_values["diesel_unit_kw_alt"]
             firm_values["alt_diesel_only_lcoe_usd_per_kwh"] = alt["diesel_only_lcoe_usd_per_kwh"]

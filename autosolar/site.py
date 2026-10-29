@@ -41,6 +41,18 @@ CARD_TITLES = (
     ("break_even_fuel_usd_per_l", "Diesel price where PV starts to pay"),
 )
 
+SENSITIVITY_LABELS = {
+    "pv_capex_usd_per_kwp": "PV price",
+    "battery_capex_usd_per_kwh": "Battery price",
+    "fuel_price_usd_per_l": "Diesel price",
+    "discount_rate_frac": "Discount rate",
+    "demand": "Demand",
+    "diesel_om_usd_per_kwh": "Diesel O&M",
+    "fuel_intercept_l_per_h_per_kw_rated": "Diesel idle fuel",
+    "fuel_slope_l_per_kwh": "Diesel fuel per kWh",
+    "battery_duration_h": "Battery hours",
+}
+
 _URL_RE = re.compile(r"https?://[^ ,]+")
 
 
@@ -359,10 +371,10 @@ def tornado_svg(rows: list[dict], base_lcoe: float) -> str:
         high = max(low_v, high_v)
         bars.append((key, low, high, high - low, order.index(key)))
     bars.sort(key=lambda b: (-b[3], b[4]))
-    width = 560.0
+    width = 720.0
     left = 8.0
-    bar_x0 = 250.0
-    bar_x1 = 540.0
+    bar_x0 = 340.0
+    bar_x1 = 700.0
     top = 16.0
     step = 34.0
     height = top + max(len(bars), 1) * step + 24.0
@@ -383,7 +395,7 @@ def tornado_svg(rows: list[dict], base_lcoe: float) -> str:
         y = top + i * step
         x = pos(low)
         w = max(pos(high) - pos(low), 1.0)
-        label = "%s: %s to %s USD/kWh" % (key, fmt(low, 3), fmt(high, 3))
+        label = "%s: %s to %s USD/kWh" % (SENSITIVITY_LABELS.get(key, key), fmt(low, 3), fmt(high, 3))
         parts.append('<g class="bar">')
         parts.append(
             '<rect x="%.1f" y="%.1f" width="%.1f" height="16" fill="#2f6fb2"></rect>' % (x, y, w)
@@ -509,6 +521,8 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     out.append("</section>")
     out.append('<section id="sensitivity"><h2>What moves the cost</h2>')
     out.append('<div class="scroll">' + tornado_svg(report["sensitivity_table"], best_lcoe) + "</div>")
+    out.append("<p>Each bar moves one input down and up by the swing in the inputs table and shows the LCOE of "
+               "the chosen design.</p>")
     out.append("</section>")
     out.append('<section id="weather"><h2>Sunshine from four sources</h2>')
     out.append('<div class="scroll">' + weather_svg(report["weather_table"]) + "</div>")

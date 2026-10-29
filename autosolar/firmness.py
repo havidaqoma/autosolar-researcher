@@ -13,7 +13,7 @@ import pandas as pd
 
 from autosolar.dispatch import Battery, DieselFleet, DispatchResult
 from autosolar.econ import CostInputs
-from autosolar.sweep import GridPoint, cost_table, dispatch_grid, least_cost, on_grid_edge
+from autosolar.sweep import GridPoint, cost_table, dispatch_grid, least_cost, on_grid_edge, widen_grid
 
 CHECKS_SCHEMA = "autosolar.checks/1"
 CHECK_NAMES = ("site_land_ha", "pv_mwdc_per_ha", "reference_pv_kwp", "diesel_must_run_units", "near_tie_frac")
@@ -383,6 +383,19 @@ def reserve_case(
     }
 
 
+def _check_widen_args(widen_max: object, pv_step_kwp: object, battery_step_kwh: object) -> int:
+    """Checked widen count. Returns int. Steps checked only when widening."""
+    if type(widen_max) is not int or widen_max < 0:
+        raise ValueError("widen_max must be an int of at least 0: " + repr(widen_max))
+    if widen_max > 0:
+        for name_str, step in (("pv_step_kwp", pv_step_kwp), ("battery_step_kwh", battery_step_kwh)):
+            if isinstance(step, bool) or not isinstance(step, numbers.Real):
+                raise ValueError("grid steps are required to widen")
+            if not math.isfinite(float(step)) or not float(step) > 0.0:  # type: ignore[arg-type]
+                raise ValueError("grid steps are required to widen")
+    return widen_max
+
+
 def diesel_size_case(
     pv_kw_per_kwp: pd.Series,
     load_kw: pd.Series,
@@ -397,19 +410,25 @@ def diesel_size_case(
     costs: CostInputs,
     co2_kg_per_l: float,
     unserved_max_frac: float,
+    pv_step_kwp: float | None = None,
+    battery_step_kwh: float | None = None,
+    widen_max: int = 0,
 ) -> dict:
     """Rerun the design search with unit_kw rated diesel units. Sizes in kW, kWp and kWh, money in USD per kWh."""
+    widen_n = _check_widen_args(widen_max, pv_step_kwp, battery_step_kwh)
     if isinstance(unit_kw, bool) or not isinstance(unit_kw, numbers.Real):
         raise ValueError("unit_kw must be a real number above 0: " + repr(unit_kw))
     size_kw = float(unit_kw)
     if not math.isfinite(size_kw) or not size_kw > 0.0:
         raise ValueError("unit_kw must be a real number above 0: " + repr(unit_kw))
     fleet = dataclasses.replace(diesel, unit_kw=size_kw)
+    pv_list = list(pv_grid)
+    batt_list = list(battery_grid)
     points = dispatch_grid(
         pv_kw_per_kwp,
         load_kw,
-        pv_grid,
-        battery_grid,
+        pv_list,
+        batt_list,
         battery_hours=battery_hours,
         battery_template=battery_template,
         diesel=fleet,
@@ -434,12 +453,33 @@ def diesel_size_case(
             "reserve_pv_kwp": None,
             "reserve_battery_kwh": None,
             "reserve_lcoe_usd_per_kwh": None,
+            "widened": 0,
         }
+    widened = 0
+    while on_grid_edge(table, pick) and widened < widen_n:
+        if float(pick["pv_kwp"]) == float(max(pv_list)):
+            pv_list = widen_grid(pv_list, float(pv_step_kwp))  # type: ignore[arg-type]
+        if float(pick["battery_kwh"]) == float(max(batt_list)):
+            batt_list = widen_grid(batt_list, float(battery_step_kwh))  # type: ignore[arg-type]
+        points = dispatch_grid(
+            pv_kw_per_kwp,
+            load_kw,
+            pv_list,
+            batt_list,
+            battery_hours=battery_hours,
+            battery_template=battery_template,
+            diesel=fleet,
+        )
+        table = cost_table(points, costs, co2_kg_per_l)
+        pick = least_cost(table, unserved_max_frac)
+        widened += 1
+    diesel_only_lcoe = float(table[(table["pv_kwp"] == 0.0) & (table["battery_kwh"] == 0.0)].iloc[0][
+        "lcoe_usd_per_kwh"])
     reserve = reserve_case(
         pv_kw_per_kwp,
         load_kw,
-        pv_grid,
-        battery_grid,
+        pv_list,
+        batt_list,
         battery_hours=battery_hours,
         battery_template=battery_template,
         diesel=fleet,
@@ -463,6 +503,7 @@ def diesel_size_case(
         "reserve_pv_kwp": reserve["pv_kwp"],
         "reserve_battery_kwh": reserve["battery_kwh"],
         "reserve_lcoe_usd_per_kwh": reserve["lcoe_usd_per_kwh"],
+        "widened": widened,
     }
 
 
@@ -518,15 +559,21 @@ def duration_case(
     co2_kg_per_l: float,
     unserved_max_frac: float,
     main_lcoe_usd_per_kwh: float,
+    pv_step_kwp: float | None = None,
+    battery_step_kwh: float | None = None,
+    widen_max: int = 0,
 ) -> dict:
     """Least cost design for another battery duration. Sizes in kWp and kWh, money in USD per kWh."""
+    widen_n = _check_widen_args(widen_max, pv_step_kwp, battery_step_kwh)
     hours_f = _real_above_zero("battery_hours", battery_hours)
     main_lcoe = _real_above_zero("main_lcoe_usd_per_kwh", main_lcoe_usd_per_kwh)
+    pv_list = list(pv_grid)
+    batt_list = list(battery_grid)
     points = dispatch_grid(
         pv_kw_per_kwp,
         load_kw,
-        pv_grid,
-        battery_grid,
+        pv_list,
+        batt_list,
         battery_hours=hours_f,
         battery_template=battery_template,
         diesel=diesel,
@@ -543,7 +590,26 @@ def duration_case(
             "lcoe_usd_per_kwh": None,
             "change_pct": None,
             "on_grid_edge": False,
+            "widened": 0,
         }
+    widened = 0
+    while on_grid_edge(table, pick) and widened < widen_n:
+        if float(pick["pv_kwp"]) == float(max(pv_list)):
+            pv_list = widen_grid(pv_list, float(pv_step_kwp))  # type: ignore[arg-type]
+        if float(pick["battery_kwh"]) == float(max(batt_list)):
+            batt_list = widen_grid(batt_list, float(battery_step_kwh))  # type: ignore[arg-type]
+        points = dispatch_grid(
+            pv_kw_per_kwp,
+            load_kw,
+            pv_list,
+            batt_list,
+            battery_hours=hours_f,
+            battery_template=battery_template,
+            diesel=diesel,
+        )
+        table = cost_table(points, costs, co2_kg_per_l)
+        pick = least_cost(table, unserved_max_frac)
+        widened += 1
     lcoe = float(pick["lcoe_usd_per_kwh"])
     return {
         "hours": hours_f,
@@ -553,6 +619,7 @@ def duration_case(
         "lcoe_usd_per_kwh": lcoe,
         "change_pct": 100.0 * (lcoe / main_lcoe - 1.0),
         "on_grid_edge": bool(on_grid_edge(table, pick)),
+        "widened": widened,
     }
 
 

@@ -37,7 +37,49 @@ SENSITIVITY_INPUTS = (
     "fuel_price_usd_per_l",
     "discount_rate_frac",
     "demand",
+    "diesel_om_usd_per_kwh",
+    "fuel_intercept_l_per_h_per_kw_rated",
+    "fuel_slope_l_per_kwh",
+    "battery_duration_h",
 )
+
+
+def _check_step(value: object, name_str: str) -> float:
+    """Grid step in kWp or kWh. Must be a finite real number above 0."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError(name_str + " must be a finite real number above 0: " + repr(value))
+    out = float(value)  # type: ignore[arg-type]
+    if not math.isfinite(out) or not out > 0.0:
+        raise ValueError(name_str + " must be a finite real number above 0: " + repr(value))
+    return out
+
+
+def _check_top(value: object, name_str: str) -> float:
+    """Grid top in kWp or kWh. Must be a finite real number of at least 0."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError(name_str + " must be a finite real number of at least 0: " + repr(value))
+    out = float(value)  # type: ignore[arg-type]
+    if not math.isfinite(out) or not out >= 0.0:
+        raise ValueError(name_str + " must be a finite real number of at least 0: " + repr(value))
+    return out
+
+
+def size_grid(step: float, top: float) -> list[float]:
+    """Grid from 0 to top in kWp, kWh or kW steps."""
+    step_f = _check_step(step, "step")
+    top_f = _check_top(top, "top")
+    count = round(top_f / step_f)
+    return [float(idx * step_f) for idx in range(count + 1)]
+
+
+def widen_grid(grid: Sequence[float], step: float) -> list[float]:
+    """Grid stretched by 1.5 times, snapped up to a whole step in kWp or kWh."""
+    if not isinstance(grid, (list, tuple)) or len(grid) == 0:
+        raise ValueError("grid must be a non-empty list or tuple")
+    step_f = _check_step(step, "step")
+    top = max(grid)
+    grown = math.ceil(top * 1.5 / step_f - 1e-9) * step_f
+    return size_grid(step_f, grown)
 
 SENSITIVITY_COLUMNS = (
     "input",
@@ -341,6 +383,31 @@ def sensitivity_table(
                     pv_kwp_grid,
                     battery_kwh_grid,
                     battery_hours=battery_hours,
+                    battery_template=battery_template,
+                    diesel=diesel,
+                )
+                tab = cost_table(pts, costs, co2_kg_per_l)
+            elif name in ("fuel_intercept_l_per_h_per_kw_rated", "fuel_slope_l_per_kwh"):
+                fleet = dataclasses.replace(
+                    diesel, **{name: float(getattr(diesel, name)) * factor_f}
+                )
+                pts = dispatch_grid(
+                    pv_ac_kw_per_kwp,
+                    load_kw,
+                    pv_kwp_grid,
+                    battery_kwh_grid,
+                    battery_hours=battery_hours,
+                    battery_template=battery_template,
+                    diesel=fleet,
+                )
+                tab = cost_table(pts, costs, co2_kg_per_l)
+            elif name == "battery_duration_h":
+                pts = dispatch_grid(
+                    pv_ac_kw_per_kwp,
+                    load_kw,
+                    pv_kwp_grid,
+                    battery_kwh_grid,
+                    battery_hours=battery_hours * factor_f,
                     battery_template=battery_template,
                     diesel=diesel,
                 )
