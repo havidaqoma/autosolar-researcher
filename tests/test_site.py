@@ -151,8 +151,8 @@ def test_study_page_structure(study):
     assert page.startswith("<!DOCTYPE html>") and '<meta charset="utf-8">' in page
     assert page.count("<style>") == 1 and "<title>AutoSolar study: Karimunjawa</title>" in page
     ids = re.findall(r'<section id="([a-z]+)"', page)
-    assert ids == ["answer", "firm", "designs", "sensitivity", "weather", "range", "checks", "inputs", "scope",
-                   "sources"]
+    assert ids == ["answer", "confirm", "firm", "designs", "sensitivity", "weather", "range", "checks", "inputs",
+                   "scope", "sources"]
     assert page.count("<svg") == 3
     assert study["report"]["run_hash"] in page
     assert esc(headline(study["report"])) in page
@@ -190,8 +190,8 @@ def test_study_page_with_paper_and_review(study):
     page = render_study_html(study["report"], study["table"], paper_check=PAPER, review=REVIEW)
     ascii_ok(page)
     ids = re.findall(r'<section id="([a-z]+)"', page)
-    assert ids == ["answer", "firm", "designs", "sensitivity", "weather", "range", "paper", "review", "checks",
-                   "inputs", "scope", "sources"]
+    assert ids == ["answer", "confirm", "firm", "designs", "sensitivity", "weather", "range", "paper", "review",
+                   "checks", "inputs", "scope", "sources"]
     assert "Flags 2, passes 1, not checkable 12" in page
     assert page.count('<tr class="flag">') == 2
     assert "pv: 1,990 kW at 11:00 vs rating 990 kW" in page and "7, 19" in page

@@ -425,3 +425,35 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - README: "When the checks say no" (USD 192/kWh battery price refused, 50 USD/kWh/yr upkeep outside 0.5 to 30, HTTP
   403 then a second search) and the Syah et al. Karimunjawa comparison, 0.263 USD/kWh with wind (paper, abstract).
 - Full suite 1,563 of 1,563 (measured). Spend so far (ledgers): API USD 3.32, Muse Code USD 0.61, all Meta USD 3.93.
+
+## T22 and T23: confirm first, check us in your own tool, which renewable fits (Friday 30 Oct)
+
+- Why: an engineer needs to know which inputs to
+  confirm first and needs the hourly series to re-run the answer in PVsyst or HOMER; and the first question for
+  a site is which renewable fits it at all. Havid chose the small version (one site, a screen, nothing new in the
+  cost model) to protect the tests before the build stop.
+- T22 order: spec `docs/specs/T22_confirm_first.md`, `tests/test_engineer_files.py` and `config/field_notes.json`
+  (5 press items, every quote found in the saved article text) committed first (red). Muse Code build 67 of 67
+  (1,100 s, USD 0.025). Planted faults 23 of 24; the HOMER file not rotated to local midnight passed, because the
+  test load repeated every day, so a test with a load that never repeats was added after the code.
+- T23 order: spec `docs/specs/T23_resource_screen.md` and `tests/test_resources.py` committed first (red). Muse Code
+  build 49 of 49 (1,615 s, USD 0.040). Planted faults 22 of 23; wind "worth a look" from class 2 passed, so a class
+  2 test was added after the code.
+- Fixes after the first live runs, each spec and failing test first, then Muse Code: T22b, the engineer files are
+  written as LF ASCII bytes (on Windows `write_text` gave CRLF, so the sha256 would differ by OS; USD 0.015); T23b,
+  every live fetch names the client (overpass-api.de answered HTTP 406 to the default User-Agent, then the mirror
+  answered 429; USD 0.009); T23c, `make_site` used `kw` before it existed when a gallery entry has a screen
+  (`UnboundLocalError`; new `tests/test_make_site.py`; USD 0.013).
+- Runs: engineer files for b4a44fc6d4c32339 and 107477f112e5d92c gave back each study's demand, peak, PV yield, fuel,
+  load not served, diesel hours and starts to within one part in a billion before writing (computed). Screen:
+  GSA PVOUT 4.05 kWh/kWp a day (favorable middle range); NASA POWER hourly WS50M, T2M, PS 2016 to 2024, 78,912
+  hours, none dropped, mean 4.44 m/s, 90.8 W/m2, class 1; OSM 1 river, 2 streams, 1 drain within 10 km; nearest
+  town Mlonggo 78.2 km; PV check +1.4% (PVGIS) and -3.3% (GSA). No Meta model call: `ledger/api_usage.jsonl`
+  stayed at 179 lines (measured).
+- Field figures (press, 2017) against the study: load 3.28 times higher, peak 2.32 times, diesel 0.76 times the
+  litres per kWh. The study keeps its inputs (post hoc rule); the page shows the figures as what to confirm first.
+- Site: 6 pages rebuilt; with the two new sections cut out every page equals the page committed before (measured).
+- Two older page structure tests (`tests/test_site.py`) listed the section ids and did not know the new section;
+  the T22 spec missed them and Muse Code may not edit tests, so they were updated after the code (labelled so).
+- Full suite 1,686 of 1,686 (measured).
+- Spend so far (ledgers): API USD 3.32, Muse Code USD 0.71, all Meta USD 4.03.
