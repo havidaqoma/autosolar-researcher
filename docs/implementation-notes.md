@@ -456,4 +456,16 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - Two older page structure tests (`tests/test_site.py`) listed the section ids and did not know the new section;
   the T22 spec missed them and Muse Code may not edit tests, so they were updated after the code (labelled so).
 - Full suite 1,686 of 1,686 (measured).
-- Spend so far (ledgers): API USD 3.32, Muse Code USD 0.71, all Meta USD 4.03.
+- Outside review (DeepSeek, after the build): 3 major, 9 minor, no physics error. Fixed in T22c (spec, tests and
+  config first, a throwaway reference passed them, then Muse Code built it, 735 s, USD 0.011): the first box adds
+  the least cost design under the always-run rule (1,500 kWp and 1,000 kWh at 0.336 USD/kWh, below diesel only);
+  the field table compares the daily fuel (10,010 L a day, diesel only, 2.50 times the press figure) and names idle
+  fuel in the litres per kWh; the press item says "produced", may be the main plant only, and gives the figure grown
+  to the study year (2.76 times); GSA is named a Solargis model; the OSM circle includes nearby islands. The README
+  now says the hourly files let an engineer set up the same case and compare (the one part in a billion is a self
+  check; we have not run PVsyst or HOMER), and that the paper's three 2018 days, as SAM 3.1 reads them, are 2.2 to
+  2.6 times the press figure. Planted faults on the T22c code: 8 of 8 caught. Tests whose pinned strings changed
+  were updated with the spec, before the code (labelled so). Pages: 6 rebuilt, every page equals the one before
+  outside the two new sections (measured).
+- Full suite after T22c: see `docs/smoke/CLONE_TEST.md`.
+- Spend so far (ledgers): API USD 3.32, Muse Code USD 0.72, all Meta USD 4.04.

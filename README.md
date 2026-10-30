@@ -9,16 +9,16 @@ Indonesia's state utility PLN plans to replace diesel generators at 741 sites wi
 [Bloomberg Technoz](https://www.bloombergtechnoz.com/detail-news/105965/pln-bakal-ganti-2-396-pltd-dengan-plts-3-21-gwp-bess-9-03-gwh)).
 Each site needs a first study like this before anyone spends money on a detailed one. It is a first screen, not
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
-and gives the hourly files to re-run the answer in such a tool.
+and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
-What it cost (measured ledgers): Muse Code wrote the engine, all 11,359 lines of `autosolar/` (22 files, `wc -l`),
-for USD 0.71. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
+What it cost (measured ledgers): Muse Code wrote the engine, all 11,395 lines of `autosolar/` (22 files, `wc -l`),
+for USD 0.72. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
 and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls. All Meta model spending for the whole hackathon,
-smoke tests, chart reader tests and reviews included: USD 4.03.
+smoke tests, chart reader tests and reviews included: USD 4.04.
 
 ## For judges
 
@@ -34,17 +34,24 @@ smoke tests, chart reader tests and reviews included: USD 4.03.
 - Confirm these first (latest study pages): the 9 inputs ranked by how far each moves the cost of the main design,
   each with the field data to ask for (in the example the discount rate comes first). Next to them, public field
   figures from the press, each with its quote: in 2017, less than a year after 24 hour power began (May 2016, same
-  article), the island's plant made
-  8,000 kWh a day on 4,000 L of diesel (press, Kompas). The study's load is 3.28 times that, and its diesel uses
-  0.382 L/kWh against 0.50 in the press (computed). The study does not use these figures; a load that much lower is
-  outside what it tested (the lowest case is 23.3% lower), so the metered load is the first thing to get. Then
+  article), the island's plant produced 8,000 kWh a day on 4,000 L of diesel (press, Kompas; it may be the main
+  plant only, as the article also names two small rented units). The study's load is 3.28 times that, or 2.76
+  times once the 2017 figure is grown at the paper's 3.48% a year to the study year (computed). The paper's own
+  three days of 2018, as SAM 3.1 reads them, are 2.2 to 2.6 times the press figure (computed), so the public
+  sources disagree with each other too. The study's diesel uses 0.382 L/kWh, idle fuel included, against 0.50 in
+  the press, at a different load and plant mix (computed). The study does not use these figures; a load that much
+  lower is outside what it tested (the sensitivity table goes to 20% lower, the post hoc chart case to 23.3%
+  lower), so the metered load is the first thing to get. Then
   two hourly files to check us in your own tool: `hourly.csv` (8,760 hours of weather, load, PV and the main
   design's energy flow) and the load as one column for HOMER. Before writing them, the tool must give back the
-  study's yearly numbers (it did, to within one part in a billion, computed; `docs/specs/T22_confirm_first.md`).
+  study's yearly numbers from them, a self check that they are the study's own series (it did, to within one part
+  in a billion, computed; `docs/specs/T22_confirm_first.md`). An engineer can set up the same case in their own
+  tool and compare; we have not run PVsyst or HOMER ourselves.
 - Which renewable fits this site (post hoc, `docs/specs/T23_resource_screen.md`): sun 4.05 kWh/kWp a day (Global
-  Solar Atlas), the World Bank's favorable middle range; wind 4.44 m/s and 91 W/m2 at 50 m (NASA POWER, hourly 2016
-  to 2024, computed), class 1 (Poor) on the NREL scale, though a coarse grid can miss local wind; 1 river and 2
-  streams mapped within 10 km (OpenStreetMap); the nearest town on the map is 78 km away. Only solar, battery and
+  Solar Atlas, a Solargis model), the World Bank's favorable middle range; wind 4.44 m/s and 91 W/m2 at 50 m (NASA
+  POWER, hourly 2016 to 2024, computed), class 1 (Poor) on the NREL scale, though a coarse grid can miss local
+  wind; 1 river and 2 streams mapped within 10 km, nearby islands included (OpenStreetMap); the nearest town on the
+  map is 78 km away. Only solar, battery and
   diesel are costed. The same section checks our PV model on outside weather: +1.4% against PVGIS and -3.3%
   against Global Solar Atlas (Solargis), computed. No Meta model call (the API ledger stayed at 179 lines,
   measured).
@@ -86,11 +93,11 @@ smoke tests, chart reader tests and reviews included: USD 4.03.
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
 | Muse Code (contributor model) | Wrote the engine (`autosolar/`) from short specs. It did not write the specs or the tests; of the run tools in `tools/` it wrote three and edited one (T20 to T23) | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last two tasks: 23 of 24 and 22 of 23; for each, one test was added after the code, then all caught; computed) |
 
-- Checks: 1,686 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,688 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
-- Cost: Muse Code USD 0.71 (46 runs, 4.9 hours; it read 63 million tokens, 93% from cache, and wrote 0.79
-  million). Meta Model API USD 3.32 (179 calls, 451 web searches). USD 4.03 in all (measured ledgers).
+- Cost: Muse Code USD 0.72 (47 runs, 5.1 hours; it read 64 million tokens, 93% from cache, and wrote 0.79
+  million). Meta Model API USD 3.32 (179 calls, 451 web searches). USD 4.04 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
@@ -147,7 +154,7 @@ with values from named documents (`config/curated_inputs.json`, applied by `tool
 
 | Input | First study | Curated | Source of the curated value |
 |---|---|---|---|
-| Battery energy capex | 300 USD/kWh (assumed) | 390 USD/kWh (docs) | Danish Energy Agency and EA Energy Analyses, Technology Data for the Indonesian Power Sector 2024, lithium-ion data sheet, 2023 column |
+| Battery energy capex | 300 USD/kWh (assumed) | 390 USD/kWh (docs) | Danish Energy Agency and EA Energy Analyses, Technology Data for the Indonesian Power Sector 2024, lithium-ion data sheet, 2023 column, in 2022 US dollars |
 | Battery power capex | 100 USD/kW (assumed) | 330 USD/kW (docs) | same data sheet |
 | Battery O&M | 5 USD/kWh/yr (assumed) | 4.48 USD/kWh/yr (docs) | same data sheet, fixed plus variable at one cycle a day |
 | Battery life | 12 yr (assumed) | 15 yr (docs) | same data sheet |
@@ -285,7 +292,7 @@ page says so. Wind, hydro and a grid link are screened, not costed. The public f
 
 ```
 uv sync
-uv run pytest                     # 1,686 tests, no network
+uv run pytest                     # 1,688 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -305,10 +312,10 @@ other sites are refused rather than guessed.
 - `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.32, including
   smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge,
   one load check, one smoke search with the judge panel and one refused question.
-- `ledger/build_usage.jsonl`: 46 Muse Code runs (42 that wrote the product, 4 sandbox smoke runs), USD 0.71 and
-  4.9 hours in total. Muse Code read 63.3 million input tokens (93% from cache) and wrote 0.79 million output
+- `ledger/build_usage.jsonl`: 47 Muse Code runs (43 that wrote the product, 4 sandbox smoke runs), USD 0.72 and
+  5.1 hours in total. Muse Code read 64.4 million input tokens (93% from cache) and wrote 0.79 million output
   tokens.
-- All Meta model spending: USD 4.03.
+- All Meta model spending: USD 4.04.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013, a load check USD 0.01 and a review USD 0.25 to 0.33.
 
@@ -329,7 +336,8 @@ Every task has a spec in `docs/specs/` and acceptance tests written before the c
 was checked against a reference build and against planted faults before Muse Code ran (recorded at the end of
 each spec). For T20 to T23 the planted faults ran on Muse Code's build after it passed; one gap each in T21, T22
 and T23 was closed with a test added after the code, labelled so. Three small fixes after the first live runs
-(T22b, T23b, T23c) kept the same order: spec and failing test first, then Muse Code. Muse Code wrote the code in a
+(T22b, T23b, T23c) kept the same order: spec and failing test first, then Muse Code; so did T22c, the wording fixes
+after an outside review (8 of 8 planted faults caught). Muse Code wrote the code in a
 sandbox and ran the tests itself. It did not write the specs or the tests. Of the run tools in `tools/` it wrote
 `tools/load_followup.py`, `tools/engineer_files.py` and `tools/resource_screen.py` and edited `tools/make_site.py`
 (T20 to T23); T19 changed two others, with its own spec and tests first. The log of what
