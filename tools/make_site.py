@@ -62,11 +62,6 @@ def main():
             p = ROOT / "runs" / "load_followups" / entry["load_followup"] / "load_followup.json"
             followup = load(p)
             shutil.copy(p, data / "load_followup.json")
-        if entry.get("resource_screen"):
-            p = ROOT / "runs" / "resource_screens" / entry["resource_screen"] / "resource_screen.json"
-            resource_screen = load(p)
-            shutil.copy(p, data / "resource_screen.json")
-            kw["resource_screen"] = resource_screen
         kw = {"figure_check": figure} if figure is not None else {}
         if followup is not None:
             kw["load_followup"] = followup
@@ -80,6 +75,11 @@ def main():
             for name in ("hourly.csv", "homer_load_kw.txt", "engineer_files.json"):
                 shutil.copy(src / name, dest / name)
             kw["engineer_files"] = load(dest / "engineer_files.json")
+        if entry.get("resource_screen"):
+            p = ROOT / "runs" / "resource_screens" / entry["resource_screen"] / "resource_screen.json"
+            resource_screen = load(p)
+            shutil.copy(p, data / "resource_screen.json")
+            kw["resource_screen"] = resource_screen
         page = render_study_html(report, table, paper_check=paper, review=review, **kw)
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")
