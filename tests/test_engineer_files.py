@@ -565,3 +565,27 @@ def test_tool_empty_cache_never_reaches_network(tmp_path):
     with pytest.raises(RuntimeError, match="no network"):
         tool.main(["--run", "b4a44fc6d4c32339", "--runs", str(tmp_path / "studies"), "--out", str(tmp_path / "out"),
                    "--weather-cache", str(tmp_path / "cache")])
+
+
+# ---------- added after the T22 code (planted fault e3 passed the tests above; labelled so) ----------
+
+def test_homer_load_lines_rotation_with_a_load_that_never_repeats():
+    load = pd.Series(np.arange(8760, dtype=float), index=IDX)
+    lines = homer_load_lines(load, TZ)
+    assert lines[0] == "8753.000000" and lines[6] == "8759.000000"
+    assert lines[7] == "0.000000" and lines[-1] == "8752.000000"
+
+
+# ---------- T22b (tests added after the T22 code) ----------
+
+def test_tool_writes_lf_ascii_bytes(tmp_path):
+    p = tmp_path / "x.txt"
+    tool.write_ascii_lf(p, "a,b\n1,2\n")
+    assert p.read_bytes() == b"a,b\n1,2\n"
+    with pytest.raises(UnicodeEncodeError):
+        tool.write_ascii_lf(tmp_path / "y.txt", "caf\u00e9\n")
+
+
+def test_tool_has_no_write_text():
+    src = (ROOT / "tools" / "engineer_files.py").read_text(encoding="ascii")
+    assert "write_text(" not in src and src.count("write_ascii_lf(") >= 4

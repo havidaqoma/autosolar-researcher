@@ -208,3 +208,23 @@ study page gets the section; nothing else on the page changes. ASCII only, no `<
 ## Acceptance
 
 `tests/test_engineer_files.py` passes, and the full suite still passes. Muse must not edit specs, tests or config.
+
+## T22b: same bytes on every OS (added after the code)
+
+On Windows, `Path.write_text` turns each `"\n"` into `"\r\n"`, so the sha256 in `engineer_files.json` would differ
+from a Linux build of the same files. Builder edits `tools/engineer_files.py` only:
+
+- Add `write_ascii_lf(path, text) -> None`: writes `text.encode("ascii")` with `Path.write_bytes`, so no newline is
+  changed on any OS; text that is not ASCII raises `UnicodeEncodeError`.
+- Use it for all three files (`hourly.csv`, `homer_load_kw.txt`, `engineer_files.json`); the tool no longer calls
+  `write_text`.
+
+Tests: `test_tool_writes_lf_ascii_bytes` and `test_tool_has_no_write_text` in `tests/test_engineer_files.py`
+(written after the T22 code, labelled so).
+
+## Planted faults (run on Muse Code's build after it passed)
+
+24 faults, each planted in the built code and run against `tests/test_engineer_files.py`: 23 caught (computed). The
+one that passed: the HOMER file not rotated to local midnight, because the test load repeats every day. A test with
+a load that never repeats was added after the code (labelled so in the test file); it fails on that fault and passes
+on the build. Script: kept with the build files.

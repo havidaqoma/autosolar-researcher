@@ -501,3 +501,10 @@ def test_page_places_resources_after_confirm():
     start = page.index('<section id="resources">')
     end = page.index("</section>", start) + len("</section>")
     assert page[:start] + page[end:] == plain
+
+
+# ---------- added after the T23 code (planted fault r13 passed the tests above; labelled so) ----------
+
+def test_screen_verdicts_wind_class_two_is_not_enough():
+    assert screen_verdicts(pvout_kwh_per_kwp_day=4.0, wind_class_number=2, rivers=0)["wind"] == NOT_ON_SCREEN
+    assert screen_verdicts(pvout_kwh_per_kwp_day=4.0, wind_class_number=8, rivers=0)["wind"] == LOOK

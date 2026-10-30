@@ -253,3 +253,10 @@ A gallery entry may hold `"resource_screen": "<run id>"`. When present, copy
 ## Acceptance
 
 `tests/test_resources.py` passes, and the full suite still passes. Muse must not edit specs, tests or config.
+
+## Planted faults (run on Muse Code's build after it passed)
+
+23 faults, each planted in the built code and run against `tests/test_resources.py`: 22 caught (computed). The one
+that passed: wind "worth a closer look" from class 2 instead of class 3, because the tests used classes 1 and 3
+only. A test for class 2 was added after the code (labelled so in the test file); it fails on that fault and passes
+on the build. Script: kept with the build files.
