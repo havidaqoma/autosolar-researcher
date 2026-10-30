@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import math
+import numbers
 import re
 
 import pandas as pd
@@ -68,6 +69,23 @@ SENSITIVITY_LABELS = {
     "fuel_slope_l_per_kwh": "Diesel fuel per kWh",
     "battery_duration_h": "Battery hours",
 }
+
+FIELD_ASKS = {
+    "pv_capex_usd_per_kwp": "Installed PV prices from recent island tenders, shipping included",
+    "battery_capex_usd_per_kwh": "Installed battery prices from recent tenders, shipping included",
+    "fuel_price_usd_per_l": "Diesel price delivered to the island, with tax and shipping",
+    "discount_rate_frac": "The real discount rate the owner or lender uses",
+    "demand": "Metered hourly load for a full year, or at least monthly kWh sent out",
+    "diesel_om_usd_per_kwh": "Diesel plant O&M cost records",
+    "fuel_intercept_l_per_h_per_kw_rated": "Litres and kWh from the plant logs, by hour or by day",
+    "fuel_slope_l_per_kwh": "Litres and kWh from the plant logs, by hour or by day",
+    "battery_duration_h": "Battery power rating offered for this energy size",
+}
+FIELD_ASK_DEFAULT = "Field records for this input"
+FIELD_NOTE_KEYS = ("site", "key", "item", "value", "decimals", "unit", "label", "date", "source", "url",
+                   "quote", "compare", "note")
+FIELD_COMPARES = ("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw")
+_FIELD_NOTE_LABELS = ("press", "docs", "paper", "measured")
 
 _URL_RE = re.compile(r"https?://[^ ,]+")
 
@@ -992,9 +1010,274 @@ def fuel_price_section(report: dict, table: pd.DataFrame) -> str:
     )
 
 
+def check_field_note(note: dict) -> dict:
+    """One public field figure for a site. Returns the same dict."""
+    if not isinstance(note, dict):
+        raise ValueError("field note must be a dict")
+    if set(note) != set(FIELD_NOTE_KEYS):
+        raise ValueError("field note keys must be exactly FIELD_NOTE_KEYS")
+    value = note["value"]
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError("field note value must be a number")
+    if not math.isfinite(float(value)):
+        raise ValueError("field note value must be finite")
+    decimals = note["decimals"]
+    if isinstance(decimals, bool) or not isinstance(decimals, int):
+        raise ValueError("field note decimals must be an int")
+    if not 0 <= decimals <= 6:
+        raise ValueError("field note decimals must be from 0 to 6")
+    if note["label"] not in _FIELD_NOTE_LABELS:
+        raise ValueError("field note label must be press, docs, paper or measured")
+    url = note["url"]
+    if not isinstance(url, str) or not (url.startswith("http://") or url.startswith("https://")):
+        raise ValueError("field note url must start with http:// or https://")
+    if note["compare"] is not None and note["compare"] not in FIELD_COMPARES:
+        raise ValueError("field note compare must be None or one of FIELD_COMPARES")
+    for key in FIELD_NOTE_KEYS:
+        if key in ("value", "decimals", "label", "url", "compare"):
+            continue
+        if key == "note":
+            if not isinstance(note[key], str):
+                raise ValueError("field note note must be a string")
+        elif not isinstance(note[key], str) or note[key] == "":
+            raise ValueError("field note " + key + " must be a non-empty string")
+    return note
+
+
+def _firm_item(report: dict, key: str) -> dict | None:
+    """One firmness item by key. None when missing."""
+    firm = report.get("firmness")
+    if not isinstance(firm, dict):
+        return None
+    for item in firm.get("items", []):
+        if isinstance(item, dict) and item.get("key") == key:
+            return item
+    return None
+
+
+def _confirm_question(report: dict) -> str:
+    """Battery first engineering question. Empty when not answerable."""
+    hours = _firm_item(report, "best_no_diesel_hours")
+    reserve = _firm_item(report, "reserve_main_design_lcoe_usd_per_kwh")
+    if hours is None or reserve is None:
+        return ""
+    try:
+        hours_f = float(hours["value"])
+        reserve_f = float(reserve["value"])
+        diesel_f = float(report["facts"]["diesel_only_lcoe_usd_per_kwh"]["value"])
+    except (KeyError, TypeError, ValueError):
+        return ""
+    if reserve_f > diesel_f:
+        word = "more than"
+    else:
+        word = "not more than"
+    units = _firm_item(report, "reserve_units")
+    if units is None or units.get("value") is None:
+        who = "one diesel unit"
+    else:
+        try:
+            units_f = float(units["value"])
+        except (TypeError, ValueError):
+            return ""
+        if units_f == 1.0:
+            who = "one diesel unit"
+        else:
+            who = fmt(units_f, 0) + " diesel units"
+    text = (
+        "An engineering question comes first: can the island grid run on batteries and inverters alone? "
+        "The main design runs with no diesel for " + fmt(hours_f, 0) + " hours a year (computed). If " + who
+        + " must run in every hour, the main design costs " + fmt(reserve_f, 3) + " USD/kWh, " + word
+        + " diesel only at " + fmt(diesel_f, 3) + " USD/kWh (computed)."
+    )
+    return '<p class="ask">' + esc(text) + "</p>"
+
+
+def _confirm_ranking(report: dict) -> str:
+    """Inputs ordered by how far they move the main design cost. Empty when none."""
+    groups: dict[str, dict] = {}
+    order: list[str] = []
+    for row in report.get("sensitivity_table", []):
+        name = str(row["input"])
+        if name not in groups:
+            groups[name] = {}
+            order.append(name)
+        factor = float(row["factor"])
+        if factor < 1.0:
+            groups[name]["low"] = row
+        elif factor > 1.0:
+            groups[name]["high"] = row
+    keep = [name for name in order if "low" in groups[name] and "high" in groups[name]]
+    if not keep:
+        return ""
+
+    def spread(name: str) -> float:
+        """Absolute LCOE move between the low and high row. Returns float."""
+        return abs(
+            float(groups[name]["high"]["base_design_lcoe_usd_per_kwh"])
+            - float(groups[name]["low"]["base_design_lcoe_usd_per_kwh"])
+        )
+
+    ranked = sorted(keep, key=lambda name: -spread(name))
+    by_input = {row.get("name"): row for row in report.get("inputs_table", []) if isinstance(row, dict)}
+    facts = report.get("facts", {})
+    rows: list[list[str]] = []
+    for pos, name in enumerate(ranked):
+        low = groups[name]["low"]
+        high = groups[name]["high"]
+        if name == "demand":
+            demand = facts["demand_kwh_yr"]
+            value_text = fmt(float(demand["value"]), 0) + " kWh/yr (" + str(demand["label"]) + ")"
+        elif name in by_input:
+            cell = by_input[name]
+            try:
+                value_text = (
+                    str(cell["cells"][1]) + " " + str(cell["unit"]) + " (" + str(cell["label"]) + ")"
+                )
+            except (KeyError, TypeError, IndexError):
+                value_text = ""
+        else:
+            value_text = ""
+        rows.append(
+            [
+                str(pos + 1),
+                SENSITIVITY_LABELS.get(name, name),
+                value_text,
+                fmt(float(low["base_design_lcoe_usd_per_kwh"]), 3)
+                + " / "
+                + fmt(float(high["base_design_lcoe_usd_per_kwh"]), 3),
+                FIELD_ASKS.get(name, FIELD_ASK_DEFAULT),
+            ]
+        )
+    out = _table(
+        ["Rank", "Input", "Value in this study", "Main design cost, input down / up (USD/kWh)",
+         "Field data to ask for"],
+        rows,
+    )
+    first_low = float(groups[ranked[0]]["low"]["factor"])
+    out += "<p>" + esc(
+        "Each input is moved " + fmt(100.0 * (1.0 - first_low), 0)
+        + "% down and up, the swing in the inputs table. The order is by how far the cost of the main "
+        "design moves (computed)."
+    ) + "</p>"
+    return out
+
+
+def _confirm_notes(report: dict, field_notes: list) -> str:
+    """Public field figures table. Empty when there are no notes."""
+    if not field_notes:
+        return ""
+    for note in field_notes:
+        check_field_note(note)
+    facts = report.get("facts", {})
+    rows: list[list[str]] = []
+    for note in field_notes:
+        public = (
+            fmt(float(note["value"]), int(note["decimals"])) + " " + str(note["unit"])
+            + " (" + str(note["label"]) + ")"
+        )
+        if str(note["note"]) != "":
+            public += "; " + str(note["note"])
+        compare = note["compare"]
+        study_text = ""
+        ratio_text = ""
+        if compare == "energy_kwh_per_day":
+            val = float(facts["demand_kwh_yr"]["value"]) / 365.0
+            study_text = fmt(val, 0) + " kWh a day (computed)"
+            ratio_text = fmt(val / float(note["value"]), 2) + "x"
+        elif compare == "fuel_l_per_kwh":
+            val = float(facts["diesel_only_fuel_l_yr"]["value"]) / float(facts["demand_kwh_yr"]["value"])
+            study_text = fmt(val, 3) + " L/kWh, diesel only (computed)"
+            ratio_text = fmt(val / float(note["value"]), 2) + "x"
+        elif compare == "peak_kw":
+            peak = facts["demand_peak_kw"]
+            study_text = fmt(float(peak["value"]), 0) + " kW (" + str(peak["label"]) + ")"
+            ratio_text = fmt(float(peak["value"]) / float(note["value"]), 2) + "x"
+        rows.append(
+            [
+                str(note["item"]),
+                public,
+                str(note["date"]),
+                str(note["source"]) + ': "' + str(note["quote"]) + '" ' + str(note["url"]),
+                study_text,
+                ratio_text,
+            ]
+        )
+    out = "<h3>Public field figures for this site</h3>"
+    out += "<p>" + esc(
+        "From the press and public documents, not from the operator's records. They can be old or rounded. "
+        "They show where to look; they do not replace the study's inputs."
+    ) + "</p>"
+    out += _table(["Item", "Public figure", "Date", "Source and quote", "This study", "Study / public"], rows)
+    return out
+
+
+def _confirm_files(report: dict, engineer_files: dict) -> str:
+    """Links to the hourly engineer files. Empty when none are given."""
+    if engineer_files is None:
+        return ""
+    if not isinstance(engineer_files, dict):
+        raise ValueError("engineer_files must be a dict")
+    if engineer_files.get("reproduced") is not True:
+        raise ValueError("engineer_files is not reproduced")
+    if engineer_files.get("study_run_hash") != report.get("run_hash"):
+        raise ValueError("engineer_files study_run_hash differs from the report run_hash")
+    run = str(report["run_hash"])
+    rows = int(engineer_files["rows"])
+    lines = int(engineer_files["homer_lines"])
+    out = "<h3>Check us in your own tool</h3>"
+    out += "<p>" + esc(
+        "The hourly series behind this page, rebuilt from the study's inputs and cached weather. Before "
+        "writing them, the tool gave back this study's yearly demand, peak load, PV yield, and the main "
+        "design's fuel, load not served, diesel hours and starts, to within one part in a billion (computed)."
+    ) + "</p>"
+    out += (
+        "<ul><li>"
+        + '<a href="' + esc("data/" + run + "/files/hourly.csv") + '">' + esc("hourly.csv") + "</a>: "
+        + esc(
+            fmt(rows, 0) + " rows, one per hour: weather, load, PV per kWp and the main design's energy "
+            "flow, in UTC and local time."
+        )
+        + "</li>"
+    )
+    out += (
+        "<li>"
+        + '<a href="' + esc("data/" + run + "/files/homer_load_kw.txt") + '">'
+        + esc("homer_load_kw.txt") + "</a>: "
+        + esc(
+            "the load in kW, one value per line, " + fmt(lines, 0)
+            + " lines, starting at local midnight on 1 January (the single column layout in HOMER's import "
+            "formats)."
+        )
+        + "</li></ul>"
+    )
+    return out
+
+
+def confirm_section(
+    report: dict,
+    *,
+    field_notes: list | None = None,
+    engineer_files: dict | None = None,
+) -> str:
+    """Confirm first section for a study page. Plain text through esc. Returns str."""
+    out = '<section id="confirm"><h2>Confirm these first</h2>'
+    out += "<p>" + esc(
+        "This page is a first screen, made in minutes from public data. It is not a design study. Before "
+        "anyone builds on it, confirm the inputs below with field data, from the top, and check the result "
+        "in your own tool."
+    ) + "</p>"
+    out += _confirm_question(report)
+    out += _confirm_ranking(report)
+    out += _confirm_notes(report, field_notes or [])
+    out += _confirm_files(report, engineer_files)
+    out += "</section>"
+    return out
+
+
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
                       review: dict | None = None, figure_check: dict | None = None,
-                      load_followup: dict | None = None) -> str:
+                      load_followup: dict | None = None, field_notes: list | None = None,
+                      engineer_files: dict | None = None) -> str:
     """Full study page for one report and design table. Returns ASCII str."""
     if load_followup is not None:
         if figure_check is None:
@@ -1033,6 +1316,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
         out.append('<div class="card"><h3>' + esc(title) + "</h3><p>" + esc(line) + "</p></div>")
     out.append("</div></section>")
     out.append(fuel_price_section(report, table))
+    out.append(confirm_section(report, field_notes=field_notes, engineer_files=engineer_files))
     if firm is not None:
         out.append('<section id="firm"><h2>How firm is the answer</h2>')
         rows = [[str(it["title"]), str(it["text"]), str(it["unit"]), str(it["label"])] for it in firm["items"]]

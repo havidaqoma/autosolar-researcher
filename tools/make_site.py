@@ -30,6 +30,11 @@ def main():
     cfg = load(ROOT / "config" / "gallery.json")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "data").mkdir(exist_ok=True)
+    notes_path = ROOT / "config" / "field_notes.json"
+    if notes_path.is_file():
+        field_notes_all = load(notes_path)["notes"]
+    else:
+        field_notes_all = []
     cards = []
     for entry in cfg["studies"]:
         run_dir = ROOT / "runs" / "studies" / entry["run"]
@@ -60,6 +65,16 @@ def main():
         kw = {"figure_check": figure} if figure is not None else {}
         if followup is not None:
             kw["load_followup"] = followup
+        site_notes = [n for n in field_notes_all if n.get("site") == report["site"]["name"]]
+        if site_notes:
+            kw["field_notes"] = site_notes
+        if entry.get("engineer_files"):
+            src = ROOT / "runs" / "engineer_files" / entry["engineer_files"]
+            dest = data / "files"
+            dest.mkdir(exist_ok=True)
+            for name in ("hourly.csv", "homer_load_kw.txt", "engineer_files.json"):
+                shutil.copy(src / name, dest / name)
+            kw["engineer_files"] = load(dest / "engineer_files.json")
         page = render_study_html(report, table, paper_check=paper, review=review, **kw)
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")
