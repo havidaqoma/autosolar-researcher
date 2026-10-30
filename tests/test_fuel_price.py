@@ -163,6 +163,16 @@ def test_slope_uses_served_energy():
     assert step["best_lcoe_usd_per_kwh"] == pytest.approx(0.10 + 1.0 * 500.0 / (10000.0 * (1.0 - 0.0005)))
 
 
+def test_battery_edge_alone_counts():
+    # Added after mutation testing of the T21 code (a fault that only checked the PV edge was not caught).
+    table = pd.DataFrame({"pv_kwp": [0.0, 50.0, 100.0], "battery_kwh": [0.0, 100.0, 0.0],
+                          "lcoe_usd_per_kwh": [0.30, 0.20, 0.29], "fuel_l_per_yr": [1000.0, 200.0, 900.0],
+                          "unserved_frac": [0.0, 0.0, 0.0], "renewable_fraction_frac": [0.0, 0.8, 0.1]})
+    step = fuel_price_steps(table, **SMALL_KW, prices_usd_per_l=[1.0])[0]
+    assert step["best_pv_kwp"] == 50.0 and step["best_battery_kwh"] == 100.0
+    assert step["on_grid_edge"] is True
+
+
 def test_tie_goes_to_earliest_row():
     table = pd.DataFrame({"pv_kwp": [0.0, 100.0, 200.0], "battery_kwh": [0.0, 0.0, 0.0],
                           "lcoe_usd_per_kwh": [0.30, 0.25, 0.25], "fuel_l_per_yr": [1000.0, 0.0, 0.0],

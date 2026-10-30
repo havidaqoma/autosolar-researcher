@@ -3,11 +3,27 @@
 from __future__ import annotations
 
 import html
+import math
 import re
 
 import pandas as pd
 
+from autosolar import sweep
 from autosolar.curate import curated_line
+
+FUEL_PRICE_STEPS_USD_PER_L = tuple(round(0.2 + 0.1 * k, 2) for k in range(15))
+MAX_PRICE_STEPS = 24
+FUEL_PRICE_CSS = (
+    ".fp input{position:absolute;opacity:0;width:1px;height:1px}"
+    ".fp-labels label{display:inline-block;padding:4px 8px;margin:2px;"
+    "border:1px solid #999;border-radius:4px;cursor:pointer}"
+    ".fp-out{display:none;margin:8px 0}"
+    + "".join(
+        "#fp%d:checked~.fp-outs #fpo%d{display:block}" % (i, i)
+        + "#fp%d:checked~.fp-labels label[for=fp%d]{background:#1f5f99;color:#fff}" % (i, i)
+        for i in range(MAX_PRICE_STEPS)
+    )
+)
 
 SITE_CSS = (
     "body{font-family:Arial,Helvetica,sans-serif;background:#eef0ea;color:#222;"
@@ -762,6 +778,220 @@ def _figure_check_section(result: dict, load_followup: dict | None = None) -> st
     return "".join(parts)
 
 
+def _check_price_usd_per_l(name: str, value: object) -> float:
+    """Finite float above 0 in USD per L. bool and text fail. Returns float."""
+    if isinstance(value, bool) or isinstance(value, (str, bytes, bytearray)):
+        raise ValueError(name + " must be a finite real above 0")
+    try:
+        out = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        raise ValueError(name + " must be a finite real above 0")
+    if not math.isfinite(out) or out <= 0.0:
+        raise ValueError(name + " must be a finite real above 0")
+    return out
+
+
+def _check_frac01(name: str, value: object) -> float:
+    """Finite float from 0 to 1. bool and text fail. Returns float."""
+    if isinstance(value, bool) or isinstance(value, (str, bytes, bytearray)):
+        raise ValueError(name + " must be a finite real from 0 to 1")
+    try:
+        out = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        raise ValueError(name + " must be a finite real from 0 to 1")
+    if not math.isfinite(out) or out < 0.0 or out > 1.0:
+        raise ValueError(name + " must be a finite real from 0 to 1")
+    return out
+
+
+def price_grid(study_price_usd_per_l: float) -> list[float]:
+    """Study price plus 0.2 to 1.6 USD per L steps, sorted. Returns floats."""
+    p0 = _check_price_usd_per_l("study_price_usd_per_l", study_price_usd_per_l)
+    steps = [float(v) for v in FUEL_PRICE_STEPS_USD_PER_L]
+    if all(abs(v - p0) > 1e-9 for v in steps):
+        steps.append(p0)
+    return sorted(steps)
+
+
+def _report_input_value(report: dict, name: str) -> float:
+    """Float value of one inputs_table row by name. Missing value fails."""
+    try:
+        rows = report["inputs_table"]
+    except (KeyError, TypeError):
+        raise ValueError("report holds no inputs_table")
+    for row in rows:
+        if isinstance(row, dict) and row.get("name") == name:
+            value = row.get("value")
+            if value is None or isinstance(value, bool):
+                raise ValueError("inputs_table row " + name + " holds no value")
+            try:
+                out = float(value)
+            except (TypeError, ValueError):
+                raise ValueError("inputs_table row " + name + " holds no value")
+            return out
+    raise ValueError("inputs_table holds no " + name + " row")
+
+
+def study_price_inputs(report: dict) -> dict:
+    """Study fuel price in USD per L, unserved limit frac, demand in kWh/yr."""
+    fuel = _report_input_value(report, "fuel_price_usd_per_l")
+    limit = _report_input_value(report, "unserved_max_frac")
+    try:
+        demand_raw = report["facts"]["demand_kwh_yr"]["value"]
+    except (KeyError, TypeError):
+        raise ValueError("report facts hold no demand_kwh_yr value")
+    if demand_raw is None or isinstance(demand_raw, bool):
+        raise ValueError("report facts hold no demand_kwh_yr value")
+    try:
+        demand = float(demand_raw)
+    except (TypeError, ValueError):
+        raise ValueError("report facts hold no demand_kwh_yr value")
+    return {"fuel_price_usd_per_l": fuel, "unserved_max_frac": limit, "demand_kwh_yr": demand}
+
+
+_FUEL_PRICE_COLS = (
+    "pv_kwp",
+    "battery_kwh",
+    "lcoe_usd_per_kwh",
+    "fuel_l_per_yr",
+    "unserved_frac",
+    "renewable_fraction_frac",
+)
+
+
+def fuel_price_steps(
+    table: pd.DataFrame,
+    *,
+    study_price_usd_per_l: float,
+    demand_kwh_yr: float,
+    unserved_max_frac: float,
+    prices_usd_per_l: list[float] | tuple[float, ...],
+) -> list[dict]:
+    """Least cost design at each fuel price in USD per L. LCOE in USD per kWh."""
+    p0 = _check_price_usd_per_l("study_price_usd_per_l", study_price_usd_per_l)
+    demand = _check_price_usd_per_l("demand_kwh_yr", demand_kwh_yr)
+    limit = _check_frac01("unserved_max_frac", unserved_max_frac)
+    if not isinstance(prices_usd_per_l, (list, tuple)) or not prices_usd_per_l:
+        raise ValueError("prices_usd_per_l must be a non-empty list or tuple")
+    if len(prices_usd_per_l) > MAX_PRICE_STEPS:
+        raise ValueError("prices_usd_per_l holds more than MAX_PRICE_STEPS prices")
+    prices = [_check_price_usd_per_l("prices_usd_per_l", p) for p in prices_usd_per_l]
+    if not isinstance(table, pd.DataFrame) or len(table) == 0:
+        raise ValueError("table must be a non-empty DataFrame")
+    for col in _FUEL_PRICE_COLS:
+        if col not in table.columns:
+            raise ValueError("table holds no " + col + " column")
+    pv_all = table["pv_kwp"].astype(float)
+    bat_all = table["battery_kwh"].astype(float)
+    diesel_mask = (pv_all == 0.0) & (bat_all == 0.0)
+    if not bool(diesel_mask.any()):
+        raise ValueError("table holds no diesel only row")
+    lcoe0 = table["lcoe_usd_per_kwh"].astype(float)
+    fuel_l = table["fuel_l_per_yr"].astype(float)
+    unserved = table["unserved_frac"].astype(float)
+    served_kwh = demand * (1.0 - unserved)
+    if bool((served_kwh <= 0.0).any()):
+        raise ValueError("served energy must stay above 0")
+    top_pv_kwp = float(pv_all.max())
+    top_battery_kwh = float(bat_all.max())
+    out: list[dict] = []
+    for price in prices:
+        recost = table.copy()
+        recost["lcoe_usd_per_kwh"] = lcoe0 + (price - p0) * fuel_l / served_kwh
+        best = sweep.least_cost(recost, limit)
+        best_pv = float(best["pv_kwp"])
+        best_bat = float(best["battery_kwh"])
+        best_lcoe = float(best["lcoe_usd_per_kwh"])
+        diesel_lcoe = float(recost.loc[diesel_mask, "lcoe_usd_per_kwh"].iloc[0])
+        wins = best_pv == 0.0 and best_bat == 0.0
+        if wins:
+            edge = False
+        else:
+            edge = best_pv == top_pv_kwp or best_bat == top_battery_kwh
+        out.append(
+            {
+                "price_usd_per_l": float(price),
+                "diesel_only_lcoe_usd_per_kwh": float(diesel_lcoe),
+                "best_pv_kwp": float(best_pv),
+                "best_battery_kwh": float(best_bat),
+                "best_lcoe_usd_per_kwh": float(best_lcoe),
+                "best_renewable_pct": float(100.0 * float(best["renewable_fraction_frac"])),
+                "saving_pct": float(100.0 * (1.0 - best_lcoe / diesel_lcoe)),
+                "diesel_only_wins": bool(wins),
+                "on_grid_edge": bool(edge),
+                "is_study_price": bool(abs(price - p0) <= 1e-9),
+            }
+        )
+    return out
+
+
+def fuel_price_section(report: dict, table: pd.DataFrame) -> str:
+    """CSS radio what-if block re-costing all designs at each USD per L price."""
+    inputs = study_price_inputs(report)
+    p0 = float(inputs["fuel_price_usd_per_l"])
+    steps = fuel_price_steps(
+        table,
+        study_price_usd_per_l=p0,
+        demand_kwh_yr=float(inputs["demand_kwh_yr"]),
+        unserved_max_frac=float(inputs["unserved_max_frac"]),
+        prices_usd_per_l=price_grid(p0),
+    )
+    n = len(table)
+    intro = (
+        "Pick a diesel price in USD per litre. The page re-costs all "
+        + fmt(n, 0)
+        + " designs of this study at that price; every other input stays as in the study, which used "
+        + fmt(p0, 2)
+        + " USD/L."
+    )
+    ins: list[str] = []
+    labels: list[str] = []
+    outs: list[str] = []
+    for i, step in enumerate(steps):
+        price = float(step["price_usd_per_l"])
+        tick = ' checked' if bool(step["is_study_price"]) else ""
+        ins.append('<input type="radio" name="fp" id="fp%d"%s>' % (i, tick))
+        text = fmt(price, 2) + (" (study)" if bool(step["is_study_price"]) else "")
+        labels.append('<label for="fp%d">%s</label>' % (i, esc(text)))
+        d0 = float(step["diesel_only_lcoe_usd_per_kwh"])
+        if bool(step["diesel_only_wins"]):
+            line = (
+                "At " + fmt(price, 2) + " USD/L: diesel only, at " + fmt(d0, 3)
+                + " USD/kWh, is the least cost choice; no design with PV or battery beats it (computed)."
+            )
+        else:
+            line = (
+                "At " + fmt(price, 2) + " USD/L: diesel only costs " + fmt(d0, 3)
+                + " USD/kWh. The least cost design is " + fmt(float(step["best_pv_kwp"]), 0)
+                + " kWp of PV and " + fmt(float(step["best_battery_kwh"]), 0)
+                + " kWh of battery at " + fmt(float(step["best_lcoe_usd_per_kwh"]), 3)
+                + " USD/kWh, " + fmt(float(step["saving_pct"]), 1) + "% less, with "
+                + fmt(float(step["best_renewable_pct"]), 0) + "% of the energy from the sun (computed)."
+            )
+            if bool(step["on_grid_edge"]):
+                line = line + " It sits on the edge of the design grid, so a larger design may cost less."
+        outs.append('<p class="fp-out" id="fpo%d">%s</p>' % (i, esc(line)))
+    foot = (
+        "How: a design's fuel use does not depend on the price, so its cost moves in a straight line "
+        "with it. At 20% below and above the study price these are the same numbers as the fuel price "
+        "rows of What moves the cost."
+    )
+    be_raw = None
+    if isinstance(report, dict) and isinstance(report.get("facts"), dict):
+        be_entry = report["facts"].get("break_even_fuel_usd_per_l")
+        if isinstance(be_entry, dict):
+            be_raw = be_entry.get("value", None)
+    if be_raw is not None:
+        foot = foot + " Below " + fmt(float(be_raw), 2) + " USD/L, diesel only is cheapest (break-even from the study)."
+    return (
+        '<section id="fuel-price"><h2>Try another diesel price</h2>'
+        + "<p>" + esc(intro) + "</p>"
+        + '<div class="fp">' + "".join(ins) + '<div class="fp-labels">' + "".join(labels) + "</div>"
+        + '<div class="fp-outs">' + "".join(outs) + "</div></div>"
+        + "<p>" + esc(foot) + "</p></section>"
+    )
+
+
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
                       review: dict | None = None, figure_check: dict | None = None,
                       load_followup: dict | None = None) -> str:
@@ -784,7 +1014,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     out: list[str] = ["<!DOCTYPE html>"]
     out.append('<html><head><meta charset="utf-8">')
     out.append("<title>AutoSolar study: " + esc(site) + "</title>")
-    out.append("<style>" + SITE_CSS + "</style></head><body>")
+    out.append("<style>" + SITE_CSS + FUEL_PRICE_CSS + "</style></head><body>")
     out.append('<header class="main-head"><h1>AutoSolar study: ' + esc(site) + "</h1>")
     out.append("<p>Run " + esc(report["run_hash"]) + ".</p></header><main>")
     out.append('<section id="answer"><h2>Answer</h2>')
@@ -802,6 +1032,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
         line = str(fact["text"]) + " " + str(fact["unit"]) + " (" + str(fact["label"]) + ")"
         out.append('<div class="card"><h3>' + esc(title) + "</h3><p>" + esc(line) + "</p></div>")
     out.append("</div></section>")
+    out.append(fuel_price_section(report, table))
     if firm is not None:
         out.append('<section id="firm"><h2>How firm is the answer</h2>')
         rows = [[str(it["title"]), str(it["text"]), str(it["unit"]), str(it["label"])] for it in firm["items"]]
