@@ -1,0 +1,106 @@
+{
+  "schema": "autosolar.resource_screen/1",
+  "run_id": "resources-20261030T181345-2ee18f",
+  "study_run_hash": "107477f112e5d92c",
+  "site": {
+    "name": "Karimunjawa",
+    "lat_deg": -5.8796265,
+    "lon_deg": 110.4329073
+  },
+  "weather_coords_deg": [
+    -5.88,
+    110.43
+  ],
+  "solar": {
+    "pvout_kwh_per_kwp_yr": 1477.524169921875,
+    "pvout_kwh_per_kwp_day": 4.0480114244434935,
+    "opta_deg": 11.0,
+    "band": "favorable middle range"
+  },
+  "wind": {
+    "hours": 78912,
+    "dropped_hours": 0,
+    "first": "2016010100",
+    "last": "2024123123",
+    "mean_speed_m_s": 4.436337819343065,
+    "mean_density_kg_m3": 1.1667219113091831,
+    "power_density_w_m2": 90.7657291259873,
+    "monthly_mean_speed_m_s": [
+      5.393463261648745,
+      5.413692810457516,
+      3.776780167264038,
+      3.1952762345679013,
+      4.513690262843489,
+      4.714070987654321,
+      5.3439023297491035,
+      5.424786439665472,
+      4.483844135802469,
+      3.4943055555555556,
+      2.8872839506172836,
+      4.599519115890084
+    ],
+    "years": [
+      2016,
+      2024
+    ],
+    "class_number": 1,
+    "class_name": "Poor"
+  },
+  "hydro": {
+    "river": 1,
+    "stream": 2,
+    "canal": 0,
+    "drain": 1,
+    "ditch": 0,
+    "other": 0,
+    "named_rivers": [],
+    "osm_base": "2026-10-30T10:11:02Z",
+    "radius_km": 10.0
+  },
+  "grid": {
+    "nearest": {
+      "name": "Mlonggo",
+      "place": "town",
+      "km": 78.17504632099471
+    },
+    "radius_km": 150.0
+  },
+  "pv_checks": [
+    {
+      "service": "PVGIS PVcalc (JRC), ERA5",
+      "case": "PVGIS-ERA5 TMY",
+      "theirs_kwh_per_kwp_yr": 1580.89,
+      "ours_kwh_per_kwp_yr": 1603.4139192835241,
+      "gap_pct": 1.4247619558301994
+    },
+    {
+      "service": "Global Solar Atlas PVOUT (Solargis)",
+      "case": "GSA scaled",
+      "theirs_kwh_per_kwp_yr": 1477.524169921875,
+      "ours_kwh_per_kwp_yr": 1428.2363539701728,
+      "gap_pct": -3.3358382187621562
+    }
+  ],
+  "verdicts": {
+    "solar": "worth a closer look",
+    "wind": "not on this screen",
+    "hydro": "check flow and head on site"
+  },
+  "files": {
+    "nasa_wind_-5.8800_110.4300_2016_2024.json": "91922f2e4222d68e3436c8dc987e9919a052b081f0caf3f73b0189e1efa2dc07",
+    "pvgis_pvcalc_-5.8800_110.4300_t10_l14.json": "b1980690c2c75d8079f4c7b0c3edca47d036c60d106b60eca20e4cebb48679ec",
+    "overpass_54dced12f16b5294.json": "1aee2547a66b1262f8a066d7d03d0e1388715eb272dfdf0f4e35ade6050cbbc4",
+    "overpass_7bbca0fe96a6e428.json": "b165b67b5a8d85574ff9fe0346aabe901f4f8b8de6a7cdd2d16eb79a8c54cbf6",
+    "gsa_-5.8800_110.4300.json": "8e1a1830b0a0a38f595104b7618caad17a1b9a0098c6b65883ac22547bb170a0"
+  },
+  "wall_s": 0.3004786968231201,
+  "sources": {
+    "nasa_power_hourly": "https://power.larc.nasa.gov/api/temporal/hourly/point",
+    "pvgis_pvcalc": "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc",
+    "global_solar_atlas": "https://api.globalsolaratlas.info/data/lta",
+    "overpass": "https://overpass-api.de/api/interpreter",
+    "world_bank_pv_potential": "https://documents1.worldbank.org/curated/en/466331592817725242/pdf/Global-Photovoltaic-Power-Potential-by-Country.pdf",
+    "nrel_wind_classes": "https://support.ul-renewables.com/windographer/def-wind-power-class.htm"
+  },
+  "note": "Written after the studies ran (post hoc). The PV model gaps for Karimunjawa were seen before this check was written. Only solar, battery and diesel are costed; this screen does not cost wind, hydro or a grid link."
+}

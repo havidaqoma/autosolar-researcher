@@ -1,0 +1,45 @@
+{
+  "schema": "autosolar.engineer_files/1",
+  "run_id": "files-20261030T180443-e175b8",
+  "study_run_hash": "b4a44fc6d4c32339",
+  "basis_case": "CAMS",
+  "local_tz": "Asia/Jakarta",
+  "rows": 8760,
+  "columns": [
+    "time_utc",
+    "time_local",
+    "ghi_w_m2",
+    "temp_air_degc",
+    "wind_speed_m_s",
+    "load_kw",
+    "pv_ac_kw_per_kwp",
+    "pv_kw",
+    "pv_to_load_kw",
+    "pv_to_battery_kw",
+    "pv_curtailed_kw",
+    "battery_discharge_kw",
+    "soc_kwh",
+    "diesel_kw",
+    "diesel_units_on",
+    "unserved_kw",
+    "fuel_l"
+  ],
+  "homer_lines": 8760,
+  "sums": {
+    "load_kwh": 9568110.0,
+    "peak_kw": 1422.0,
+    "pv_kwh_per_kwp": 1353.2910373240716,
+    "fuel_l": 549022.6589008882,
+    "unserved_kwh": 0.0,
+    "diesel_run_hours": 1458,
+    "diesel_starts": 217
+  },
+  "files": {
+    "hourly.csv": "daa14404d4df67ed6aba7f63e79a25bf7444a0f20367e447ed2758fcc29bb777",
+    "homer_load_kw.txt": "fa41b51da6f480262b79c2ff95e4e00072aaa81551cce2d66d123f95de689309"
+  },
+  "reproduced": true,
+  "reproduction_errors": [],
+  "wall_s": 0.18876028060913086,
+  "note": "Rebuilt from the study's inputs and cached weather. The study itself is unchanged."
+}
