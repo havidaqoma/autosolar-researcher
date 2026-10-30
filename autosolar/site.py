@@ -11,6 +11,7 @@ import pandas as pd
 
 from autosolar import sweep
 from autosolar.curate import curated_line
+from autosolar.resources import RESOURCE_SCHEMA
 
 FUEL_PRICE_STEPS_USD_PER_L = tuple(round(0.2 + 0.1 * k, 2) for k in range(15))
 MAX_PRICE_STEPS = 24
@@ -1274,10 +1275,74 @@ def confirm_section(
     return out
 
 
+def resources_section(report: dict, screen: dict | None) -> str:
+    """First screen of other local renewables. Counts and yields in plain text. Returns str."""
+    if screen is None:
+        return ""
+    if not isinstance(screen, dict) or screen.get("schema") != RESOURCE_SCHEMA:
+        raise ValueError("screen must hold schema " + RESOURCE_SCHEMA)
+    if screen.get("study_run_hash") != report["run_hash"]:
+        raise ValueError("screen study_run_hash differs from the report run_hash")
+    sol = screen["solar"]
+    wnd = screen["wind"]
+    hyd = screen["hydro"]
+    grd = screen["grid"]
+    ver = screen["verdicts"]
+    rows = [
+        ["Sun",
+         "PV output " + fmt(sol["pvout_kwh_per_kwp_day"], 2) + " kWh/kWp a day, "
+         + fmt(sol["pvout_kwh_per_kwp_yr"], 0) + " a year (Global Solar Atlas, measured)",
+         "World Bank band: " + str(sol["band"]) + " (docs); " + str(ver["solar"]),
+         "Costed on this page"],
+        ["Wind",
+         "Mean " + fmt(wnd["mean_speed_m_s"], 2) + " m/s and " + fmt(wnd["power_density_w_m2"], 0)
+         + " W/m2 at 50 m, hourly " + str(wnd["years"][0]) + " to " + str(wnd["years"][1])
+         + " (NASA POWER, coarse MERRA-2 grid; computed)",
+         "Class " + str(wnd["class_number"]) + ", " + str(wnd["class_name"])
+         + ", on the NREL scale (docs); " + str(ver["wind"]),
+         "Global Wind Atlas or a mast on site; a coarse grid can miss local wind"],
+        ["Hydro",
+         fmt(hyd["river"], 0) + " river and " + fmt(hyd["stream"], 0)
+         + " stream lines mapped within " + fmt(hyd["radius_km"], 0)
+         + " km (OpenStreetMap, measured)",
+         str(ver["hydro"]), "Flow and head from a field survey"],
+    ]
+    near = grd["nearest"]
+    if isinstance(near, dict):
+        grid_text = ("Nearest town or city on the map: " + str(near.get("name", ""))
+                     + " (" + str(near.get("place", "")) + "), " + fmt(near["km"], 0)
+                     + " km in a straight line (computed)")
+    else:
+        grid_text = "No town or city on the map within " + fmt(grd["radius_km"], 0) + " km"
+    rows.append(["Grid link", grid_text, "Not screened", "Cost of a grid link or sea cable"])
+    out = '<section id="resources"><h2>Which renewable fits this site?</h2>'
+    out += "<p>" + esc("A first screen of other local resources, from free public data. The costs on this page "
+                       "cover solar, battery and diesel only; wind, hydro and a grid link are not costed "
+                       "here.") + "</p>"
+    out += _table(["Resource", "Public data", "Screen reading", "Next check"], rows)
+    out += "<p>" + esc("Screen rule (assumed): solar is worth a closer look at 3.5 kWh/kWp a day or more, the "
+                       "lower bound of the World Bank's favorable range; wind at class 3 or more; hydro needs "
+                       "at least one mapped river within 10 km, and then flow and head decide.") + "</p>"
+    out += "<h3>Is our PV model close to outside models?</h3>"
+    pv_rows = []
+    for item in screen["pv_checks"]:
+        gap = float(item["gap_pct"])
+        sign = "+" if gap >= 0.0 else "-"
+        pv_rows.append([str(item["service"]), fmt(item["theirs_kwh_per_kwp_yr"], 0),
+                        fmt(item["ours_kwh_per_kwp_yr"], 0), sign + fmt(abs(gap), 1) + "%"])
+    out += _table(["Outside model", "Their PV output (kWh/kWp a year)",
+                   "Our model on their weather (kWh/kWp a year)", "Gap"], pv_rows)
+    out += "<p>" + esc("Same site and panel tilt; the loss chains differ, so a gap of a few percent is expected. "
+                       "Computed after the studies ran (post hoc).") + "</p>"
+    out += "</section>"
+    return out
+
+
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
                       review: dict | None = None, figure_check: dict | None = None,
                       load_followup: dict | None = None, field_notes: list | None = None,
-                      engineer_files: dict | None = None) -> str:
+                      engineer_files: dict | None = None,
+                      resource_screen: dict | None = None) -> str:
     """Full study page for one report and design table. Returns ASCII str."""
     if load_followup is not None:
         if figure_check is None:
@@ -1317,6 +1382,8 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     out.append("</div></section>")
     out.append(fuel_price_section(report, table))
     out.append(confirm_section(report, field_notes=field_notes, engineer_files=engineer_files))
+    if resource_screen is not None:
+        out.append(resources_section(report, resource_screen))
     if firm is not None:
         out.append('<section id="firm"><h2>How firm is the answer</h2>')
         rows = [[str(it["title"]), str(it["text"]), str(it["unit"]), str(it["label"])] for it in firm["items"]]
