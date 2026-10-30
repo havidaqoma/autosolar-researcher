@@ -28,6 +28,11 @@ from autosolar.weather import build_weather_cases, cached_fetchers  # noqa: E402
 from load_followup import CACHE_ONLY_EMAIL, no_network_fetchers  # noqa: E402
 
 
+def write_ascii_lf(path: pathlib.Path | str, text: str) -> None:
+    """Write ASCII text with LF newlines unchanged on any OS. Returns None."""
+    pathlib.Path(path).write_bytes(text.encode("ascii"))
+
+
 def _resolve(raw: str) -> pathlib.Path:
     """Path against the repo root when relative. Returns a path."""
     path = pathlib.Path(raw)
@@ -83,10 +88,8 @@ def main(argv: list[str] | None = None) -> int:
     run_id = "files-" + time.strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:6]
     out_dir = _resolve(str(args.out)) / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "hourly.csv").write_text(
-        frame.to_csv(index=False, lineterminator="\n"), encoding="ascii"
-    )
-    (out_dir / "homer_load_kw.txt").write_text("\n".join(lines) + "\n", encoding="ascii")
+    write_ascii_lf(out_dir / "hourly.csv", frame.to_csv(index=False, lineterminator="\n"))
+    write_ascii_lf(out_dir / "homer_load_kw.txt", "\n".join(lines) + "\n")
     files = {
         "hourly.csv": hashlib.sha256((out_dir / "hourly.csv").read_bytes()).hexdigest(),
         "homer_load_kw.txt": hashlib.sha256((out_dir / "homer_load_kw.txt").read_bytes()).hexdigest(),
@@ -103,9 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         files=files,
         wall_s=float(time.time() - t0),
     )
-    (out_dir / "engineer_files.json").write_text(
-        json.dumps(doc, indent=2, ensure_ascii=True) + "\n", encoding="ascii"
-    )
+    write_ascii_lf(out_dir / "engineer_files.json", json.dumps(doc, indent=2, ensure_ascii=True) + "\n")
     print(run_id)
     print("rows %d homer_lines %d" % (len(frame), len(lines)))
     print("sums " + json.dumps(doc["sums"], ensure_ascii=True))
