@@ -85,7 +85,7 @@ FIELD_ASKS = {
 FIELD_ASK_DEFAULT = "Field records for this input"
 FIELD_NOTE_KEYS = ("site", "key", "item", "value", "decimals", "unit", "label", "date", "source", "url",
                    "quote", "compare", "note")
-FIELD_COMPARES = ("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw")
+FIELD_COMPARES = ("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw", "fuel_l_per_day")
 _FIELD_NOTE_LABELS = ("press", "docs", "paper", "measured")
 
 _URL_RE = re.compile(r"https?://[^ ,]+")
@@ -1090,6 +1090,38 @@ def _confirm_question(report: dict) -> str:
         + " must run in every hour, the main design costs " + fmt(reserve_f, 3) + " USD/kWh, " + word
         + " diesel only at " + fmt(diesel_f, 3) + " USD/kWh (computed)."
     )
+    least_pv = _firm_item(report, "reserve_pv_kwp")
+    least_bat = _firm_item(report, "reserve_battery_kwh")
+    least_lcoe = _firm_item(report, "reserve_lcoe_usd_per_kwh")
+
+    def _finite_real(item: dict | None) -> float | None:
+        """Finite real firmness value. None when missing or not a finite real."""
+        if item is None:
+            return None
+        value = item.get("value")
+        if isinstance(value, bool) or not isinstance(value, numbers.Real):
+            return None
+        try:
+            out = float(value)
+        except (TypeError, ValueError):
+            return None
+        if not math.isfinite(out):
+            return None
+        return out
+
+    pv_f = _finite_real(least_pv)
+    bat_f = _finite_real(least_bat)
+    lcoe_f = _finite_real(least_lcoe)
+    if pv_f is not None and bat_f is not None and lcoe_f is not None:
+        if lcoe_f < diesel_f:
+            below = "below"
+        else:
+            below = "not below"
+        text += (
+            " Under that rule the least cost design is " + fmt(pv_f, 0) + " kWp and "
+            + fmt(bat_f, 0) + " kWh at " + fmt(lcoe_f, 3) + " USD/kWh, " + below
+            + " diesel only (computed; see How firm is the answer)."
+        )
     return '<p class="ask">' + esc(text) + "</p>"
 
 
@@ -1187,12 +1219,16 @@ def _confirm_notes(report: dict, field_notes: list) -> str:
             ratio_text = fmt(val / float(note["value"]), 2) + "x"
         elif compare == "fuel_l_per_kwh":
             val = float(facts["diesel_only_fuel_l_yr"]["value"]) / float(facts["demand_kwh_yr"]["value"])
-            study_text = fmt(val, 3) + " L/kWh, diesel only (computed)"
+            study_text = fmt(val, 3) + " L/kWh, diesel only, idle fuel included (computed)"
             ratio_text = fmt(val / float(note["value"]), 2) + "x"
         elif compare == "peak_kw":
             peak = facts["demand_peak_kw"]
             study_text = fmt(float(peak["value"]), 0) + " kW (" + str(peak["label"]) + ")"
             ratio_text = fmt(float(peak["value"]) / float(note["value"]), 2) + "x"
+        elif compare == "fuel_l_per_day":
+            val = float(facts["diesel_only_fuel_l_yr"]["value"]) / 365.0
+            study_text = fmt(val, 0) + " L a day, diesel only (computed)"
+            ratio_text = fmt(val / float(note["value"]), 2) + "x"
         rows.append(
             [
                 str(note["item"]),
@@ -1291,7 +1327,7 @@ def resources_section(report: dict, screen: dict | None) -> str:
     rows = [
         ["Sun",
          "PV output " + fmt(sol["pvout_kwh_per_kwp_day"], 2) + " kWh/kWp a day, "
-         + fmt(sol["pvout_kwh_per_kwp_yr"], 0) + " a year (Global Solar Atlas, measured)",
+         + fmt(sol["pvout_kwh_per_kwp_yr"], 0) + " a year (Global Solar Atlas, a Solargis model; docs)",
          "World Bank band: " + str(sol["band"]) + " (docs); " + str(ver["solar"]),
          "Costed on this page"],
         ["Wind",
@@ -1304,7 +1340,7 @@ def resources_section(report: dict, screen: dict | None) -> str:
         ["Hydro",
          fmt(hyd["river"], 0) + " river and " + fmt(hyd["stream"], 0)
          + " stream lines mapped within " + fmt(hyd["radius_km"], 0)
-         + " km (OpenStreetMap, measured)",
+         + " km, nearby islands included (OpenStreetMap, measured)",
          str(ver["hydro"]), "Flow and head from a field survey"],
     ]
     near = grd["nearest"]
