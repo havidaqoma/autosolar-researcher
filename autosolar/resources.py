@@ -44,6 +44,9 @@ SOURCES = {
     "nrel_wind_classes": "https://support.ul-renewables.com/windographer/def-wind-power-class.htm",
 }
 
+USER_AGENT = ("autosolar-researcher/1 (resource screen; "
+              "https://github.com/havidaqoma/autosolar-researcher)")
+
 _OVERPASS_RETRY_URL = "https://overpass.kumi.systems/api/interpreter"
 
 _REAL_TYPES = (int, float, np.integer, np.floating)
@@ -529,7 +532,8 @@ def default_resource_fetchers() -> ResourceFetchers:
         params = {"parameters": "WS50M,T2M,PS", "community": "RE", "longitude": lon, "latitude": lat,
                   "start": "%d0101" % first, "end": "%d1231" % last, "format": "JSON",
                   "time-standard": "UTC"}
-        resp = requests.get(SOURCES["nasa_power_hourly"], params=params, timeout=300)
+        resp = requests.get(SOURCES["nasa_power_hourly"], params=params, timeout=300,
+                              headers={"User-Agent": USER_AGENT})
         resp.raise_for_status()
         return resp.json()
 
@@ -541,7 +545,8 @@ def default_resource_fetchers() -> ResourceFetchers:
         params = {"lat": lat, "lon": lon, "peakpower": 1, "loss": loss, "angle": tilt,
                   "aspect": 180 if lat < 0.0 else 0, "usehorizon": 1, "raddatabase": "PVGIS-ERA5",
                   "outputformat": "json"}
-        resp = requests.get(SOURCES["pvgis_pvcalc"], params=params, timeout=120)
+        resp = requests.get(SOURCES["pvgis_pvcalc"], params=params, timeout=120,
+                              headers={"User-Agent": USER_AGENT})
         resp.raise_for_status()
         return resp.json()
 
@@ -549,11 +554,13 @@ def default_resource_fetchers() -> ResourceFetchers:
         if not isinstance(query, str):
             raise ValueError("query must be a string: " + repr(query))
         try:
-            resp = requests.post(SOURCES["overpass"], data={"data": query}, timeout=180)
+            resp = requests.post(SOURCES["overpass"], data={"data": query}, timeout=180,
+                                 headers={"User-Agent": USER_AGENT})
             resp.raise_for_status()
             return resp.json()
         except Exception:
-            retry = requests.post(_OVERPASS_RETRY_URL, data={"data": query}, timeout=180)
+            retry = requests.post(_OVERPASS_RETRY_URL, data={"data": query}, timeout=180,
+                                  headers={"User-Agent": USER_AGENT})
             retry.raise_for_status()
             return retry.json()
 
