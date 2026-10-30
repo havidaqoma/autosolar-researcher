@@ -35,7 +35,7 @@ def main():
         run_dir = ROOT / "runs" / "studies" / entry["run"]
         report = load(run_dir / "report.json")
         table = pd.read_csv(run_dir / "design_table.csv")
-        paper = review = figure = None
+        paper = review = figure = followup = None
         data = OUT / "data" / entry["run"]
         data.mkdir(exist_ok=True)
         shutil.copy(run_dir / "report.json", data / "report.json")
@@ -53,7 +53,13 @@ def main():
             p = ROOT / "runs" / "figure_checks" / entry["figure_check"] / "figure_check.json"
             figure = load(p)
             shutil.copy(p, data / "figure_check.json")
+        if entry.get("load_followup"):
+            p = ROOT / "runs" / "load_followups" / entry["load_followup"] / "load_followup.json"
+            followup = load(p)
+            shutil.copy(p, data / "load_followup.json")
         kw = {"figure_check": figure} if figure is not None else {}
+        if followup is not None:
+            kw["load_followup"] = followup
         page = render_study_html(report, table, paper_check=paper, review=review, **kw)
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")

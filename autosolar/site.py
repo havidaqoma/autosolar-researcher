@@ -556,7 +556,148 @@ def figure_check_svg(result: dict) -> str:
     return "".join(parts)
 
 
-def _figure_check_section(result: dict) -> str:
+def _load_followup_html(doc: dict) -> str:
+    """Post hoc follow-up block for the figure check section. Returns str."""
+    basis_series = str(doc["basis_series"])
+    designs = fmt(float(doc["designs"]), 0)
+    parts = ["<h3>If the chart is right</h3>"]
+    parts.append(
+        "<p>"
+        + esc(
+            "Added after the load check result (post hoc), so the answer above is unchanged. The engine re-ran all "
+            + designs
+            + " designs at each load below (computed). Before that, it gave back this study's own answer and "
+            "the two demand rows of What moves the cost, to within one part in a billion."
+        )
+        + "</p>"
+    )
+    chart = None
+    for case in doc["cases"]:
+        if case.get("key") == "chart_basis":
+            chart = case
+            break
+    if chart is None:
+        chart = doc["cases"][0]
+    scale_frac = float(chart["scale_frac"])
+    if scale_frac > 1.0:
+        direction = "higher"
+        pct = fmt(100.0 * (scale_frac - 1.0), 1)
+    else:
+        direction = "lower"
+        pct = fmt(100.0 * (1.0 - scale_frac), 1)
+    d0 = fmt(float(chart["diesel_only_lcoe_usd_per_kwh"]), 3)
+    saving = chart.get("saving_pct")
+    if saving is not None and float(saving) > 0.0:
+        pv = fmt(float(chart["best_pv_kwp"]), 0)
+        bat = fmt(float(chart["best_battery_kwh"]), 0)
+        best = fmt(float(chart["best_lcoe_usd_per_kwh"]), 3)
+        save = fmt(float(saving), 1)
+        parts.append(
+            "<p>"
+            + esc(
+                "If the load is what the "
+                + basis_series
+                + " curve implies ("
+                + pct
+                + "% "
+                + direction
+                + "), the least cost design is "
+                + pv
+                + " kWp of PV and "
+                + bat
+                + " kWh of battery at "
+                + best
+                + " USD/kWh against "
+                + d0
+                + " for diesel only: "
+                + save
+                + "% less (computed)."
+            )
+            + "</p>"
+        )
+    else:
+        parts.append(
+            "<p>"
+            + esc(
+                "If the load is what the "
+                + basis_series
+                + " curve implies ("
+                + pct
+                + "% "
+                + direction
+                + "), no design with PV or battery beats diesel only at "
+                + d0
+                + " USD/kWh (computed)."
+            )
+            + "</p>"
+        )
+    rows: list[list[str]] = []
+    for case in doc["cases"]:
+        key = str(case.get("key"))
+        scale = float(case["scale_frac"])
+        if key == "chart_basis":
+            name = "Chart day: " + basis_series + " (post hoc)"
+        elif key == "chart_mean":
+            name = "Chart, mean of all days (post hoc)"
+        elif key == "swing_low":
+            name = "Demand -" + fmt(100.0 * abs(scale - 1.0), 0) + "% (sensitivity row)"
+        elif key == "swing_high":
+            name = "Demand +" + fmt(100.0 * abs(scale - 1.0), 0) + "% (sensitivity row)"
+        else:
+            name = key
+        if case.get("best_pv_kwp") is None or case.get("best_battery_kwh") is None:
+            design = "none feasible"
+        else:
+            design = fmt(float(case["best_pv_kwp"]), 0) + " kWp + " + fmt(float(case["best_battery_kwh"]), 0) + " kWh"
+        if case.get("best_lcoe_usd_per_kwh") is None:
+            cost = ""
+        else:
+            cost = fmt(float(case["best_lcoe_usd_per_kwh"]), 3)
+        if case.get("saving_pct") is None:
+            save_cell = ""
+        else:
+            save_cell = fmt(float(case["saving_pct"]), 1) + "%"
+        rows.append(
+            [
+                name,
+                fmt(float(case["demand_kwh_yr"]), 0),
+                fmt(float(case["diesel_only_lcoe_usd_per_kwh"]), 3),
+                design,
+                cost,
+                save_cell,
+                fmt(float(case["main_lcoe_usd_per_kwh"]), 3),
+            ]
+        )
+    parts.append(
+        _table(
+            [
+                "Load case",
+                "Load (kWh/yr)",
+                "Diesel only (USD/kWh)",
+                "Least cost design",
+                "Its cost (USD/kWh)",
+                "Below diesel only",
+                "Main design (USD/kWh)",
+            ],
+            rows,
+        )
+    )
+    base = doc["base"]
+    parts.append(
+        "<p>"
+        + esc(
+            "Main design: the study's answer, "
+            + fmt(float(base["best_pv_kwp"]), 0)
+            + " kWp + "
+            + fmt(float(base["best_battery_kwh"]), 0)
+            + " kWh, at each load. Other inputs stay as in the study."
+        )
+        + "</p>"
+    )
+    return "".join(parts)
+
+
+def _figure_check_section(result: dict, load_followup: dict | None = None) -> str:
     """One figure check section for the study page. Loads in kW and kWh. Returns str."""
     plan = result.get("plan", {})
     compare_plan = plan.get("compare", {})
@@ -615,13 +756,23 @@ def _figure_check_section(result: dict) -> str:
               + "% of the axis span on a real figure and " + fmt(synth_pct, 2)
               + "% on synthetic charts, away from the first and last point.")
     parts.append("<p>" + esc(fourth) + "</p>")
+    if load_followup is not None:
+        parts.append(_load_followup_html(load_followup))
     parts.append("</section>")
     return "".join(parts)
 
 
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
-                      review: dict | None = None, figure_check: dict | None = None) -> str:
+                      review: dict | None = None, figure_check: dict | None = None,
+                      load_followup: dict | None = None) -> str:
     """Full study page for one report and design table. Returns ASCII str."""
+    if load_followup is not None:
+        if figure_check is None:
+            raise ValueError("load_followup needs figure_check")
+        if not load_followup.get("reproduced"):
+            raise ValueError("load_followup is not reproduced")
+        if load_followup.get("study_run_hash") != report["run_hash"]:
+            raise ValueError("load_followup study_run_hash differs from the report run_hash")
     site = str(report["site"]["name"])
     facts = report["facts"]
     firm = report.get("firmness")
@@ -711,7 +862,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
         )
         out.append("</section>")
     if figure_check is not None:
-        out.append(_figure_check_section(figure_check))
+        out.append(_figure_check_section(figure_check, load_followup))
     if review is not None:
         out.append('<section id="review"><h2>Second model review</h2>')
         out.append("<p>" + esc(review["model"]) + "</p><ul>")
