@@ -260,3 +260,15 @@ A gallery entry may hold `"resource_screen": "<run id>"`. When present, copy
 that passed: wind "worth a closer look" from class 2 instead of class 3, because the tests used classes 1 and 3
 only. A test for class 2 was added after the code (labelled so in the test file); it fails on that fault and passes
 on the build. Script: kept with the build files.
+
+## T23b: name the client (added after the code)
+
+The first live run failed: overpass-api.de answers HTTP 406 to the default `python-requests` User-Agent (measured,
+Friday 30 Oct), and the mirror then answered 429. Builder edits `autosolar/resources.py` only:
+
+- Add `USER_AGENT = "autosolar-researcher/1 (resource screen; https://github.com/havidaqoma/autosolar-researcher)"`.
+- Every request made by `default_resource_fetchers()` (NASA POWER, PVGIS, both Overpass attempts) passes
+  `headers={"User-Agent": USER_AGENT}`. Nothing else changes.
+
+Test: `test_live_fetchers_name_the_client` in `tests/test_resources.py` (written after the T23 code, labelled so;
+it replaces `requests.get` and `requests.post` with fakes, so it makes no network call).

@@ -508,3 +508,46 @@ def test_page_places_resources_after_confirm():
 def test_screen_verdicts_wind_class_two_is_not_enough():
     assert screen_verdicts(pvout_kwh_per_kwp_day=4.0, wind_class_number=2, rivers=0)["wind"] == NOT_ON_SCREEN
     assert screen_verdicts(pvout_kwh_per_kwp_day=4.0, wind_class_number=8, rivers=0)["wind"] == LOOK
+
+
+# ---------- T23b (added after the T23 code, labelled so) ----------
+
+def test_live_fetchers_name_the_client(monkeypatch):
+    import requests
+
+    from autosolar import resources
+    from autosolar.resources import default_resource_fetchers
+
+    seen = []
+
+    class Resp:
+        def __init__(self, status):
+            self.status = status
+
+        def raise_for_status(self):
+            if self.status >= 400:
+                raise requests.HTTPError(str(self.status))
+
+        def json(self):
+            return {"ok": True}
+
+    def fake_get(url, **kw):
+        seen.append(("get", url, kw.get("headers")))
+        return Resp(200)
+
+    def fake_post(url, **kw):
+        seen.append(("post", url, kw.get("headers")))
+        return Resp(406 if "overpass-api.de" in url else 200)
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr(requests, "post", fake_post)
+    assert resources.USER_AGENT == ("autosolar-researcher/1 (resource screen; "
+                                    "https://github.com/havidaqoma/autosolar-researcher)")
+    f = default_resource_fetchers()
+    assert f.nasa_wind_hourly(-5.88, 110.43, 2016, 2024) == {"ok": True}
+    assert f.pvgis_pvcalc(-5.88, 110.43, 10.0, 14.0) == {"ok": True}
+    assert f.overpass("q") == {"ok": True}
+    assert [s[0] for s in seen] == ["get", "get", "post", "post"]
+    assert "overpass-api.de" in seen[2][1] and "kumi" in seen[3][1]
+    for _kind, _url, headers in seen:
+        assert headers == {"User-Agent": resources.USER_AGENT}
