@@ -1,0 +1,81 @@
+{
+  "schema": "autosolar.field_notes/1",
+  "note": "Hand curated after the studies ran (post hoc). Each quote was checked word for word against a saved copy of the source; the copies are kept with the build files, not in this repo.",
+  "notes": [
+    {
+      "site": "Karimunjawa",
+      "key": "energy_per_day",
+      "item": "Energy sent out a day",
+      "value": 8000.0,
+      "decimals": 0,
+      "unit": "kWh",
+      "label": "press",
+      "date": "2017 (PLN data to March 2017)",
+      "source": "Kompas, Warga Karimunjawa Butuh Tambahan Listrik",
+      "url": "https://www.kompas.id/artikel/warga-karimunjawa-butuh-tambahan-listrik",
+      "quote": "Dalam sehari, PLTD mengonsumsi 4.000 liter solar dengan produksi listrik 8.000 kWh.",
+      "compare": "energy_kwh_per_day",
+      "note": ""
+    },
+    {
+      "site": "Karimunjawa",
+      "key": "fuel_per_kwh",
+      "item": "Diesel fuel per kWh",
+      "value": 0.5,
+      "decimals": 2,
+      "unit": "L/kWh",
+      "label": "press",
+      "date": "2017 (PLN data to March 2017)",
+      "source": "Kompas, Warga Karimunjawa Butuh Tambahan Listrik",
+      "url": "https://www.kompas.id/artikel/warga-karimunjawa-butuh-tambahan-listrik",
+      "quote": "Dalam sehari, PLTD mengonsumsi 4.000 liter solar dengan produksi listrik 8.000 kWh.",
+      "compare": "fuel_l_per_kwh",
+      "note": "4,000 L for 8,000 kWh a day, in the same sentence"
+    },
+    {
+      "site": "Karimunjawa",
+      "key": "peak_load",
+      "item": "Peak load",
+      "value": 612.0,
+      "decimals": 0,
+      "unit": "kW",
+      "label": "press",
+      "date": "2017 (PLN data to March 2017)",
+      "source": "Kompas, Warga Karimunjawa Butuh Tambahan Listrik",
+      "url": "https://www.kompas.id/artikel/warga-karimunjawa-butuh-tambahan-listrik",
+      "quote": "Namun, penjualan listrik baru mencapai 9 persen dengan beban puncak 612 kilowatt (kW).",
+      "compare": "peak_kw",
+      "note": ""
+    },
+    {
+      "site": "Karimunjawa",
+      "key": "fuel_per_day",
+      "item": "Diesel fuel a day",
+      "value": 4000.0,
+      "decimals": 0,
+      "unit": "L",
+      "label": "press",
+      "date": "4 April 2017",
+      "source": "detikFinance, Ini Pembangkit Listrik yang Terangi Karimunjawa 24 Jam",
+      "url": "https://finance.detik.com/energi/d-3464813/ini-pembangkit-listrik-yang-terangi-karimunjawa-24-jam",
+      "quote": "Setiap harinya, konsumsi solar PLTD Legon Bajak mencapai 4.000 liter.",
+      "compare": null,
+      "note": "a second outlet, same figure"
+    },
+    {
+      "site": "Karimunjawa",
+      "key": "diesel_units_2025",
+      "item": "Diesel units on the island",
+      "value": 2.5,
+      "decimals": 1,
+      "unit": "MW each, 2 units",
+      "label": "press",
+      "date": "July 2025",
+      "source": "ANTARA News, PLN conducts study on PLTS development in Karimunjawa",
+      "url": "https://en.antaranews.com/news/366409/pln-conducts-study-on-plts-development-in-karimunjawa",
+      "quote": "He explained that electricity in Karimunjawa is currently still supplied by a diesel power plant (PLTD) with a capacity of 2 x 2.5 megawatts (MW).",
+      "compare": null,
+      "note": "the study runs 2 x 1.8 MW and checks 2 x 2.7 MW, both from the paper"
+    }
+  ]
+}
