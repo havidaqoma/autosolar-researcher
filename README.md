@@ -26,18 +26,20 @@ smoke tests, chart reader tests and reviews included: USD 3.93.
   `docs/smoke/T19_SMOKE_RULES.md`).
 - Try it on the page: each study page has "Try another diesel price". Click a price from 0.20 to 1.60 USD/L
   and the page shows the least cost design at that price, re-costed over all 925 designs (computed; plain HTML
-  and CSS, no script). It is exact, not an estimate: a design's fuel use does not depend on the price, and at
-  20% below and above the study price it gives the same numbers as the sensitivity table.
+  and CSS, no script). It is an exact re-cost within the model, not a guess between points: a design's fuel
+  use does not depend on the price, and at 20% below and above the study price it gives the same numbers as
+  the sensitivity table.
 - When the checks say no (example study page, Inputs table): the judge refused a battery price of USD 192/kWh,
-  because the quote gives a system level storage cost, not the installed price of a lithium-ion battery; a
-  battery upkeep cost of 50 USD/kWh/yr was refused as outside the allowed 0.5 to 30; when a site blocked the
-  download (HTTP 403), the tool searched a second time. A value that fails keeps its assumed value and the page
+  because the quote gives a system level storage cost, not the installed price of a lithium-ion battery; the
+  range check threw out a battery upkeep cost of 50 USD/kWh/yr before any vote, as outside the allowed 0.5 to
+  30; when a site blocked the download (HTTP 403), the tool searched a second time. A value that fails keeps its assumed value and the page
   says why: 3 of the 7 sourced inputs stayed assumed (these two, and the discount rate, where both downloads
   failed).
-- If the load chart is right (post hoc): the load check says the study's load may be about 30% too high. At the
-  load the chart implies (23.3% lower), solar plus battery still wins: 5,750 kWp and 15,000 kWh at 0.257
-  USD/kWh against 0.388 for diesel only, 33.7% less (computed). Before it reports, the tool must give back the
-  study's own numbers; the rules were written before the run (`docs/smoke/T20_T21_SMOKE_RULES.md`).
+- If the load chart is right (post hoc): the load check finds the study's load 30.4% above the paper's
+  December 2018 curve (18.2% above the mean of the three days it plots). At the load that curve implies (23.3%
+  lower, computed), solar plus battery still wins: 5,750 kWp and 15,000 kWh at 0.257 USD/kWh against 0.388 for
+  diesel only, 33.7% less (computed). Before it reports, the tool must give back the study's own numbers; the
+  rules for this re-run were committed before it ran (`docs/smoke/T20_T21_SMOKE_RULES.md`).
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
@@ -207,10 +209,11 @@ each value are kept with the build files.
   re-ran all 925 designs at two loads read from the chart and at the two demand rows of the sensitivity table.
   Before it reports, it must give back the study's own answer and those two rows (it did, to within one part in
   a billion). Example study: at the 31 Dec 2018 curve (23.3% lower) the least cost design is 5,750 kWp and
-  15,000 kWh at 0.257 USD/kWh, 33.7% below diesel only; at the mean of the three days (15.4% lower), 6,250 kWp
-  and 16,000 kWh at 0.254 USD/kWh, 32.0% below (computed). Curated run: 49.4% and 48.0% below (computed).
-  Diesel only wins in none of the cases. The study's headline is not changed; the result is shown in the load
-  check section, marked post hoc. No model call (the ledger did not grow, measured).
+  15,000 kWh at 0.257 USD/kWh, 33.7% below diesel only; at the mean of the three days (15.4% lower, computed),
+  6,250 kWp and 16,000 kWh at 0.254 USD/kWh, 32.0% below (computed). Curated run (page 107477f112e5d92c):
+  49.4% and 48.0% below (computed). Diesel only wins in none of the four load cases. The study's headline is
+  not changed; the result is shown in the load check section, marked post hoc. The re-run made no model call
+  (the ledger did not grow, measured).
 - A published comparison: Syah et al. (IEEE IES, doi 10.1109/IES67184.2025.11160749) report a lowest cost of
   0.263 USD/kWh for Karimunjawa with PV, wind, battery and diesel (paper, abstract only; we did not read the
   full text). It adds wind and uses its own inputs, so it is a comparison, not a check; our 0.251 USD/kWh
