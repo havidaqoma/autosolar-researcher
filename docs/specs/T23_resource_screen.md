@@ -272,3 +272,13 @@ Friday 30 Oct), and the mirror then answered 429. Builder edits `autosolar/resou
 
 Test: `test_live_fetchers_name_the_client` in `tests/test_resources.py` (written after the T23 code, labelled so;
 it replaces `requests.get` and `requests.post` with fakes, so it makes no network call).
+
+## T23c: build the gallery with a screen (added after the code)
+
+`tools/make_site.py` sets `kw["resource_screen"]` before `kw` exists, so the first gallery build with a
+`"resource_screen"` entry stops with `UnboundLocalError` (measured). Builder edits `tools/make_site.py` only: create
+`kw` first (as now, from the figure check), then add `load_followup`, `field_notes`, `engineer_files` and
+`resource_screen` to it; the copies into `docs/site/data/<run>/` stay as they are.
+
+Tests: `tests/test_make_site.py` (written after the T22/T23 code, labelled so; all inputs under `tmp_path`, the
+renderers are fakes, no network).
