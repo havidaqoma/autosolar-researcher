@@ -34,3 +34,28 @@ lower load. No other load scale is tried after seeing these results; the four ca
 ## Results
 
 To be added after the runs, below this line, without editing the rules above.
+
+Steps 1 and 2 (measured, `runs/load_followups/`, copied to `docs/site/data/<run>/load_followup.json`):
+
+| Study | Follow-up run | Reproduced | Exit | Wall time |
+|---|---|---|---|---|
+| b4a44fc6d4c32339 (pre-registered) | followup-20261030T110813-24e132 | yes | 0 | 161 s |
+| 107477f112e5d92c (curated, post hoc) | followup-20261030T111050-ee43ba | yes | 0 | 152 s |
+
+`ledger/api_usage.jsonl` had 179 lines before and 179 after: no model call, USD 0 (measured).
+
+At the load the chart day implies (23.3% lower, computed), pre-registered study: diesel only 0.388 USD/kWh, least
+cost design 5,750 kWp + 15,000 kWh at 0.257 USD/kWh, 33.7% less (computed). The study's own design, 7,250 kWp +
+19,000 kWh, costs 0.286 USD/kWh at that load (computed). Curated study: 0.562 against 0.284, 49.4% less (computed).
+Diesel only does not win in any of the four cases on either study.
+
+Steps 3 and 4: both gallery entries got `load_followup`; `tools/make_site.py` built 6 pages and the index. Each page
+has one `fuel-price` section, one checked step, one "(study)" label and no `<script`. With the new section, its CSS
+and (on the two latest pages) the "If the chart is right" block cut out, all 6 pages are the same as the pages
+committed before, character for character (measured, scratch script).
+
+Step 5 (measured, local Chrome via Playwright, scratch script): on the page load the 0.85 (study) line shows; clicks
+on 0.20, 0.85 (study) and 1.60 each show one line, and each line starts with the clicked price and matches
+`fuel_price_steps`. At 0.20 the line says diesel only wins; at 1.60 it says the design sits on the edge of the grid.
+
+Result: PASS.

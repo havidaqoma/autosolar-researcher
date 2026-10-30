@@ -5,6 +5,7 @@
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261029T060800-acbbb2",
       "figure_check": "figure-20261029T053942-12137f",
+      "load_followup": "followup-20261030T111050-ee43ba",
       "note": "Curated inputs (post hoc). Latest build: 9 inputs in What moves the cost, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
     },
     {
@@ -12,6 +13,7 @@
       "paper": "paper-20261028T035325-b646fb",
       "review": null,
       "figure_check": "figure-20261029T053942-12137f",
+      "load_followup": "followup-20261030T110813-24e132",
       "note": "Pre-registered inputs. Latest build: 9 inputs in What moves the cost, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
     },
     {
