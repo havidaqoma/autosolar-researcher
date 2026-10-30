@@ -5,7 +5,7 @@
     {
       "site": "Karimunjawa",
       "key": "energy_per_day",
-      "item": "Energy sent out a day",
+      "item": "Electricity produced a day",
       "value": 8000.0,
       "decimals": 0,
       "unit": "kWh",
@@ -15,7 +15,7 @@
       "url": "https://www.kompas.id/artikel/warga-karimunjawa-butuh-tambahan-listrik",
       "quote": "Dalam sehari, PLTD mengonsumsi 4.000 liter solar dengan produksi listrik 8.000 kWh.",
       "compare": "energy_kwh_per_day",
-      "note": ""
+      "note": "produced, as the article says; it may be the main plant only, as the same article names two small rented units (500 and 350 kVA, press); grown at the paper's 3.48% a year (paper) to the study year it would be about 9,500 kWh, and the study 2.76 times that (computed)"
     },
     {
       "site": "Karimunjawa",
@@ -59,7 +59,7 @@
       "source": "detikFinance, Ini Pembangkit Listrik yang Terangi Karimunjawa 24 Jam",
       "url": "https://finance.detik.com/energi/d-3464813/ini-pembangkit-listrik-yang-terangi-karimunjawa-24-jam",
       "quote": "Setiap harinya, konsumsi solar PLTD Legon Bajak mencapai 4.000 liter.",
-      "compare": null,
+      "compare": "fuel_l_per_day",
       "note": "a second outlet, same figure"
     },
     {

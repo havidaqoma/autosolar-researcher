@@ -287,7 +287,7 @@ def test_engineer_doc_reproduced(frame_and_result):
 def test_field_constants():
     assert FIELD_NOTE_KEYS == ("site", "key", "item", "value", "decimals", "unit", "label", "date", "source", "url",
                                "quote", "compare", "note")
-    assert FIELD_COMPARES == ("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw")
+    assert FIELD_COMPARES == ("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw", "fuel_l_per_day")  # T22c
     assert FIELD_ASK_DEFAULT == "Field records for this input"
     assert set(FIELD_ASKS) == set(SENSITIVITY_LABELS)
     assert FIELD_ASKS["demand"] == "Metered hourly load for a full year, or at least monthly kWh sent out"
@@ -348,7 +348,9 @@ def test_confirm_section_engineering_question():
     sec = confirm_section(REPORT)
     text = ("An engineering question comes first: can the island grid run on batteries and inverters alone? The main "
             "design runs with no diesel for 7,302 hours a year (computed). If one diesel unit must run in every hour, "
-            "the main design costs 0.414 USD/kWh, more than diesel only at 0.354 USD/kWh (computed).")
+            "the main design costs 0.414 USD/kWh, more than diesel only at 0.354 USD/kWh (computed). Under that "
+            "rule the least cost design is 1,500 kWp and 1,000 kWh at 0.336 USD/kWh, below diesel only (computed; "
+            "see How firm is the answer).")  # second sentence: T22c, updated after the code
     assert '<p class="ask">' + esc(text) + "</p>" in sec
 
 
@@ -443,13 +445,17 @@ def test_confirm_section_field_notes():
     rows = [_cells(r) for r in _rows(part, after="<h3>Public field figures for this site</h3>")]
     assert len(rows) == 5
     energy, fuel, peak, perday, units = rows
-    assert energy[0] == "Energy sent out a day" and energy[1] == "8,000 kWh (press)"
+    # T22c (updated after the code): item name, note, per-day compare and fuel wording
+    assert energy[0] == "Electricity produced a day"
+    assert energy[1] == esc("8,000 kWh (press); " + KARI[0]["note"])
+    assert "about 9,500 kWh, and the study 2.76 times that (computed)" in KARI[0]["note"]
     assert energy[4] == "26,214 kWh a day (computed)" and energy[5] == "3.28x"
     assert energy[3] == esc(KARI[0]["source"] + ': "' + KARI[0]["quote"] + '" ' + KARI[0]["url"])
     assert fuel[1] == "0.50 L/kWh (press); 4,000 L for 8,000 kWh a day, in the same sentence"
-    assert fuel[4] == "0.382 L/kWh, diesel only (computed)" and fuel[5] == "0.76x"
+    assert fuel[4] == "0.382 L/kWh, diesel only, idle fuel included (computed)" and fuel[5] == "0.76x"
     assert peak[1] == "612 kW (press)" and peak[4] == "1,422 kW (paper)" and peak[5] == "2.32x"
-    assert perday[4] == "" and perday[5] == "" and perday[2] == "4 April 2017"
+    assert perday[4] == "10,010 L a day, diesel only (computed)" and perday[5] == "2.50x"
+    assert perday[2] == "4 April 2017"
     assert units[1] == "2.5 MW each, 2 units (press); the study runs 2 x 1.8 MW and checks 2 x 2.7 MW, both from " \
                        "the paper"
 
@@ -589,3 +595,45 @@ def test_tool_writes_lf_ascii_bytes(tmp_path):
 def test_tool_has_no_write_text():
     src = (ROOT / "tools" / "engineer_files.py").read_text(encoding="ascii")
     assert "write_text(" not in src and src.count("write_ascii_lf(") >= 4
+
+
+# ---------- T22c (added after the T22 code, labelled so) ----------
+
+def _without(report, keys):
+    rep = copy.deepcopy(report)
+    rep["firmness"]["items"] = [i for i in rep["firmness"]["items"] if i["key"] not in keys]
+    return rep
+
+
+def test_confirm_question_least_cost_under_rule():
+    first = ("If one diesel unit must run in every hour, the main design costs 0.414 USD/kWh, more than diesel only "
+             "at 0.354 USD/kWh (computed).")
+    tail = (" Under that rule the least cost design is 1,500 kWp and 1,000 kWh at 0.336 USD/kWh, below diesel only "
+            "(computed; see How firm is the answer).")
+    assert esc(first + tail) in confirm_section(REPORT)
+    for key in ("reserve_pv_kwp", "reserve_battery_kwh", "reserve_lcoe_usd_per_kwh"):
+        sec = confirm_section(_without(REPORT, {key}))
+        assert esc(first) + "</p>" in sec and "Under that rule" not in sec
+    rep = copy.deepcopy(REPORT)
+    for item in rep["firmness"]["items"]:
+        if item["key"] == "reserve_lcoe_usd_per_kwh":
+            item["value"] = 0.40
+    assert "at 0.400 USD/kWh, not below diesel only (computed; see How firm is the answer)." in confirm_section(rep)
+    for bad in (float("nan"), None, "0.3", True):
+        rep = copy.deepcopy(REPORT)
+        for item in rep["firmness"]["items"]:
+            if item["key"] == "reserve_pv_kwp":
+                item["value"] = bad
+        sec = confirm_section(rep)
+        assert "Under that rule" not in sec and esc(first) in sec
+
+
+def test_field_fuel_per_day():
+    note = copy.deepcopy(KARI[3])
+    assert note["compare"] == "fuel_l_per_day"
+    sec = confirm_section(REPORT, field_notes=[note])
+    part = sec[sec.index("<h3>Public field figures for this site</h3>"):]
+    row = _cells(_rows(part, after="<h3>Public field figures for this site</h3>")[0])
+    per_day = REPORT["facts"]["diesel_only_fuel_l_yr"]["value"] / 365.0
+    assert row[4] == format(per_day, ",.0f") + " L a day, diesel only (computed)"
+    assert row[5] == format(per_day / 4000.0, ",.2f") + "x"

@@ -450,14 +450,15 @@ def test_resources_section_text():
     heads = re.findall(r"<th>(.*?)</th>", sec)
     assert heads[:4] == ["Resource", "Public data", "Screen reading", "Next check"]
     sun, wind, hydro, grid = _rows_after(sec, "<h2>")
-    assert sun == ["Sun", "PV output 4.05 kWh/kWp a day, 1,478 a year (Global Solar Atlas, measured)",
+    assert sun == ["Sun", "PV output 4.05 kWh/kWp a day, 1,478 a year (Global Solar Atlas, a Solargis model; docs)",
                    "World Bank band: favorable middle range (docs); worth a closer look", "Costed on this page"]
     w = doc["wind"]
     assert wind == ["Wind", esc("Mean 4.40 m/s and %s W/m2 at 50 m, hourly 2016 to 2024 (NASA POWER, coarse MERRA-2 "
                                 "grid; computed)" % format(w["power_density_w_m2"], ",.0f")),
                     "Class 1, Poor, on the NREL scale (docs); not on this screen",
                     "Global Wind Atlas or a mast on site; a coarse grid can miss local wind"]
-    assert hydro == ["Hydro", "3 river and 2 stream lines mapped within 10 km (OpenStreetMap, measured)",
+    assert hydro == ["Hydro", "3 river and 2 stream lines mapped within 10 km, nearby islands included "
+                              "(OpenStreetMap, measured)",  # T22c wording, updated after the code
                      "check flow and head on site", "Flow and head from a field survey"]
     km = format(doc["grid"]["nearest"]["km"], ",.0f")
     assert grid == ["Grid link", "Nearest town or city on the map: Mlonggo (town), %s km in a straight line "
@@ -482,7 +483,7 @@ def test_resources_section_no_place_and_no_river():
     doc["grid"]["nearest"] = None
     sec = resources_section(REPORT, doc)
     assert "No town or city on the map within 150 km" in sec
-    assert "0 river and 0 stream lines mapped within 10 km" in sec
+    assert "0 river and 0 stream lines mapped within 10 km, nearby islands included" in sec
 
 
 def test_page_places_resources_after_confirm():

@@ -228,3 +228,36 @@ Tests: `test_tool_writes_lf_ascii_bytes` and `test_tool_has_no_write_text` in `t
 one that passed: the HOMER file not rotated to local midnight, because the test load repeats every day. A test with
 a load that never repeats was added after the code (labelled so in the test file); it fails on that fault and passes
 on the build. Script: kept with the build files.
+
+## T22c: wording after an outside review (added after the code)
+
+An outside review (DeepSeek, Friday 30 Oct) found four places where the page says less than it knows, or more.
+Builder edits `autosolar/site.py` only. Every other line of T22 and T23 stays in force.
+
+1. `_confirm_question`: when the firmness items `reserve_pv_kwp`, `reserve_battery_kwh` and
+   `reserve_lcoe_usd_per_kwh` are all present with finite real values, append one sentence after the existing
+   text, inside the same `<p class="ask">`: `" Under that rule the least cost design is " + fmt(P, 0) + " kWp and "
+   + fmt(B, 0) + " kWh at " + fmt(L, 3) + " USD/kWh, " + W + " diesel only (computed; see How firm is the
+   answer)."` where `W` is `"below"` when `L < diesel only LCOE` and `"not below"` otherwise. When any of the three
+   is missing or not a finite real, the sentence is left out and the rest stays as it is. Why: the first sentence
+   alone reads as "solar loses"; the same rule's least cost design still beats diesel in the example (0.336
+   against 0.354).
+2. `FIELD_COMPARES` becomes `("energy_kwh_per_day", "fuel_l_per_kwh", "peak_kw", "fuel_l_per_day")`. For
+   `"fuel_l_per_day"` the "This study" cell is `fmt(facts["diesel_only_fuel_l_yr"]["value"] / 365.0, 0) + " L a
+   day, diesel only (computed)"`, and "Study / public" is the study value over the public value, as for the
+   others. Why: the cell was blank, and the daily fuel (2.50 times the press figure) belongs next to the litres per
+   kWh (0.76 times).
+3. For `"fuel_l_per_kwh"` the "This study" cell becomes `fmt(value, 3) + " L/kWh, diesel only, idle fuel included
+   (computed)"`. Why: the inputs table shows the fuel curve at 0.25 L/kWh; the field row shows the year's litres
+   over the year's kWh, which also counts idle fuel and part load.
+4. Two strings in `resources_section` (T23): the sun cell ends `"(Global Solar Atlas, a Solargis model; docs)"`
+   instead of `"(Global Solar Atlas, measured)"`, because PVOUT is a model output; the hydro cell reads
+   `"<n> river and <m> stream lines mapped within <r> km, nearby islands included (OpenStreetMap, measured)"`,
+   because a 10 km circle reaches the neighbouring islands.
+
+Config (orchestrator, same commit as this section): in `config/field_notes.json` the first item becomes
+"Electricity produced a day", with a note on what the article covers and the figure grown to the study year, and
+the "Diesel fuel a day" item compares with `"fuel_l_per_day"`.
+
+Tests: the T22 and T23 tests that pin these strings were updated after the code, labelled so, plus
+`test_confirm_question_least_cost_under_rule` and `test_field_fuel_per_day`.
