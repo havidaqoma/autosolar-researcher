@@ -402,3 +402,26 @@ the values are marked post hoc everywhere and the first study stays as it is.
   made no model call. One panel search for the diesel minimum load: checked at 0.3 with votes local yes, local
   yes, Wonder yes (USD 0.046, measured). Neither output is used by a study.
 - Spend so far (ledgers): API USD 3.32, Muse Code USD 0.56, all Meta USD 3.88.
+
+## T20 and T21: if the chart is right, and other diesel prices (Friday 30 Oct)
+
+- Why: AI judge round 2 said the report is static (no what-if), the headline rests on a load the load check finds
+  about 30% too high, and no case shows the checks saying no. Havid chose all three fixes.
+- T20 order: spec `docs/specs/T20_load_followup.md` and `tests/test_load_followup.py` committed first (red), Muse
+  Code build (63 of 63, 1,046 s, USD 0.035), planted faults 21 of 22 (the other is stopped by `dispatch_grid`),
+  smoke rules `docs/smoke/T20_T21_SMOKE_RULES.md` committed before the runs.
+- T20 runs: both studies gave back their own numbers first, then: example study at the chart day load (23.3% lower)
+  5,750 kWp and 15,000 kWh at 0.257 USD/kWh against 0.388 for diesel only (33.7% less); curated run 49.4% less
+  (computed). No model call; `ledger/api_usage.jsonl` stayed at 179 lines (measured). Post hoc, shown in the load
+  check section only; the headline is unchanged.
+- T21: the fuel price never enters the dispatch, so each design's litres are fixed and its cost is a straight line
+  in the price. The page re-costs all 925 designs at 16 prices and picks the least cost one with the study's own
+  rule; at 0.8 and 1.2 times the study price it gives the sensitivity table's rows exactly. CSS radio buttons, no
+  script. Spec and tests first (tests passed on a throwaway reference in scratch before Muse ran); Muse Code build
+  44 of 44 (915 s, USD 0.017); planted faults 10 of 11, so one test was added after the code (battery edge alone),
+  then 11 of 11.
+- Site: 6 pages rebuilt. With the new parts cut out, every page equals the page committed before (measured). Click
+  check in local Chrome: one line shows per price and matches the function.
+- README: "When the checks say no" (USD 192/kWh battery price refused, 50 USD/kWh/yr upkeep outside 0.5 to 30, HTTP
+  403 then a second search) and the Syah et al. Karimunjawa comparison, 0.263 USD/kWh with wind (paper, abstract).
+- Full suite 1,563 of 1,563 (measured). Spend so far (ledgers): API USD 3.32, Muse Code USD 0.61, all Meta USD 3.93.

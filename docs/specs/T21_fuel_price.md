@@ -109,3 +109,12 @@ page stays as it was.
 ## Acceptance
 
 `tests/test_fuel_price.py` passes, and the full suite still passes. Muse must not edit specs, tests or config.
+
+## Test record (added by the orchestrator after the build)
+
+- Before Muse Code ran, the 44 tests passed on a throwaway reference build in a scratch folder (never committed),
+  and the site and study tests still passed with it (265 tests).
+- Muse Code build: 44 of 44 pass (915 s, USD 0.017, measured, `ledger/build_usage.jsonl`).
+- Planted faults in `autosolar/site.py`: 10 of 11 caught at first. The missed one marked the grid edge by PV size
+  only. One test (`test_battery_edge_alone_counts`) was added after the code and is labelled so in the test file;
+  then 11 of 11 caught, 45 tests.

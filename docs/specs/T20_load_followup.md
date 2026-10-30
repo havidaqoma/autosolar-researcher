@@ -155,3 +155,11 @@ A gallery entry may hold `"load_followup": "<follow-up run id>"`. When present, 
 ## Acceptance
 
 `tests/test_load_followup.py` passes, and the full suite still passes. Muse must not edit specs, tests or config.
+
+## Test record (added by the orchestrator after the build)
+
+- The tests were red before the code (module not written). They were not run against a reference build first.
+- Muse Code build: 63 of 63 tests pass (1,046 s, USD 0.035, measured, `ledger/build_usage.jsonl`).
+- Planted faults in `autosolar/load_followup.py`, `autosolar/site.py` and `tools/load_followup.py`: 21 of 22
+  caught. The one that got through (a grid without 0 kWp allowed) is stopped by `dispatch_grid` itself, which
+  refuses a grid whose first value is not 0.
