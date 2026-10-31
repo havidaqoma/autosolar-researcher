@@ -1,0 +1,236 @@
+{
+ "Pulau Sebesi": {
+  "query": "Pulau Sebesi, Lampung, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Sebesi, Tejang Pulau Sebesi, Lampung Selatan, Lampung, Indonesia",
+    "lat": "-5.9461645",
+    "lon": "105.4900172",
+    "osm_type": "way",
+    "osm_id": 26929989,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-5.9716919",
+     "-5.9207133",
+     "105.4623100",
+     "105.5164638"
+    ]
+   }
+  ]
+ },
+ "Pulau Raas": {
+  "query": "Pulau Raas, Sumenep, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Raas, Jungkat, Sumenep, Jawa Timur, Indonesia",
+    "lat": "-7.1479533",
+    "lon": "114.5881710",
+    "osm_type": "relation",
+    "osm_id": 12569163,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-7.1662871",
+     "-7.1296002",
+     "114.4749051",
+     "114.6163836"
+    ]
+   }
+  ]
+ },
+ "Pulau Kangean": {
+  "query": "Pulau Kangean, Sumenep, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Kangean, Sumenep, Jawa Timur, Indonesia",
+    "lat": "-6.9196264",
+    "lon": "115.2733086",
+    "osm_type": "relation",
+    "osm_id": 12366906,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-7.0124141",
+     "-6.8268365",
+     "115.2036184",
+     "115.5758943"
+    ]
+   }
+  ]
+ },
+ "Pulau Sapudi": {
+  "query": "Pulau Sapudi, Sumenep, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Sapudi, Sokarame Paseser, Sumenep, Jawa Timur, Indonesia",
+    "lat": "-7.1185283",
+    "lon": "114.3304101",
+    "osm_type": "way",
+    "osm_id": 25718171,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-7.1817620",
+     "-7.0552078",
+     "114.2713255",
+     "114.4073135"
+    ]
+   }
+  ]
+ },
+ "Pulau Masalembu": {
+  "query": "Pulau Masalembu, Sumenep, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Masalembu, Masalima, Sumenep, Jawa Timur, Indonesia",
+    "lat": "-5.5612085",
+    "lon": "114.4228452",
+    "osm_type": "way",
+    "osm_id": 25718266,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-5.5901087",
+     "-5.5321534",
+     "114.3932292",
+     "114.4545767"
+    ]
+   }
+  ]
+ },
+ "Pulau Enggano": {
+  "query": "Pulau Enggano, Bengkulu, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Enggano, Bengkulu Utara, Bengkulu, Indonesia",
+    "lat": "-5.3978597",
+    "lon": "102.2748599",
+    "osm_type": "relation",
+    "osm_id": 9718597,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "-5.5144382",
+     "-5.2813060",
+     "102.0861482",
+     "102.3888585"
+    ]
+   }
+  ]
+ },
+ "Pulau Selayar": {
+  "query": "Pulau Selayar, Sulawesi Selatan, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "SD Negeri Pulau Pasi No. 37 dan SMP Negeri 23 Satap Kepulauan Selayar, Jalan Poros Pamatata - Benteng, Kappea, Bontosinde, Panaikang, Barat Lambongan, Bontomatene, Kepulauan Selayar, Sulawesi Selatan, Indonesia",
+    "lat": "-5.7541589",
+    "lon": "120.4853644",
+    "osm_type": "way",
+    "osm_id": 1336995308,
+    "category": "amenity",
+    "type": "school",
+    "addresstype": "amenity",
+    "boundingbox": [
+     "-5.7543994",
+     "-5.7538156",
+     "120.4851163",
+     "120.4856125"
+    ]
+   }
+  ]
+ },
+ "Pulau Derawan": {
+  "query": "Pulau Derawan, Berau, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Derawan, Berau, Kalimantan Timur, Indonesia",
+    "lat": "2.2841235",
+    "lon": "118.2435287",
+    "osm_type": "way",
+    "osm_id": 199616363,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "2.2817435",
+     "2.2868588",
+     "118.2393242",
+     "118.2482844"
+    ]
+   }
+  ]
+ },
+ "Pulau Serasan": {
+  "query": "Pulau Serasan, Natuna, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Serasan, Air Ringau, Natuna, Kepulauan Riau, Indonesia",
+    "lat": "2.5206575",
+    "lon": "109.0695574",
+    "osm_type": "relation",
+    "osm_id": 9370281,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "2.4808873",
+     "2.5604960",
+     "108.9747271",
+     "109.1210362"
+    ]
+   }
+  ]
+ },
+ "Pulau Balai": {
+  "query": "Pulau Balai, Aceh Singkil, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Pulau Balai, Pulaubalai, Pulau Banyak, Aceh Singkil, Aceh, Indonesia",
+    "lat": "2.3043027",
+    "lon": "97.4073977",
+    "osm_type": "way",
+    "osm_id": 27411674,
+    "category": "place",
+    "type": "island",
+    "addresstype": "island",
+    "boundingbox": [
+     "2.2946303",
+     "2.3140191",
+     "97.4023725",
+     "97.4128693"
+    ]
+   }
+  ]
+ },
+ "Benteng, Kepulauan Selayar": {
+  "query": "Benteng, Kepulauan Selayar, Indonesia",
+  "status": 200,
+  "results": [
+   {
+    "display_name": "Benteng, Kepulauan Selayar, Sulawesi Selatan, 92812, Indonesia",
+    "lat": "-6.1181824",
+    "lon": "120.4581329",
+    "addresstype": "town",
+    "type": "administrative"
+   }
+  ]
+ },
+ "_note": "OpenStreetMap Nominatim search results (top 3, trimmed), fetched once on 1 Nov 2026 MYT; data (c) OpenStreetMap contributors, ODbL. The Pulau Selayar query returned a school, so Selayar uses the town of Benteng."
+}

@@ -1,0 +1,171 @@
+{
+  "schema": "autosolar.island_list/1",
+  "note": "Fixed before the island screen ran (post hoc to the studies). A convenience list: each island was found by a name search for a diesel plant (PLTD) on it, and the quote was found in the page fetched by the product's own fetcher before this list was written. Not a sample of PLN's 741 sites. Coordinates: OpenStreetMap Nominatim, saved in config/island_screen_geocode.json. Only Karimunjawa has an hourly load, so only Karimunjawa is costed.",
+  "islands": [
+    {
+      "name": "Karimunjawa",
+      "region": "Jepara, Central Java",
+      "lat_deg": -5.879626,
+      "lon_deg": 110.432907,
+      "point": "Karimunjawa village, the same point as the study",
+      "diesel": {
+        "url": "https://en.antaranews.com/news/366409/pln-conducts-study-on-plts-development-in-karimunjawa",
+        "quote": "electricity in Karimunjawa is currently still supplied by a diesel power plant (PLTD) with a capacity of 2 x 2.5 megawatts (MW)",
+        "outlet": "ANTARA News",
+        "year": 2025,
+        "label": "press"
+      },
+      "study": "b4a44fc6d4c32339"
+    },
+    {
+      "name": "Sebesi",
+      "region": "Lampung Selatan, Lampung",
+      "lat_deg": -5.946165,
+      "lon_deg": 105.490017,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.antaranews.com/berita/661004/pln-tambah-daya-pltd-pulau-sebesi-lampung",
+        "quote": "PT PLN (Persero) menambah kapasitas daya pembangkit listrik tenaga diesel (PLTD) Pulau Sebesi di Kabupaten Lampung Selatan",
+        "outlet": "ANTARA News",
+        "year": 2017,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Raas",
+      "region": "Sumenep, East Java",
+      "lat_deg": -7.147953,
+      "lon_deg": 114.588171,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://news.detik.com/berita-jawa-timur/d-4804774/pltd-diresmikan-pulau-raas-sumenep-makin-terang-benderang",
+        "quote": "Gubernur Khofifah Indar Parawansa meresmikan pembangkit listrik tenaga diesel (PLTD) di Kepulauan Raas",
+        "outlet": "detikNews",
+        "year": 2019,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Kangean",
+      "region": "Sumenep, East Java",
+      "lat_deg": -6.919626,
+      "lon_deg": 115.273309,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://penamadura.com/pln-kangean-lakukan-pemadaman-bergilir-sampai-akhir-bulan-begini-alasannya/",
+        "quote": "mesin yang nyala ada 11 dari total 14 mesin PLTD yang dikelola ULP Kengean",
+        "outlet": "Pena Madura",
+        "year": 2024,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Sapudi",
+      "region": "Sumenep, East Java",
+      "lat_deg": -7.118528,
+      "lon_deg": 114.33041,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://swaindonesia.com/padam-listrik-di-pulau-sapudi-dikritisi-dprd/",
+        "quote": "pengelolaan pembangkit listrik tenaga diesel (PLTD) Sapudi",
+        "outlet": "SWA Indonesia",
+        "year": 2026,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Masalembu",
+      "region": "Sumenep, East Java",
+      "lat_deg": -5.561209,
+      "lon_deg": 114.422845,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://seputarmadura.com/sumenep/berita-sumenep/pengelolaan-pltd-masalembu-murni-swasta/",
+        "quote": "pengelolaan pembangkit listrik tenaga diesel (PLTD) di Kecamatan Kepulauan Masalembu",
+        "outlet": "Seputar Madura",
+        "year": 2017,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Enggano",
+      "region": "Bengkulu Utara, Bengkulu",
+      "lat_deg": -5.39786,
+      "lon_deg": 102.27486,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://bengkulu.antaranews.com/berita/438193/pln-bangun-plts-perkuat-sistem-kelistrikan-pulau-enggano",
+        "quote": "penguatan pembangkit listrik yang telah ada di Pulau Enggano, yakni pembangkit listrik tenaga diesel",
+        "outlet": "ANTARA Bengkulu",
+        "year": 2025,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Selayar",
+      "region": "Kepulauan Selayar, South Sulawesi",
+      "lat_deg": -6.118182,
+      "lon_deg": 120.458133,
+      "point": "Benteng, the main town of Selayar, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.beritasatu.com/network/selayarnews/625599/jaga-kedaulatan-energi-nasional-up-pltd-selayar-perkuat-sinergi-dengan-pemda-dan-media-bahas-isu-kelistrikan",
+        "quote": "unit pembangkit pusat listrik tenaga diesel (UP PLTD) Selayar",
+        "outlet": "Beritasatu",
+        "year": 2025,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Derawan",
+      "region": "Berau, East Kalimantan",
+      "lat_deg": 2.284124,
+      "lon_deg": 118.243529,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://kaltim.antaranews.com/berita/168061/pln-dukung-kelestarian-melalui-pemasangan-plts-di-pulau-derawan",
+        "quote": "Sejak 1992, PLN telah melistriki Derawan dengan menggunakan pembangkit listrik tenaga diesel (PLTD)",
+        "outlet": "ANTARA Kaltim",
+        "year": 2022,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Serasan",
+      "region": "Natuna, Riau Islands",
+      "lat_deg": 2.520657,
+      "lon_deg": 109.069557,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://kepri.antaranews.com/berita/231785/pln-kirim-2-pltd-ke-pulau-serasan-di-natuna-atasi-krisis-listrik",
+        "quote": "PT PLN mengirim dua unit pembangkit listrik tenaga diesel (PLTD) dari Tanjungpinang ke Pulau Serasan",
+        "outlet": "ANTARA Kepri",
+        "year": 2025,
+        "label": "press"
+      },
+      "study": null
+    },
+    {
+      "name": "Balai",
+      "region": "Pulau Banyak, Aceh Singkil, Aceh",
+      "lat_deg": 2.304303,
+      "lon_deg": 97.407398,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.kontrasaceh.net/2025/07/28/menembus-batas-negeri-pln-pastikan-pulau-terluar-aceh-terlistriki-jelang-hut-ri-ke-80/",
+        "quote": "dua pembangkit listrik tenaga diesel (PLTD) di Pulau Balai dan Pulau Haloban",
+        "outlet": "Kontras Aceh",
+        "year": 2025,
+        "label": "press"
+      },
+      "study": null
+    }
+  ]
+}
