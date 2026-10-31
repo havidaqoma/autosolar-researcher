@@ -275,8 +275,9 @@ def test_page_basics():
     assert "<title>AutoSolar Researcher: island screen</title>" in html
     assert 'href="index.html"' in html
     assert "Which diesel islands could use solar or wind? A first screen of 2 islands" in html
-    assert ("2 islands are named in a news article as running a diesel plant; the tool found the quote in the "
-            "fetched page for 1. Fully screened: 1. Costed: 1 (Alpha), the only island with an hourly load.") in html
+    assert ("The list names 2 islands, each with a news article that says it has a diesel plant (PLTD); the tool "  # T24c
+            "found the quote in the fetched page for 1. Fully screened: 1. Costed: 1 (Alpha), the only island with an "
+            "hourly load.") in html
     assert esc(I.NOTE) in html
     assert 'viewBox="0 0 960 360"' in html
 
@@ -291,12 +292,12 @@ def test_page_table_and_map():
     assert len(re.findall(r"<circle", html)) == 2
     assert len(re.findall(r'<circle[^>]*class="costed"', html)) == 1
     assert len(re.findall(r'<circle[^>]*class="island"', html)) == 1
-    assert '<a href="' + HASH + '.html">yes: study ' + HASH + "</a>" in html
+    assert '<a href="' + HASH + '.html">yes: open the full study</a> (run ' + HASH + ")" in html  # T24c
     assert I.NOT_COSTED in html
     assert "4.05, " in html                      # 1478.25 / 365 = 4.05
     assert "4.44 m/s, 91 W/m2, class 1 (Poor)" in html
     assert "1 river, 2 streams" in html            # T24b: was "1 rivers"
-    assert "Mlonggo (town), 78 km" in html
+    assert "Mlonggo (town), 78 km in a straight line<" in html   # T24c
     assert I.NOT_FETCHED in html                 # Beta has no wind
     assert I.QUOTE_MISSING in html
     assert '<a href="https://example.org/news/1">Example News 2025</a>' in html
@@ -424,7 +425,7 @@ def test_t24b_page():
     assert '<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">' in html
     answer = '<p class="answer"><b>' + esc(I.answer_line(rows)) + "</b></p>"
     assert answer in html
-    assert html.index("5 islands are named") < html.index(answer) < html.index(esc(I.NOTE))
+    assert html.index("The list names 5 islands") < html.index(answer) < html.index(esc(I.NOTE))  # T24c
     assert re.findall(r"<th[^>]*>(.*?)</th>", html)[-1] == "Screen says"
     assert esc(I.verdict_text(rows[0])) in html
     assert html.count("<td>" + I.NOT_FETCHED + "</td>") >= 2          # D: wind cell and its verdict cell
@@ -442,3 +443,56 @@ def test_t24b_page_merged_labels_and_plurals():
     texts = re.findall(r"<text[^>]*>(.*?)</text>", html)
     assert texts == ["Raas, Kangean, Sapudi"]
     assert "0 rivers, 1 stream<" in html
+
+
+# ---------- T24c (written before the T24c code) ----------
+
+def test_t24c_note_and_rule():
+    assert I.NOTE == (
+        "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island is "
+        "named in a news article as having a diesel plant (PLTD), and the tool checks the quote in the page it "
+        "fetches; a found quote shows the words are on the page, not that the plant runs today. Only Karimunjawa has "
+        "an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a first screen from free public "
+        "data, not a resource assessment; nothing here costs wind, hydro or a grid link, and the nearest town is not "
+        "a grid connection.")
+    assert I.SCREEN_RULE == (
+        "Screen rule (assumed): solar is worth a closer look at 3.5 kWh/kWp a day or more, the lower bound of the "
+        "World Bank's favorable range; wind at class 3 or more on the NREL scale at 50 m (class 1, Poor, is the "
+        "lowest); hydro needs at least one mapped river within 10 km (streams are listed but not counted), and then "
+        "flow and head decide.")
+    from autosolar import resources as RS
+    assert "at %.1f kWh/kWp a day" % RS.SOLAR_LOOK_KWH_PER_KWP_DAY in I.SCREEN_RULE
+    assert "class %d or more" % RS.WIND_LOOK_CLASS in I.SCREEN_RULE
+    assert "within %.0f km" % RS.WATER_RADIUS_KM in I.SCREEN_RULE
+
+
+def test_t24c_page_order_and_footer():
+    rows = _verdict_rows()
+    doc = I.island_screen_doc(rows, run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+    html = I.render_islands_html(doc)
+    answer = '<p class="answer"><b>' + esc(I.answer_line(rows)) + "</b></p>"
+    rule = "<p>" + esc(I.SCREEN_RULE) + "</p>"
+    assert html.count(rule) == 1
+    assert html.index(answer) < html.index(rule) < html.index(esc(I.NOTE))
+    assert ("Rivers and towns: OpenStreetMap, counts of mapped features (measured); town distance in a straight line "
+            "from the island point (computed). Coordinates: OpenStreetMap Nominatim.") in html
+    assert "running a diesel plant" not in html
+
+
+def test_t24c_town_cell_zero_km():
+    def town_html(km):
+        row = _row(place={"name": "Benteng", "place": "town", "km": km})
+        doc = I.island_screen_doc([row], run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+        return I.render_islands_html(doc)
+    assert "Benteng (town), 0 km in a straight line; the island point is in this town<" in town_html(0.3)
+    assert "Benteng (town), 0 km in a straight line; the island point is in this town<" in town_html(0.0)
+    html = town_html(0.6)
+    assert "Benteng (town), 1 km in a straight line<" in html and "the island point is in this town" not in html
+
+
+def test_t24c_not_costed_row_unchanged():
+    row = _row(_isl_at("Q", -5.0, 112.0))
+    assert row["costed"] == I.NOT_COSTED
+    doc = I.island_screen_doc([row], run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+    html = I.render_islands_html(doc)
+    assert "<td>" + esc(I.NOT_COSTED) + "</td>" in html and "open the full study" not in html
