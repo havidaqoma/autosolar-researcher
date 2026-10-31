@@ -111,10 +111,12 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
 | Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last two tasks: 23 of 24 and 22 of 23; for each, one test was added after the code, then all caught; computed) |
 
 - Checks: 1,688 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+  Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
+  `docs/smoke/FRESH_RERUN.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
 - Cost: Muse Code USD 0.72 (47 runs, 5.1 hours; it read 64 million tokens, 93% from cache, and wrote 0.79
-  million). Meta Model API USD 3.32 (179 calls, 451 web searches). USD 4.04 in all (measured ledgers).
+  million). Meta Model API USD 3.32 (181 calls, 451 web searches). USD 4.04 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
@@ -327,7 +329,8 @@ answers for sites within 30 km of the island; other sites are refused rather tha
 
 - `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.32, including
   smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge,
-  one load check, one smoke search with the judge panel and one refused question.
+  one load check, one smoke search with the judge panel, one refused question and two question parses for the
+  fresh re-run (`docs/smoke/FRESH_RERUN.md`).
 - `ledger/build_usage.jsonl`: 47 Muse Code runs (43 that wrote the product, 4 sandbox smoke runs), USD 0.72 and
   5.1 hours in total. Muse Code read 64.4 million input tokens (93% from cache) and wrote 0.79 million output
   tokens.
