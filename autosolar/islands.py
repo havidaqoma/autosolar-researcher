@@ -10,6 +10,8 @@ import math
 
 from autosolar.cite_check import find_quote
 from autosolar.resources import (
+    HYDRO_CHECK,
+    LOOK,
     PLACE_RADIUS_KM,
     SOURCES as RESOURCE_SOURCES,
     WATER_RADIUS_KM,
@@ -54,8 +56,15 @@ _FOOTER = (
     "(measured). Coordinates: OpenStreetMap Nominatim. Land outline: Natural Earth (public domain). Diesel: press, "
     "quote re-checked by the tool."
 )
+LABEL_MERGE_PX = 20.0
+MAP_CSS = ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"
+           "path.land{fill:#efe9da;stroke:#b8ad94;stroke-width:0.6}"
+           "circle.island{fill:#1a4f9c;stroke:#ffffff;stroke-width:1.5}"
+           "circle.costed{fill:#d9822b;stroke:#000000;stroke-width:1.5}"
+           "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}")
 _HEADS = ("Island", "Diesel plant named in", "Sun (kWh/kWp a day)", "Wind at 50 m",
-          "Rivers and streams within 10 km", "Nearest mapped town", "Costed here?")
+          "Rivers and streams within 10 km", "Nearest mapped town", "Costed here?",
+          "Screen says")
 
 
 def _finite_real(name_str: str, value: object) -> float:
@@ -392,7 +401,74 @@ def _hydro_cell(row: dict) -> str:
     hydro = row.get("hydro")
     if hydro is None:
         return esc(NOT_FETCHED)
-    return esc("%d rivers, %d streams" % (int(hydro["river"]), int(hydro["stream"])))
+    rivers_n = int(hydro["river"])
+    streams_n = int(hydro["stream"])
+    river_txt = "1 river" if rivers_n == 1 else "%d rivers" % rivers_n
+    stream_txt = "1 stream" if streams_n == 1 else "%d streams" % streams_n
+    return esc(river_txt + ", " + stream_txt)
+
+
+def answer_line(rows: list) -> str:
+    """One line verdict counts for a screen. Counts are ints. Returns str."""
+    if not isinstance(rows, list):
+        raise ValueError("rows must be a list: " + repr(rows))
+    screened = [r for r in rows if isinstance(r, dict) and isinstance(r.get("verdicts"), dict)]
+    if not screened:
+        return "No island has every part fetched, so the screen gives no verdict."
+    solar_n = sum(1 for r in screened if r["verdicts"].get("solar") == LOOK)
+    wind_n = sum(1 for r in screened if r["verdicts"].get("wind") == LOOK)
+    hydro_n = sum(1 for r in screened if r["verdicts"].get("hydro") == HYDRO_CHECK)
+    return ("On this screen, of the %d islands with every part fetched: "
+            "solar is worth a closer look on %d, wind at 50 m on %d, and %d have a "
+            "mapped river to check for flow and head on site."
+            % (len(screened), int(solar_n), int(wind_n), int(hydro_n)))
+
+
+def verdict_text(row: dict) -> str:
+    """Verdict words for one row. Returns str."""
+    if not isinstance(row, dict):
+        raise ValueError("row must be a dict")
+    verdicts = row.get("verdicts")
+    if verdicts is None:
+        return NOT_FETCHED
+    return ("solar: " + str(verdicts["solar"]) + "; wind: " + str(verdicts["wind"])
+            + "; hydro: " + str(verdicts["hydro"]))
+
+
+def label_groups(rows: list) -> list:
+    """Label groups for close dots. Positions in px. Returns dicts."""
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("rows must be a non-empty list")
+    dots_px: list[tuple] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("rows must hold dicts")
+        dots_px.append(map_xy(row["lat_deg"], row["lon_deg"]))
+    names: list[str] = [str(r["name"]) for r in rows]
+    group_idx: list[int] = []
+    groups: list[dict] = []
+    members: list[list[int]] = []
+    for i in range(len(rows)):
+        placed = None
+        for j in range(i):
+            dx_px = float(dots_px[i][0]) - float(dots_px[j][0])
+            dy_px = float(dots_px[i][1]) - float(dots_px[j][1])
+            if (dx_px * dx_px + dy_px * dy_px) ** 0.5 <= LABEL_MERGE_PX:
+                placed = group_idx[j]
+                break
+        if placed is None:
+            placed = len(groups)
+            groups.append({})
+            members.append([])
+        group_idx.append(placed)
+        members[placed].append(i)
+    out: list[dict] = []
+    for idx_list in members:
+        top_x_px = max(float(dots_px[i][0]) for i in idx_list) + 7.0
+        first_y_px = float(dots_px[idx_list[0]][1]) + 4.0
+        out.append({"names": [names[i] for i in idx_list],
+                    "x": round(top_x_px, 2), "y": round(first_y_px, 2)})
+    return out
 
 
 def _town_cell(row: dict) -> str:
@@ -431,9 +507,9 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     num = int(counts["islands"])
     costed_names = [str(r["name"]) for r in rows
                     if isinstance(r.get("costed"), str) and str(r["costed"]).startswith("yes")]
-    parts = ["<!DOCTYPE html>", '<html><head><meta charset="ascii">',
+    parts = ["<!DOCTYPE html>", '<html><head><meta charset="utf-8">',
              "<title>AutoSolar Researcher: island screen</title>",
-             "<style>" + SITE_CSS + "</style></head><body>"]
+             "<style>" + SITE_CSS + MAP_CSS + "</style></head><body>"]
     parts.append('<p><a href="index.html">back to gallery</a></p>')
     parts.append("<h1>" + esc("Which diesel islands could use solar or wind? A first screen of "
                               "%d islands" % num) + "</h1>")
@@ -443,8 +519,9 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
                              % (num, int(counts["diesel_quote_found"]),
                                 int(counts["fully_screened"]), int(counts["costed"]),
                                 ", ".join(costed_names))) + "</p>")
+    parts.append('<p class="answer"><b>' + esc(answer_line(rows)) + "</b></p>")
     parts.append("<p>" + esc(str(doc.get("note", NOTE))) + "</p>")
-    svg = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">']
+    svg = ['<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">']
     if land:
         for ring in land:
             if not ring:
@@ -461,8 +538,10 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
         x, y = map_xy(float(row["lat_deg"]), float(row["lon_deg"]))
         cls = "costed" if str(row.get("costed", "")).startswith("yes") else "island"
         svg.append('<circle class="%s" cx="%.2f" cy="%.2f" r="5"></circle>' % (cls, x, y))
+    for group in label_groups(rows):
         svg.append('<text x="%.2f" y="%.2f" font-size="11">%s</text>'
-                   % (x + 7.0, y + 4.0, esc(str(row["name"]))))
+                   % (float(group["x"]), float(group["y"]),
+                      esc(", ".join(str(n) for n in group["names"]))))
     svg.append("</svg>")
     parts.append("".join(svg))
     table = ["<table><tr>"]
@@ -483,6 +562,7 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
         table.append("<td>" + _hydro_cell(row) + "</td>")
         table.append("<td>" + _town_cell(row) + "</td>")
         table.append("<td>" + _costed_cell(row) + "</td>")
+        table.append("<td>" + esc(verdict_text(row)) + "</td>")
         table.append("</tr>")
     table.append("</table>")
     parts.append("".join(table))
