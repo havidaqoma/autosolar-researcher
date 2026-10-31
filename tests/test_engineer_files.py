@@ -540,7 +540,9 @@ def test_page_with_notes_and_files():
 
 def test_page_otherwise_unchanged_from_committed_page():
     committed = (ROOT / "docs" / "site" / "b4a44fc6d4c32339.html").read_text(encoding="ascii")
-    new = _page(field_notes=KARI, engineer_files=_files_doc())
+    # Changed after consult round 1 (Sat 31 Oct): config/gallery.json now sets a Muse Wonder review for this study,
+    # and tools/make_site.py renders the committed page with that review, so this page is rendered with it too.
+    new = _page(field_notes=KARI, engineer_files=_files_doc(), review=_load_json("review.json"))
     for sid in ("confirm", "resources"):
         committed = _cut(committed, sid)
         new = _cut(new, sid)
