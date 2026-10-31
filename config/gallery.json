@@ -21,6 +21,13 @@
       "note": "The entry, second run: same engine, 7 inputs curated by hand after seeing results (post hoc). Same sections as the first. Judge: local model twice, then Muse Wonder."
     },
     {
+      "page": "islands.html",
+      "title": "11 diesel islands: a first screen (post hoc)",
+      "question": "Which diesel islands could use solar or wind?",
+      "text": "Sun, wind, rivers and the nearest town for 11 islands named in the press as running a diesel plant. Only Karimunjawa is costed: it is the only island with an hourly load.",
+      "run": "islands-20261101T004038-b71f2f"
+    },
+    {
       "run": "5ee65dcd3350bec1",
       "paper": "paper-20261028T035325-b646fb",
       "review": null,

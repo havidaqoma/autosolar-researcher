@@ -486,3 +486,24 @@ the values are marked post hoc everywhere and the first study stays as it is.
   quotes are in the study and paper check files; the other is its own product of two of them (249 x 12 = 2,988,
   computed). Only the example page changed, by the new review section (measured).
 - Spend so far (ledgers): API USD 3.54 (182 calls), Muse Code USD 0.72, all Meta USD 4.26.
+
+## T24 and T24b: island screen (Sun 1 Nov, after midnight)
+
+- Why: all six outside consultants ranked a many-island screen as worth doing only if it stays honest: no cost
+  column without an hourly load, and never "distance to grid" (the tool measures the nearest mapped town).
+- The list (`config/island_screen.json`) was fixed before the screen ran: 11 islands found by searching the news for
+  a diesel plant (PLTD) on each, with each quote checked in the page by `cite_check.fetch_source` and `find_quote`
+  first (11 of 11 found). Coordinates from OpenStreetMap Nominatim (saved, `config/island_screen_geocode.json`); the
+  Pulau Selayar query returned a school, so Selayar uses the town of Benteng. Land outline: Natural Earth 1:50m.
+- T24 spec and tests first (3aaf78f), then Muse Code (311 s, USD 0.021). Planted faults on its build: 25 of 26
+  caught; the miss (verdict read from streams) was closed by a test added after the code, then 26 of 26.
+- First real run: 1,151 s; two river lookups (Masalembu, Balai) hit map server timeouts and the record says so.
+  A second run fetched only those two (69 s); a third from the cache with no network gave the same rows and files
+  (4.7 s). All measured.
+- The first render read: SVG fills default to black and SITE_CSS sets none; three islands off Madura sit within
+  20 px and their labels overlapped; "1 rivers"; and the page computed verdicts it never showed. A colour fix was
+  first written by hand, then reverted so `autosolar/` stays Muse Code's, and T24b asked for all four (spec and
+  tests first, 12c6549; Muse Code 150 s, USD 0.011; 10 of 10 planted faults caught).
+- Result (computed): solar worth a closer look on 11 of 11 (3.59 to 4.50 kWh/kWp a day), wind at 50 m on 0 (all
+  class 1), 4 with a mapped river within 10 km. Only Karimunjawa is costed. The Karimunjawa row gives back the T23
+  single site values.

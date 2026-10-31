@@ -1,0 +1,570 @@
+{
+  "schema": "autosolar.island_screen/1",
+  "run_id": "islands-20261101T004038-b71f2f",
+  "list_sha256": "ed3e7c1e7dbd20874904bb3e7ad0ce6e39873cb7baeb7b2ecea91d83ac80e7be",
+  "note": "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island is named in a news article as running a diesel plant (PLTD), and the tool checks the quote in the page it fetches. Only Karimunjawa has an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a first screen from free public data, not a resource assessment; nothing here costs wind, hydro or a grid link, and the nearest town is not a grid connection.",
+  "counts": {
+    "islands": 11,
+    "diesel_quote_found": 11,
+    "fully_screened": 11,
+    "costed": 1
+  },
+  "rows": [
+    {
+      "name": "Karimunjawa",
+      "region": "Jepara, Central Java",
+      "lat_deg": -5.879626,
+      "lon_deg": 110.432907,
+      "point": "Karimunjawa village, the same point as the study",
+      "diesel": {
+        "url": "https://en.antaranews.com/news/366409/pln-conducts-study-on-plts-development-in-karimunjawa",
+        "quote": "electricity in Karimunjawa is currently still supplied by a diesel power plant (PLTD) with a capacity of 2 x 2.5 megawatts (MW)",
+        "outlet": "ANTARA News",
+        "year": 2025,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1477.524169921875,
+        "pvout_kwh_per_kwp_day": 4.0480114244434935,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.436337819343065,
+        "power_density_w_m2": 90.7657291259873,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 1,
+        "stream": 2
+      },
+      "nearest_town": {
+        "name": "Mlonggo",
+        "place": "town",
+        "km": 78.17511047194662
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "check flow and head on site"
+      },
+      "costed": "yes: study b4a44fc6d4c32339",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Sebesi",
+      "region": "Lampung Selatan, Lampung",
+      "lat_deg": -5.946165,
+      "lon_deg": 105.490017,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.antaranews.com/berita/661004/pln-tambah-daya-pltd-pulau-sebesi-lampung",
+        "quote": "PT PLN (Persero) menambah kapasitas daya pembangkit listrik tenaga diesel (PLTD) Pulau Sebesi di Kabupaten Lampung Selatan",
+        "outlet": "ANTARA News",
+        "year": 2017,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1504.66943359375,
+        "pvout_kwh_per_kwp_day": 4.12238200984589,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 3.8461861313868613,
+        "power_density_w_m2": 58.71555514626978,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 2
+      },
+      "nearest_town": {
+        "name": "Kalianda",
+        "place": "city",
+        "km": 25.992529908383005
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Raas",
+      "region": "Sumenep, East Java",
+      "lat_deg": -7.147953,
+      "lon_deg": 114.588171,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://news.detik.com/berita-jawa-timur/d-4804774/pltd-diresmikan-pulau-raas-sumenep-makin-terang-benderang",
+        "quote": "Gubernur Khofifah Indar Parawansa meresmikan pembangkit listrik tenaga diesel (PLTD) di Kepulauan Raas",
+        "outlet": "detikNews",
+        "year": 2019,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1641.038330078125,
+        "pvout_kwh_per_kwp_day": 4.495995424871575,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.7084674067315495,
+        "power_density_w_m2": 95.68296015437399,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Brakas",
+        "place": "town",
+        "km": 2.7396813006235456
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Kangean",
+      "region": "Sumenep, East Java",
+      "lat_deg": -6.919626,
+      "lon_deg": 115.273309,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://penamadura.com/pln-kangean-lakukan-pemadaman-bergilir-sampai-akhir-bulan-begini-alasannya/",
+        "quote": "mesin yang nyala ada 11 dari total 14 mesin PLTD yang dikelola ULP Kengean",
+        "outlet": "Pena Madura",
+        "year": 2024,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1499.079345703125,
+        "pvout_kwh_per_kwp_day": 4.107066700556507,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.60614621350365,
+        "power_density_w_m2": 94.46233349093643,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 7
+      },
+      "nearest_town": {
+        "name": "Arjasa",
+        "place": "town",
+        "km": 6.7506517992798845
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Sapudi",
+      "region": "Sumenep, East Java",
+      "lat_deg": -7.118528,
+      "lon_deg": 114.33041,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://swaindonesia.com/padam-listrik-di-pulau-sapudi-dikritisi-dprd/",
+        "quote": "pengelolaan pembangkit listrik tenaga diesel (PLTD) Sapudi",
+        "outlet": "SWA Indonesia",
+        "year": 2026,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1592.0567626953125,
+        "pvout_kwh_per_kwp_day": 4.3617993498501715,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.7084674067315495,
+        "power_density_w_m2": 95.68296015437399,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 2,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Gayam",
+        "place": "town",
+        "km": 4.99126178197087
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "check flow and head on site"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Masalembu",
+      "region": "Sumenep, East Java",
+      "lat_deg": -5.561209,
+      "lon_deg": 114.422845,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://seputarmadura.com/sumenep/berita-sumenep/pengelolaan-pltd-masalembu-murni-swasta/",
+        "quote": "pengelolaan pembangkit listrik tenaga diesel (PLTD) di Kecamatan Kepulauan Masalembu",
+        "outlet": "Seputar Madura",
+        "year": 2017,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1518.8306884765625,
+        "pvout_kwh_per_kwp_day": 4.161179968428939,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.848012723033253,
+        "power_density_w_m2": 113.49854918363768,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 0
+      },
+      "nearest_town": null,
+      "nearest_town_status": "none within 150 km",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Enggano",
+      "region": "Bengkulu Utara, Bengkulu",
+      "lat_deg": -5.39786,
+      "lon_deg": 102.27486,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://bengkulu.antaranews.com/berita/438193/pln-bangun-plts-perkuat-sistem-kelistrikan-pulau-enggano",
+        "quote": "penguatan pembangkit listrik yang telah ada di Pulau Enggano, yakni pembangkit listrik tenaga diesel",
+        "outlet": "ANTARA Bengkulu",
+        "year": 2025,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1333.2545166015625,
+        "pvout_kwh_per_kwp_day": 3.6527521002782533,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 5.6369388686131385,
+        "power_density_w_m2": 175.80390813851312,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 7,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Manna",
+        "place": "town",
+        "km": 125.81657050381774
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "check flow and head on site"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Selayar",
+      "region": "Kepulauan Selayar, South Sulawesi",
+      "lat_deg": -6.118182,
+      "lon_deg": 120.458133,
+      "point": "Benteng, the main town of Selayar, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.beritasatu.com/network/selayarnews/625599/jaga-kedaulatan-energi-nasional-up-pltd-selayar-perkuat-sinergi-dengan-pemda-dan-media-bahas-isu-kelistrikan",
+        "quote": "unit pembangkit pusat listrik tenaga diesel (UP PLTD) Selayar",
+        "outlet": "Beritasatu",
+        "year": 2025,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1518.4739990234375,
+        "pvout_kwh_per_kwp_day": 4.160202737050514,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 4.753378066707218,
+        "power_density_w_m2": 101.8493973207317,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 7,
+        "stream": 26
+      },
+      "nearest_town": {
+        "name": "Benteng",
+        "place": "town",
+        "km": 4.583158657244085e-05
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "check flow and head on site"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Derawan",
+      "region": "Berau, East Kalimantan",
+      "lat_deg": 2.284124,
+      "lon_deg": 118.243529,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://kaltim.antaranews.com/berita/168061/pln-dukung-kelestarian-melalui-pemasangan-plts-di-pulau-derawan",
+        "quote": "Sejak 1992, PLN telah melistriki Derawan dengan menggunakan pembangkit listrik tenaga diesel (PLTD)",
+        "outlet": "ANTARA Kaltim",
+        "year": 2022,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1421.8154296875,
+        "pvout_kwh_per_kwp_day": 3.895384738869863,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 2.82125,
+        "power_density_w_m2": 22.79336522218597,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Tanah Kuning",
+        "place": "town",
+        "km": 58.09671378849267
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Serasan",
+      "region": "Natuna, Riau Islands",
+      "lat_deg": 2.520657,
+      "lon_deg": 109.069557,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://kepri.antaranews.com/berita/231785/pln-kirim-2-pltd-ke-pulau-serasan-di-natuna-atasi-krisis-listrik",
+        "quote": "PT PLN mengirim dua unit pembangkit listrik tenaga diesel (PLTD) dari Tanjungpinang ke Pulau Serasan",
+        "outlet": "ANTARA Kepri",
+        "year": 2025,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1309.0361328125,
+        "pvout_kwh_per_kwp_day": 3.586400363869863,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 3.493978102189781,
+        "power_density_w_m2": 53.808994004575425,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Serasan",
+        "place": "town",
+        "km": 4.840658495549905
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    },
+    {
+      "name": "Balai",
+      "region": "Pulau Banyak, Aceh Singkil, Aceh",
+      "lat_deg": 2.304303,
+      "lon_deg": 97.407398,
+      "point": "island centre point, OpenStreetMap Nominatim",
+      "diesel": {
+        "url": "https://www.kontrasaceh.net/2025/07/28/menembus-batas-negeri-pln-pastikan-pulau-terluar-aceh-terlistriki-jelang-hut-ri-ke-80/",
+        "quote": "dua pembangkit listrik tenaga diesel (PLTD) di Pulau Balai dan Pulau Haloban",
+        "outlet": "Kontras Aceh",
+        "year": 2025,
+        "label": "press",
+        "found": true,
+        "status": "quote found in the fetched page"
+      },
+      "solar": {
+        "pvout_kwh_per_kwp_yr": 1426.13916015625,
+        "pvout_kwh_per_kwp_day": 3.907230575770548,
+        "band": "favorable middle range"
+      },
+      "wind": {
+        "mean_speed_m_s": 2.8694410229115976,
+        "power_density_w_m2": 26.125000574199166,
+        "class_number": 1,
+        "class_name": "Poor"
+      },
+      "hydro": {
+        "river": 0,
+        "stream": 0
+      },
+      "nearest_town": {
+        "name": "Singkil",
+        "place": "town",
+        "km": 43.376226222414246
+      },
+      "nearest_town_status": "fetched",
+      "verdicts": {
+        "solar": "worth a closer look",
+        "wind": "not on this screen",
+        "hydro": "not on this screen"
+      },
+      "costed": "no: no hourly load, so no cost; the tool refuses rather than guess",
+      "missing": [],
+      "errors": {}
+    }
+  ],
+  "files": {
+    "gsa_-5.3979_102.2749.json": "8263f4aa16e1821e817378b92813c0acc47894df8213652d1308fd0d84ba7d6c",
+    "gsa_-5.5612_114.4228.json": "fea5bba4c7a7f07d2cfd0869abe387063fd1891a1432b9c101232b02c70f1116",
+    "gsa_-5.8796_110.4329.json": "64bbf3385baecf5c2398b4bc98a0c186bba89049daeafe37f36146725eca1525",
+    "gsa_-5.9462_105.4900.json": "fab12ba4016169bf3ddfa69e25cc5461d6f0e8159251b7525b560281d045fdf6",
+    "gsa_-6.1182_120.4581.json": "7e6dece27db84f8908a492bf37774953b70e036ed7a883b76215be18badd8188",
+    "gsa_-6.9196_115.2733.json": "164e005add66a246ea930386b08581052e659ea87014df25088276f7b60d8371",
+    "gsa_-7.1185_114.3304.json": "875b9d602a9886e495426a1b9f5885bfcecee484370621c13a3c58285f77c1f2",
+    "gsa_-7.1480_114.5882.json": "20c39a59dc57175117e3ad3381bf31ca55d4e11213cb8e28429b1f5bd9f2db6e",
+    "gsa_2.2841_118.2435.json": "9342ed867a2b5ead41947bd4ec70b9124807ad14bf146d314ae96c05a1b104e4",
+    "gsa_2.3043_97.4074.json": "709da7b65b1f62e04ef67d5e850fe4d88e7a114aa445df25fe9f3aa609dbd6e9",
+    "gsa_2.5207_109.0696.json": "e0dc619df0d9f1d204d7fabeaa5a9aaf31c38722efc0897234509085969f0a97",
+    "nasa_wind_-5.3979_102.2749_2016_2024.json": "b80798d89cedf71cabc4046a8afb3172376674bddebe0718a98594857d0788f3",
+    "nasa_wind_-5.5612_114.4228_2016_2024.json": "c4d7793350ded0b7ce18c9f71d668f9d519f0144ecc8815a4fb9f6bce4392fac",
+    "nasa_wind_-5.8796_110.4329_2016_2024.json": "0b941d373d6f410f3f846ae5111a9df2fdb0bd8bfcc66745ea36712b276ead54",
+    "nasa_wind_-5.9462_105.4900_2016_2024.json": "e0e9a6f778c649ff434d3f52aa708c4490eb318d2866fc29145e5b0e0d19b32d",
+    "nasa_wind_-6.1182_120.4581_2016_2024.json": "fc7fdf18f27dd1715f3ca3105ec0e55234d9bf7591e5492b3e13ee38de46b9c0",
+    "nasa_wind_-6.9196_115.2733_2016_2024.json": "33f66bc62dd6ee70681da8e28366565e2ee30daf2f1e8b869399fc8c6d70a345",
+    "nasa_wind_-7.1185_114.3304_2016_2024.json": "1ebdc049ed26426d6c3c54d8547f2571c68efacf05056fa0ed70cee2c9c4174b",
+    "nasa_wind_-7.1480_114.5882_2016_2024.json": "991e15863a91eb9cd733d1f1a0846c0e70c8d865d42ec7ab903483e2dc5115e5",
+    "nasa_wind_2.2841_118.2435_2016_2024.json": "0ea1e034f1495563cbf766e4ac0cd83af08804caedf5a19e41c7b9fe98d21d26",
+    "nasa_wind_2.3043_97.4074_2016_2024.json": "2eb2902d211a0aaf0e91cb9cba2775224aca193b1709a78f64add39c831aad6e",
+    "nasa_wind_2.5207_109.0696_2016_2024.json": "500d0b8b153c8af2c62701087c0b4154acfe273d9deb3df578f649ed74e4a3a4",
+    "overpass_21a2888c014f9998.json": "fbf6a390ece2792552bb54b76a0af093687ab60ff3552412e0961cfa26467d55",
+    "overpass_2e4a89698658af50.json": "d2a8b92a1b497aa0f1332d815424baa22a0fc10371c8599cf2a0ab7e04f05604",
+    "overpass_54dced12f16b5294.json": "b5166d7010d9f7128b40702cffdb5502746fb2b658bbada7582d03c7aa73ea5a",
+    "overpass_5753bea848a7d0f8.json": "8a329e90123322b599ae991039b7baa7de7a40be5417e231f2ad70af6e1ebfbb",
+    "overpass_5903da62021b9e42.json": "eba47e2346b1d9f62fd06c04b4104229ee919046e8ebb9c1d457b7efc88603c7",
+    "overpass_5e11870d9a6eedf9.json": "e4757741e74bc821f79ae098193e11a498b608dba72c850de01af50ca7e0ab87",
+    "overpass_708d0c659f664589.json": "045b4c40bb42b5ce84fd603f2c536e9a9aed5445550f8e407f51d54392c4a65a",
+    "overpass_7253725038abf534.json": "e5255000d4f00523c1ad38d6e9d816fec8679399a344832f0564a4ca4644d249",
+    "overpass_7bbca0fe96a6e428.json": "7775b0240ccce17b3263361297967398c97a3ab7f21b8cd9a761e37a89109a4d",
+    "overpass_99a0b545b88765c7.json": "c8bf29f0c0c2e99fe34cd07e19724462865765d30b3fea0d84cada771c0079bf",
+    "overpass_a3a92b6bc2ed9a7a.json": "2833ae8496fe117f5ca7be3e7e7536dde325a81c710b8d07c048bd6588107d64",
+    "overpass_aa0824e33a5195d6.json": "f53ab8ec604517fbe5632ea431245c9bf5bdc888ec67ce522da5e71479c0b18e",
+    "overpass_aae0721b64c1c33f.json": "cd84e3998a5e05cbdd79c0e6cecc6867ae0b7e7ddf034b8d064b253d4e18b0d3",
+    "overpass_af936224e5e131ac.json": "65736deefdafa9e31a200ae9c5f9615afe7ab5802783fb0a463e46a5237521a6",
+    "overpass_b8a8b8aede3ab416.json": "9875f81573d252ed51eec129a2e5be36302e1c47e664e42f0363f34b50e60fa5",
+    "overpass_cc32c3e1be982173.json": "f5cd6010ad7a7f187c368f3f1a36c32b09a440ce96159419c1e7c7eaf2c1b0fc",
+    "overpass_d10088b59db44046.json": "3e313b094018275468208f5cd70f4c69a53885c5a3b8aff00ce9f4336a359572",
+    "overpass_d3a5cfe0c7358f28.json": "82ccaa79027d9e30208bfaf05674cf24facfead3afea26a415fc5bb373b697d8",
+    "overpass_da216d10c9835675.json": "413d9bd1715a44d8905d17eb9b85b57a85850d0ee52a8fc16ae6b9eb98359a5b",
+    "overpass_e050aaf3d5e5eb8a.json": "92f93885c39dbad95035c18ea5408eea25e2b7343b0595483ef740d068f87a57",
+    "overpass_ee5e6b3489689542.json": "9e54291a32f27f5eb4ff668c0df8c916f558460355171f27415447dc2a2911eb",
+    "overpass_f5589428aabb90ba.json": "58a0d60d9347ad3dcc2ec7577a393e23802900bfe02f809f60ffc9a94e7edc0b",
+    "source_1283292b3c4ff5bb.json": "d1b297dfca85cd5512e880f7939e9be3444eb2fdc81a0f10a106a29d9c7628c1",
+    "source_15b8e6fb428c5a64.json": "be033c2552705ed164a7e573df8ad191463d5ebbc71f7e159fabf5b3e3959c9c",
+    "source_1a79ede1be2c1d27.json": "4965ba3144cbdc59a337f67729f16779a5d0f261adee5d98a43cdb5d0a51252d",
+    "source_2b0221fb5bbcc0cc.json": "1da740548d62c0fe4330e2b872622dcdc92786f104c76be28c2da2bb183eff1c",
+    "source_5c92324cf6ae6859.json": "2be706b307544ab7e2e135445b7958c592bd281f628024f00386c254233af597",
+    "source_6bf6b17b83883857.json": "de606d2d7cc864dec408d976544ff62e8884eda48dceded935205c6cad61816b",
+    "source_72080ffafb6bd187.json": "5bd08bc285edd37f9fa5ed3e2d3194dcff048389b64227c9723714ed3eb30fec",
+    "source_8c660fef5cd08851.json": "37b1b5a5169ae65e4113d9a214242cdb98d18ca1c632d77286dd2006ad8af4d2",
+    "source_b878f4f43fde76a4.json": "fddb1174cb406fb9f25dca701c757cd0931ed695026b2e5c02e624d35a69767c",
+    "source_c0b00726de82f8b7.json": "dcfbd7510f620f3e711652750029e0b7fb846bcb3c79dbe1e32ccf2bf57ff522",
+    "source_c99eaa873ad14141.json": "025c2d6b7a231c42e064cf28faad1e38d4cd1f05620b561fcb24f1ff09e141fb"
+  },
+  "wall_s": 4.675050497055054,
+  "sources": {
+    "nasa_power_hourly": "https://power.larc.nasa.gov/api/temporal/hourly/point",
+    "global_solar_atlas": "https://api.globalsolaratlas.info/data/lta",
+    "overpass": "https://overpass-api.de/api/interpreter",
+    "nominatim": "https://nominatim.openstreetmap.org/search",
+    "natural_earth": "https://www.naturalearthdata.com/"
+  }
+}
