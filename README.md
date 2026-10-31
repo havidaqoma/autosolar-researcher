@@ -19,6 +19,7 @@ In short, for Karimunjawa (computed unless labelled):
 | Least cost solar plus battery | 7,250 kWp and 19,000 kWh at 0.251 USD/kWh, 29.1% less | 8,500 kWp and 19,000 kWh at 0.277 USD/kWh, 45.7% less |
 | Battery prices and discount rate | assumed | from named documents |
 | If one diesel unit must always run | a smaller design (1,500 kWp) is still 5.1% below diesel only | a smaller design (4,250 kWp) is still 9.9% below |
+| How far PV and battery prices could rise before diesel only is cheaper | 189% (to 3,239 USD/kWp and 868 USD/kWh) | 365% (to 5,199 USD/kWp and 1,812 USD/kWh) |
 
 So solar plus battery comes out 29% to 46% cheaper than diesel only, and the gap is much smaller if a diesel unit
 must always spin. The load comes from the island's one published study, and our own chart check says it may be
@@ -34,7 +35,7 @@ for USD 0.72. It did not write the specs or the tests: each task's spec and acce
 and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
 web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
-smoke tests, chart reader tests and reviews included: USD 4.04.
+smoke tests, chart reader tests and reviews included: USD 4.26.
 
 ## For judges
 
@@ -106,7 +107,7 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
 |---|---|---|---|
 | Muse Spark (Meta Model API) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
 | Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
-| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (64 of 65 in the last review; the other is the reviewer's own product of two of them, and it is right, computed) |
+| Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (71 of 72 in the latest review, of the example study; the other is the reviewer's own product of two of them, 249 cycles a year x 12 years, and it is right, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
 | Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last two tasks: 23 of 24 and 22 of 23; for each, one test was added after the code, then all caught; computed) |
 
@@ -116,14 +117,14 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
 - Cost: Muse Code USD 0.72 (47 runs, 5.1 hours; it read 64 million tokens, 93% from cache, and wrote 0.79
-  million). Meta Model API USD 3.32 (181 calls, 451 web searches). USD 4.04 in all (measured ledgers).
+  million). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.26 in all (measured ledgers).
 - Limits: see "What it does not cover" and the open review points under "Checks".
 
 ## See it
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
-`docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`, with
-the latest Muse Wonder review. Both start from the input file whose 4 checked values were re-judged by two models
+`docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`. Each
+has a Muse Wonder review, and the gallery lists these two first. Both start from the input file whose 4 checked values were re-judged by two models
 (see Checks; the curated run then replaces 7 values by hand, the diesel price among them). These two are the
 entry. Earlier builds of the same two studies stay in the gallery with the same numbers, except that "What moves the
 cost" now has 9 inputs and the curated diesel unit size check no longer sits on the grid edge (computed, a script
@@ -276,7 +277,14 @@ each value are kept with the build files.
   is the reviewer's own product of two of them (2,375 kW x 330 USD/kW), and it is right (computed).
 - Second model review, curated run, earlier build: 10 points, 3 open (the fuel curve and O&M, the flagged Hiron
   load data, reliability).
-- Second model review, example study (earlier): Muse Wonder raised 10 points; 2 are not answered by the report (a
+- Second model review, example study, latest build (review-20261031T153256-bf16d0): Muse Wonder raised 10 points;
+  3 are not answered by the report: the flagged Hiron load (no metered hourly profile behind it), a year by year
+  cash flow (the battery replacement in year 12 and what the PV is still worth when the study ends), and
+  resilience (no forced outage case for the battery, its inverter or the diesels, and no run of several cloudy days
+  or a late fuel delivery). 71 of the 72 numbers it quotes are in the study and paper check files; the other,
+  2,988 battery cycles, is its own product of two of them (249 cycles a year x 12 years), and it is right
+  (computed). It cost USD 0.22 (measured).
+- Second model review, example study, earlier build: Muse Wonder raised 10 points; 2 are not answered by the report (a
   bankable yield and reliability case behind the 0 kWh not served, and an expansion path for demand growth). They
   are shown as open. The review before the last build left 6 open; the last build answered four of them with new
   checks (battery power, island prices, load not served and battery cycles, diesel engine hours), scored by a rule
@@ -327,16 +335,16 @@ answers for sites within 30 km of the island; other sites are refused rather tha
 
 ## Cost (measured ledgers)
 
-- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.32, including
-  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, five reviews, the two-model re-judge,
+- `ledger/api_usage.jsonl`: every paid model call with tokens and computed USD. Total so far USD 3.54, including
+  smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, six reviews, the two-model re-judge,
   one load check, one smoke search with the judge panel, one refused question and two question parses for the
   fresh re-run (`docs/smoke/FRESH_RERUN.md`).
 - `ledger/build_usage.jsonl`: 47 Muse Code runs (43 that wrote the product, 4 sandbox smoke runs), USD 0.72 and
   5.1 hours in total. Muse Code read 64.4 million input tokens (93% from cache) and wrote 0.79 million output
   tokens.
-- All Meta model spending: USD 4.04.
+- All Meta model spending: USD 4.26.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
-  about USD 0.013, a load check USD 0.01 and a review USD 0.25 to 0.33.
+  about USD 0.013, a load check USD 0.01 and a review USD 0.22 to 0.33.
 
 ## Chart reader: how far it can be trusted
 

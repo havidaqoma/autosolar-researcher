@@ -1,0 +1,62 @@
+{
+  "schema": "autosolar.review/1",
+  "run_id": "review-20261031T153256-bf16d0",
+  "study": "b4a44fc6d4c32339",
+  "model": "muse-wonder-1.0",
+  "usage": {
+    "input_tokens": 7113,
+    "cached_tokens": 0,
+    "output_tokens": 9472,
+    "reasoning_tokens": 8342,
+    "search_queries": 0
+  },
+  "cost_usd": 0.217892,
+  "wall_s": 62.7,
+  "report_sha256": "b11a262d71f5f1c2997c7538414bd0277461b1dd0ab99da6b4fe91712632dc68",
+  "prompt_sha256": "740466dd16abd9675f6472c7e2295dc98736ac0f4ca06033e307ed477e94b2ed",
+  "points": [
+    {
+      "point": "The headline design claims '85.8 %' renewable share and '7,302 h/yr' with no diesel running, but with one reserve diesel always online its LCOE rises from '0.251 USD/kWh' to '0.414 USD/kWh' and the optimum shrinks to '1,500 kWp' PV with '1,000 kWh' battery; the case therefore hinges on unproven diesel-off grid-forming operation.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Battery sizing is '19,000 kWh / 4,750 kW' although peak demand and highest discharge are only '1,422 kW'; the assumed '4.0 h' duration forces a 3.3-times-peak inverter and '4,555 kW' charging, while the '8.0 h' check gives '0.255 USD/kWh', only '1.4 %' higher, so battery energy and power should be sized independently.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Diesel unit rating is ambiguous at '1,800 kW' versus '2,700 kW' per unit; using 2,700 kW changes diesel-only LCOE from '0.354 USD/kWh' to '0.410 USD/kWh', least-cost LCOE to '0.260 USD/kWh', and the reserve-case optimum to '750 kWp' with '0 kWh' battery, so the fleet nameplate must be field-verified.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Land fit is marginal: the '7,250 kWp' design needs '8.3 ha' of '9.0 ha' set aside and the land cap is '7,830 kWp', yet near-tie designs reach '8,250 kWp' and the growth case needs '8,500 kWp'; the '0.87 MWdc/ha' density is a US fixed-tilt median, not a site layout with access, setbacks and shading.",
+      "addressed_in": "How firm is the answer"
+    },
+    {
+      "point": "Weather uncertainty is material: annual GHI spans '1,731 to 2,049 kWh/m2/yr', spread '18.4 %', and optimised LCOE spans '0.215 to 0.251 USD/kWh' across CAMS 2018, NASA POWER 2020, a PVGIS TMY composite and GSA scaling, so the headline is not based on a long-term measured site series.",
+      "addressed_in": "Range of the answer"
+    },
+    {
+      "point": "Demand credibility is unresolved: annual demand '9,568,110 kWh/yr' and peak '1,422 kW' rest on Hiron 2021, whose own checks flag daily-versus-schedule totals of '2.648e+07 vs 2.621e+04 kWh' and hourly rows such as '2,208 kW vs 1,104 kW'; no reconciled metered hourly load profile is shown even though all dispatch and battery results depend on it.",
+      "addressed_in": null
+    },
+    {
+      "point": "Key prices behind LCOE '0.251 USD/kWh' are weakly supported for an island utility: battery capex '300.0 USD/kWh' and discount rate '0.08' stayed assumed, PV capex '1119 USD/kWp' is a 2022 national utility figure, PV O&M '24.38 USD/kWp/yr' comes from a rooftop mosque study, and fuel '0.848485 USD/L' is derived from '14000 IDR per liter' in a palm-oil-waste article with FX '16500 IDR per USD' assumed, not a Karimunjawa delivered diesel price.",
+      "addressed_in": "Sourced inputs"
+    },
+    {
+      "point": "The economics cannot be audited: NPC '23,591,478 USD', upfront capital '14,287,750 USD' and LCOE '0.251 USD/kWh' are given without an annual cash flow showing the '12 yr' battery replacement inside a '20 yr' project, residual value for '25 yr' PV, or replacement of the existing diesels whose capital is treated as sunk.",
+      "addressed_in": null
+    },
+    {
+      "point": "Resilience is not tested: the design reports '0 kWh/yr' unserved against an allowed fraction of '0.001' in the simulated weather years, but there is no N-1 or forced-outage analysis for the single '19,000 kWh' battery, its '4,750 kW' inverter or the diesels, no maintenance and spares case, and no multi-day low-sun or interrupted-delivery case for the remaining '549,023 L/yr' of diesel.",
+      "addressed_in": null
+    },
+    {
+      "point": "Degradation and overhaul exposure is uncosted: battery throughput of '249 cycles/yr' implies roughly 2,988 cycles before the assumed '12 yr' replacement in salt air, while diesel overhaul needs change as running falls from '8,760 unit h/yr' to '1,458 unit h/yr'; these effects could move the claimed '0.251 USD/kWh'.",
+      "addressed_in": "Not covered by this study"
+    }
+  ],
+  "headings_replaced_by_null": 0,
+  "parse_error": null,
+  "raw_text": "{\"points\": [{\"point\": \"The headline design claims '85.8 %' renewable share and '7,302 h/yr' with no diesel running, but with one reserve diesel always online its LCOE rises from '0.251 USD/kWh' to '0.414 USD/kWh' and the optimum shrinks to '1,500 kWp' PV with '1,000 kWh' battery; the case therefore hinges on unproven diesel-off grid-forming operation.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Battery sizing is '19,000 kWh / 4,750 kW' although peak demand and highest discharge are only '1,422 kW'; the assumed '4.0 h' duration forces a 3.3-times-peak inverter and '4,555 kW' charging, while the '8.0 h' check gives '0.255 USD/kWh', only '1.4 %' higher, so battery energy and power should be sized independently.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Diesel unit rating is ambiguous at '1,800 kW' versus '2,700 kW' per unit; using 2,700 kW changes diesel-only LCOE from '0.354 USD/kWh' to '0.410 USD/kWh', least-cost LCOE to '0.260 USD/kWh', and the reserve-case optimum to '750 kWp' with '0 kWh' battery, so the fleet nameplate must be field-verified.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Land fit is marginal: the '7,250 kWp' design needs '8.3 ha' of '9.0 ha' set aside and the land cap is '7,830 kWp', yet near-tie designs reach '8,250 kWp' and the growth case needs '8,500 kWp'; the '0.87 MWdc/ha' density is a US fixed-tilt median, not a site layout with access, setbacks and shading.\", \"addressed_in\": \"How firm is the answer\"}, {\"point\": \"Weather uncertainty is material: annual GHI spans '1,731 to 2,049 kWh/m2/yr', spread '18.4 %', and optimised LCOE spans '0.215 to 0.251 USD/kWh' across CAMS 2018, NASA POWER 2020, a PVGIS TMY composite and GSA scaling, so the headline is not based on a long-term measured site series.\", \"addressed_in\": \"Range of the answer\"}, {\"point\": \"Demand credibility is unresolved: annual demand '9,568,110 kWh/yr' and peak '1,422 kW' rest on Hiron 2021, whose own checks flag daily-versus-schedule totals of '2.648e+07 vs 2.621e+04 kWh' and hourly rows such as '2,208 kW vs 1,104 kW'; no reconciled metered hourly load profile is shown even though all dispatch and battery results depend on it.\", \"addressed_in\": null}, {\"point\": \"Key prices behind LCOE '0.251 USD/kWh' are weakly supported for an island utility: battery capex '300.0 USD/kWh' and discount rate '0.08' stayed assumed, PV capex '1119 USD/kWp' is a 2022 national utility figure, PV O&M '24.38 USD/kWp/yr' comes from a rooftop mosque study, and fuel '0.848485 USD/L' is derived from '14000 IDR per liter' in a palm-oil-waste article with FX '16500 IDR per USD' assumed, not a Karimunjawa delivered diesel price.\", \"addressed_in\": \"Sourced inputs\"}, {\"point\": \"The economics cannot be audited: NPC '23,591,478 USD', upfront capital '14,287,750 USD' and LCOE '0.251 USD/kWh' are given without an annual cash flow showing the '12 yr' battery replacement inside a '20 yr' project, residual value for '25 yr' PV, or replacement of the existing diesels whose capital is treated as sunk.\", \"addressed_in\": null}, {\"point\": \"Resilience is not tested: the design reports '0 kWh/yr' unserved against an allowed fraction of '0.001' in the simulated weather years, but there is no N-1 or forced-outage analysis for the single '19,000 kWh' battery, its '4,750 kW' inverter or the diesels, no maintenance and spares case, and no multi-day low-sun or interrupted-delivery case for the remaining '549,023 L/yr' of diesel.\", \"addressed_in\": null}, {\"point\": \"Degradation and overhaul exposure is uncosted: battery throughput of '249 cycles/yr' implies roughly 2,988 cycles before the assumed '12 yr' replacement in salt air, while diesel overhaul needs change as running falls from '8,760 unit h/yr' to '1,458 unit h/yr'; these effects could move the claimed '0.251 USD/kWh'.\", \"addressed_in\": \"Not covered by this study\"}]}"
+}

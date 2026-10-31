@@ -469,3 +469,20 @@ the values are marked post hoc everywhere and the first study stays as it is.
   outside the two new sections (measured).
 - Full suite after T22c: see `docs/smoke/CLONE_TEST.md`.
 - Spend so far (ledgers): API USD 3.32, Muse Code USD 0.72, all Meta USD 4.04.
+
+## After the build: outside consult, round 1 (Sat 31 Oct, night)
+
+- Six outside models read the repo and the form text and ranked what to do before the feature freeze (raw answers
+  kept outside this repo). All six put the demo first; five said the gallery still did not say which study is the
+  answer; none wanted a second simulator, a Monte Carlo or a second local model before the freeze.
+- One reviewer said `_npc_path_b_usd` in `autosolar/econ.py` leaves out the battery replacement. It does not: the
+  battery events are added to the same running sum (lines 290 and 291), and the example study's NPC times the
+  capital recovery factor over the yearly load gives back its LCOE exactly, 0.2511304871971075 USD/kWh both ways
+  (computed). No change.
+- Gallery (`config/gallery.json`, no code change): the pre-registered example study is listed first with "Start
+  here", then the curated run; the four earlier builds follow, marked as kept for the record.
+- Muse Wonder review of the example study (`tools/review.py`, review-20261031T153256-bf16d0, 62.7 s, USD 0.218,
+  measured): 10 points, 3 open (the flagged load, a year by year cash flow, resilience). 71 of the 72 numbers it
+  quotes are in the study and paper check files; the other is its own product of two of them (249 x 12 = 2,988,
+  computed). Only the example page changed, by the new review section (measured).
+- Spend so far (ledgers): API USD 3.54 (182 calls), Muse Code USD 0.72, all Meta USD 4.26.
