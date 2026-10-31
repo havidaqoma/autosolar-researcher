@@ -37,6 +37,12 @@ def main():
         field_notes_all = []
     cards = []
     for entry in cfg["studies"]:
+        if "page" in entry:
+            cards.append({"href": entry["page"], "site": entry["title"],
+                          "question": entry["question"], "headline": entry["text"],
+                          "run_hash": entry["run"]})
+            print("card " + entry["page"])
+            continue
         run_dir = ROOT / "runs" / "studies" / entry["run"]
         report = load(run_dir / "report.json")
         table = pd.read_csv(run_dir / "design_table.csv")

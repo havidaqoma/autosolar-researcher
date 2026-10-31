@@ -322,3 +322,13 @@ def test_page_escapes_text():
     html = _page(rows=[row])
     assert "A&amp;B &lt;x&gt;" in html and "R &amp; S" in html
     assert "A&B <x>" not in html
+
+
+# ---------- written AFTER the T24 code: planted fault i8 (verdict read from streams) was not caught ----------
+
+def test_hydro_verdict_counts_rivers_not_streams():
+    """With 1 river and 2 streams both counts give the same verdict; 0 rivers and 3 streams does not."""
+    row = _row(water={"river": 0, "stream": 3})
+    assert row["verdicts"]["hydro"] == "not on this screen"
+    row = _row(water={"river": 2, "stream": 0})
+    assert row["verdicts"]["hydro"] == "check flow and head on site"
