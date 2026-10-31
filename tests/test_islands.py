@@ -285,7 +285,8 @@ def test_page_table_and_map():
     html = _page()
     heads = re.findall(r"<th[^>]*>(.*?)</th>", html)
     assert heads == ["Island", "Diesel plant named in", "Sun (kWh/kWp a day)", "Wind at 50 m",
-                     "Rivers and streams within 10 km", "Nearest mapped town", "Costed here?"]
+                     "Rivers and streams within 10 km", "Nearest mapped town", "Costed here?",
+                     "Screen says"]                  # T24b: eighth column
     assert html.count("<tr") == 3
     assert len(re.findall(r"<circle", html)) == 2
     assert len(re.findall(r'<circle[^>]*class="costed"', html)) == 1
@@ -294,7 +295,7 @@ def test_page_table_and_map():
     assert I.NOT_COSTED in html
     assert "4.05, " in html                      # 1478.25 / 365 = 4.05
     assert "4.44 m/s, 91 W/m2, class 1 (Poor)" in html
-    assert "1 rivers, 2 streams" in html
+    assert "1 river, 2 streams" in html            # T24b: was "1 rivers"
     assert "Mlonggo (town), 78 km" in html
     assert I.NOT_FETCHED in html                 # Beta has no wind
     assert I.QUOTE_MISSING in html
@@ -332,3 +333,112 @@ def test_hydro_verdict_counts_rivers_not_streams():
     assert row["verdicts"]["hydro"] == "not on this screen"
     row = _row(water={"river": 2, "stream": 0})
     assert row["verdicts"]["hydro"] == "check flow and head on site"
+
+
+# ---------- T24b (written before the T24b code) ----------
+
+from autosolar.resources import HYDRO_CHECK, LOOK, NOT_ON_SCREEN  # noqa: E402
+
+
+def _isl_at(name, lat, lon):
+    return I.parse_island_list(_doc(_island(name, lat=lat, lon=lon)))[0]
+
+
+def test_t24b_constants():
+    assert I.LABEL_MERGE_PX == 20.0
+    assert I.MAP_CSS == ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"
+                         "path.land{fill:#efe9da;stroke:#b8ad94;stroke-width:0.6}"
+                         "circle.island{fill:#1a4f9c;stroke:#ffffff;stroke-width:1.5}"
+                         "circle.costed{fill:#d9822b;stroke:#000000;stroke-width:1.5}"
+                         "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}")
+
+
+def _verdict_rows():
+    a = _row(_isl_at("A", -5.0, 110.0))                                            # solar, hydro
+    b = _row(_isl_at("B", -5.0, 112.0), wind={"mean_speed_m_s": 7.0, "power_density_w_m2": 350.0},
+             water={"river": 0, "stream": 4})                                      # solar, wind
+    c = _row(_isl_at("C", -5.0, 114.0), gsa={"pvout_kwh_per_kwp_yr": 1000.0},
+             water={"river": 0, "stream": 0})                                      # nothing
+    d = _row(_isl_at("D", -5.0, 116.0), wind=None)                                 # not fully screened
+    e = _row(_isl_at("E", -5.0, 118.0), water={"river": 3, "stream": 0})           # solar, hydro
+    return [a, b, c, d, e]
+
+
+def test_t24b_verdict_fixture_is_what_we_think():
+    v = [r["verdicts"] for r in _verdict_rows()]
+    assert v[0] == {"solar": LOOK, "wind": NOT_ON_SCREEN, "hydro": HYDRO_CHECK}
+    assert v[1] == {"solar": LOOK, "wind": LOOK, "hydro": NOT_ON_SCREEN}
+    assert v[2] == {"solar": NOT_ON_SCREEN, "wind": NOT_ON_SCREEN, "hydro": NOT_ON_SCREEN}
+    assert v[3] is None
+
+
+def test_t24b_answer_line():
+    assert I.answer_line(_verdict_rows()) == (
+        "On this screen, of the 4 islands with every part fetched: solar is worth a closer look on 3, wind at 50 m "
+        "on 1, and 2 have a mapped river to check for flow and head on site.")
+    assert I.answer_line([_verdict_rows()[3]]) == "No island has every part fetched, so the screen gives no verdict."
+    assert I.answer_line([]) == "No island has every part fetched, so the screen gives no verdict."
+    with pytest.raises(ValueError):
+        I.answer_line("rows")
+
+
+def test_t24b_verdict_text():
+    rows = _verdict_rows()
+    assert I.verdict_text(rows[0]) == "solar: " + LOOK + "; wind: " + NOT_ON_SCREEN + "; hydro: " + HYDRO_CHECK
+    assert I.verdict_text(rows[3]) == I.NOT_FETCHED
+
+
+def _rows_at(points):
+    return [_row(_isl_at(name, lat, lon)) for name, lat, lon in points]
+
+
+def test_t24b_label_groups_madura_cluster():
+    pts = [("Raas", -7.147953, 114.588171), ("Kangean", -6.919626, 115.273309), ("Sapudi", -7.118528, 114.33041),
+           ("Masalembu", -5.561209, 114.422845)]
+    groups = I.label_groups(_rows_at(pts))
+    xy = {n: I.map_xy(lat, lon) for n, lat, lon in pts}
+    assert [g["names"] for g in groups] == [["Raas", "Kangean", "Sapudi"], ["Masalembu"]]
+    assert groups[0]["x"] == round(max(xy["Raas"][0], xy["Kangean"][0], xy["Sapudi"][0]) + 7.0, 2)
+    assert groups[0]["y"] == round(xy["Raas"][1] + 4.0, 2)
+    assert groups[1] == {"names": ["Masalembu"], "x": round(xy["Masalembu"][0] + 7.0, 2),
+                         "y": round(xy["Masalembu"][1] + 4.0, 2)}
+
+
+def test_t24b_label_groups_edges():
+    # exactly 20 px apart (1 deg of longitude is 20 px) counts as within; 21 px does not
+    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.0)]))] == [["P", "Q"]]
+    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.05)]))] == [["P"], ["Q"]]
+    # a row joins the group of the FIRST earlier row within reach, and groups keep the order they start in
+    groups = I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.5), ("R", 0.0, 100.75)]))
+    assert [g["names"] for g in groups] == [["P", "R"], ["Q"]]
+    assert groups[0]["x"] == 142.0 and groups[1]["x"] == 157.0
+    with pytest.raises(ValueError):
+        I.label_groups([])
+
+
+def test_t24b_page():
+    rows = _verdict_rows()
+    doc = I.island_screen_doc(rows, run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+    html = I.render_islands_html(doc)
+    assert '<meta charset="utf-8">' in html and I.MAP_CSS in html
+    assert '<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">' in html
+    answer = '<p class="answer"><b>' + esc(I.answer_line(rows)) + "</b></p>"
+    assert answer in html
+    assert html.index("5 islands are named") < html.index(answer) < html.index(esc(I.NOTE))
+    assert re.findall(r"<th[^>]*>(.*?)</th>", html)[-1] == "Screen says"
+    assert esc(I.verdict_text(rows[0])) in html
+    assert html.count("<td>" + I.NOT_FETCHED + "</td>") >= 2          # D: wind cell and its verdict cell
+    assert "0 rivers, 4 streams" in html and "3 rivers, 0 streams" in html
+    assert "<script" not in html.lower()
+
+
+def test_t24b_page_merged_labels_and_plurals():
+    pts = [("Raas", -7.147953, 114.588171), ("Kangean", -6.919626, 115.273309), ("Sapudi", -7.118528, 114.33041)]
+    rows = _rows_at(pts)
+    rows[1] = _row(_isl_at("Kangean", -6.919626, 115.273309), water={"river": 0, "stream": 1})
+    doc = I.island_screen_doc(rows, run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+    html = I.render_islands_html(doc)
+    assert len(re.findall(r"<circle", html)) == 3
+    texts = re.findall(r"<text[^>]*>(.*?)</text>", html)
+    assert texts == ["Raas, Kangean, Sapudi"]
+    assert "0 rivers, 1 stream<" in html
