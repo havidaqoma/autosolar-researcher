@@ -507,3 +507,12 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - Result (computed): solar worth a closer look on 11 of 11 (3.59 to 4.50 kWh/kWp a day), wind at 50 m on 0 (all
   class 1), 4 with a mapped river within 10 km. Only Karimunjawa is costed. The Karimunjawa row gives back the T23
   single site values.
+- Outside review of the page (opencode, DeepSeek v4.1 flash at max effort; the first try tried to read outside its
+  folder, was refused, and gave no answer; the second ran read-only in its own folder). Six findings, all
+  accepted: the page did not state its cut-offs; streams were listed but not said to be left out of the hydro
+  verdict; "running a diesel plant" claimed more than a found quote shows (one article only says PLN shipped two
+  diesel units, another is from 2017); town distances did not say "straight line", and Selayar's 0 km looked like a
+  bug (its point is its main town); the costed row showed a bare hash as its link text; and a README "(measured)"
+  read oddly. T24c (spec and tests first, f1b335a; Muse Code 75 s, USD 0.007; 7 of 7 planted faults caught) fixed
+  the page; the README and the prep texts were fixed by hand. A run from the cache with no network
+  (islands-20261101T005633-17e106) gave the same rows and now carries the new note.

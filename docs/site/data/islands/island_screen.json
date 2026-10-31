@@ -1,8 +1,8 @@
 {
   "schema": "autosolar.island_screen/1",
-  "run_id": "islands-20261101T004038-b71f2f",
+  "run_id": "islands-20261101T005633-17e106",
   "list_sha256": "ed3e7c1e7dbd20874904bb3e7ad0ce6e39873cb7baeb7b2ecea91d83ac80e7be",
-  "note": "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island is named in a news article as running a diesel plant (PLTD), and the tool checks the quote in the page it fetches. Only Karimunjawa has an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a first screen from free public data, not a resource assessment; nothing here costs wind, hydro or a grid link, and the nearest town is not a grid connection.",
+  "note": "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island is named in a news article as having a diesel plant (PLTD), and the tool checks the quote in the page it fetches; a found quote shows the words are on the page, not that the plant runs today. Only Karimunjawa has an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a first screen from free public data, not a resource assessment; nothing here costs wind, hydro or a grid link, and the nearest town is not a grid connection.",
   "counts": {
     "islands": 11,
     "diesel_quote_found": 11,
@@ -559,7 +559,7 @@
     "source_c0b00726de82f8b7.json": "dcfbd7510f620f3e711652750029e0b7fb846bcb3c79dbe1e32ccf2bf57ff522",
     "source_c99eaa873ad14141.json": "025c2d6b7a231c42e064cf28faad1e38d4cd1f05620b561fcb24f1ff09e141fb"
   },
-  "wall_s": 4.675050497055054,
+  "wall_s": 4.652185678482056,
   "sources": {
     "nasa_power_hourly": "https://power.larc.nasa.gov/api/temporal/hourly/point",
     "global_solar_atlas": "https://api.globalsolaratlas.info/data/lta",
