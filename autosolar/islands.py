@@ -35,11 +35,18 @@ NO_TOWN = "none within 150 km"
 QUOTE_FOUND = "quote found in the fetched page"
 QUOTE_MISSING = "quote not in the fetched page"
 NOTE = (
-    "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island "
-    "is named in a news article as running a diesel plant (PLTD), and the tool checks the quote in the page it "
-    "fetches. Only Karimunjawa has an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a "
-    "first screen from free public data, not a resource assessment; nothing here costs wind, hydro or a grid "
-    "link, and the nearest town is not a grid connection."
+    "Written after the studies ran (post hoc). A convenience list, not a sample of PLN's 741 sites: each island is "
+    "named in a news article as having a diesel plant (PLTD), and the tool checks the quote in the page it "
+    "fetches; a found quote shows the words are on the page, not that the plant runs today. Only Karimunjawa has "
+    "an hourly load, so only Karimunjawa is costed. Sun, wind and rivers are a first screen from free public "
+    "data, not a resource assessment; nothing here costs wind, hydro or a grid link, and the nearest town is not "
+    "a grid connection."
+)
+SCREEN_RULE = (
+    "Screen rule (assumed): solar is worth a closer look at 3.5 kWh/kWp a day or more, the lower bound of the "
+    "World Bank's favorable range; wind at class 3 or more on the NREL scale at 50 m (class 1, Poor, is the "
+    "lowest); hydro needs at least one mapped river within 10 km (streams are listed but not counted), and then "
+    "flow and head decide."
 )
 SOURCES = {
     "nasa_power_hourly": RESOURCE_SOURCES["nasa_power_hourly"],
@@ -51,10 +58,10 @@ SOURCES = {
 
 _HEX = "0123456789abcdef"
 _FOOTER = (
-    "Sun: Global Solar Atlas (a Solargis model), long-term PV output at the optimum tilt. Wind: "
-    "NASA POWER hourly at 50 m, 2016 to 2024 (computed). Rivers and towns: OpenStreetMap, counts of mapped features "
-    "(measured). Coordinates: OpenStreetMap Nominatim. Land outline: Natural Earth (public domain). Diesel: press, "
-    "quote re-checked by the tool."
+    "Sun: Global Solar Atlas (a Solargis model), long-term PV output at the optimum tilt. Wind: NASA POWER hourly "
+    "at 50 m, 2016 to 2024 (computed). Rivers and towns: OpenStreetMap, counts of mapped features (measured); town "
+    "distance in a straight line from the island point (computed). Coordinates: OpenStreetMap Nominatim. Land "
+    "outline: Natural Earth (public domain). Diesel: press, quote re-checked by the tool."
 )
 LABEL_MERGE_PX = 20.0
 MAP_CSS = ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"
@@ -475,8 +482,11 @@ def _town_cell(row: dict) -> str:
     """Town table cell. Distance in km. Returns HTML."""
     town = row.get("nearest_town")
     if isinstance(town, dict):
-        return esc("%s (%s), %.0f km" % (str(town["name"]), str(town["place"]),
-                                         float(town["km"])))
+        km = float(town["km"])
+        txt = "%s (%s), %.0f km in a straight line" % (str(town["name"]), str(town["place"]), km)
+        if "%.0f" % km == "0":
+            txt += "; the island point is in this town"
+        return esc(txt)
     if row.get("nearest_town_status") == NO_TOWN:
         return esc(NO_TOWN)
     return esc(NOT_FETCHED)
@@ -487,7 +497,7 @@ def _costed_cell(row: dict) -> str:
     costed = str(row.get("costed", ""))
     if costed.startswith("yes"):
         study = costed[len("yes: study "):]
-        return '<a href="' + esc(study) + '.html">' + esc(costed) + "</a>"
+        return '<a href="' + esc(study) + '.html">yes: open the full study</a> (run ' + esc(study) + ")"
     return esc(NOT_COSTED)
 
 
@@ -513,13 +523,14 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     parts.append('<p><a href="index.html">back to gallery</a></p>')
     parts.append("<h1>" + esc("Which diesel islands could use solar or wind? A first screen of "
                               "%d islands" % num) + "</h1>")
-    parts.append("<p>" + esc("%d islands are named in a news article as running a diesel plant; "
-                             "the tool found the quote in the fetched page for %d. Fully screened: "
-                             "%d. Costed: %d (%s), the only island with an hourly load."
+    parts.append("<p>" + esc("The list names %d islands, each with a news article that says it has "
+                             "a diesel plant (PLTD); the tool found the quote in the fetched page for %d. "
+                             "Fully screened: %d. Costed: %d (%s), the only island with an hourly load."
                              % (num, int(counts["diesel_quote_found"]),
                                 int(counts["fully_screened"]), int(counts["costed"]),
                                 ", ".join(costed_names))) + "</p>")
     parts.append('<p class="answer"><b>' + esc(answer_line(rows)) + "</b></p>")
+    parts.append("<p>" + esc(SCREEN_RULE) + "</p>")
     parts.append("<p>" + esc(str(doc.get("note", NOTE))) + "</p>")
     svg = ['<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">']
     if land:
