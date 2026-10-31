@@ -11,19 +11,36 @@ Each site needs a first study like this before anyone spends money on a detailed
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
 and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
+In short, for Karimunjawa (computed unless labelled):
+
+| | Example study (inputs fixed before the run) | Same study, 7 inputs curated by hand (post hoc) |
+|---|---|---|
+| Diesel only | 0.354 USD/kWh | 0.511 USD/kWh |
+| Least cost solar plus battery | 7,250 kWp and 19,000 kWh at 0.251 USD/kWh, 29.1% less | 8,500 kWp and 19,000 kWh at 0.277 USD/kWh, 45.7% less |
+| Battery prices and discount rate | assumed | from named documents |
+| If one diesel unit must always run | a smaller design (1,500 kWp) is still 5.1% below diesel only | a smaller design (4,250 kWp) is still 9.9% below |
+
+So solar plus battery comes out 29% to 46% cheaper than diesel only, and the gap is much smaller if a diesel unit
+must always spin. The load comes from the island's one published study, and our own chart check says it may be
+about 30% too high; at the load the chart implies, solar plus battery is still 33.7% cheaper (post hoc). The
+metered load and the battery price are the first things to confirm. Pages: `docs/site/b4a44fc6d4c32339.html`
+(example) and `docs/site/107477f112e5d92c.html` (curated).
+
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
 What it cost (measured ledgers): Muse Code wrote the engine, all 11,395 lines of `autosolar/` (22 files, `wc -l`),
 for USD 0.72. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
 and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
-search for its prices, costs about USD 0.50 in Meta model calls. All Meta model spending for the whole hackathon,
+search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
+web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
 smoke tests, chart reader tests and reviews included: USD 4.04.
 
 ## For judges
 
-- Scope: one island today. The tool answers for Karimunjawa; the demand model covers sites within 30 km of it and
-  refuses other sites rather than guess. A new site needs its own hourly load. Asked about Bawean, another diesel
+- Scope: one island today. The only hourly load the tool has is Karimunjawa's (from the published study), so it
+  answers for sites within 30 km of it and refuses other sites rather than guess. A new site needs its own hourly
+  load. Asked about Bawean, another diesel
   island in the Java Sea, it answers "No study" and says the site is 247 km away (computed,
   `docs/smoke/T19_SMOKE_RULES.md`).
 - Try it on the page: each study page has "Try another diesel price". Click a price from 0.20 to 1.60 USD/L
@@ -52,8 +69,8 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
   POWER, hourly 2016 to 2024, computed), class 1 (Poor) on the NREL scale, though a coarse grid can miss local
   wind; 1 river and 2 streams mapped within 10 km, nearby islands included (OpenStreetMap); the nearest town on the
   map is 78 km away. Only solar, battery and
-  diesel are costed. The same section checks our PV model on outside weather: +1.4% against PVGIS and -3.3%
-  against Global Solar Atlas (Solargis), computed. No Meta model call (the API ledger stayed at 179 lines,
+  diesel are costed. The same section has a sanity check of our PV model (one site, post hoc, not a validation):
+  +1.4% against PVGIS and -3.3% against Global Solar Atlas (Solargis), computed. No Meta model call (the API ledger stayed at 179 lines,
   measured).
 - When the checks say no (example study page, Inputs table): the judge refused a battery price of USD 192/kWh,
   because the quote gives a system level storage cost, not the installed price of a lithium-ion battery; the
@@ -91,7 +108,7 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
 | Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
 | Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (64 of 65 in the last review; the other is the reviewer's own product of two of them, and it is right, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
-| Muse Code (contributor model) | Wrote the engine (`autosolar/`) from short specs. It did not write the specs or the tests; of the run tools in `tools/` it wrote three and edited one (T20 to T23) | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last two tasks: 23 of 24 and 22 of 23; for each, one test was added after the code, then all caught; computed) |
+| Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last two tasks: 23 of 24 and 22 of 23; for each, one test was added after the code, then all caught; computed) |
 
 - Checks: 1,688 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
@@ -105,13 +122,12 @@ smoke tests, chart reader tests and reviews included: USD 4.04.
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
 `docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`, with
 the latest Muse Wonder review. Both start from the input file whose 4 checked values were re-judged by two models
-(see Checks; the curated run then replaces 7 values by hand, the diesel price among them). They come from the latest
-build. Every number matches the earlier runs 5ee65dcd3350bec1 and 4a0c0eedd47b2672 (and f86df9819fa150a7 and
-579f414386fe2d58 before them), except that "What moves the cost" now has 9 inputs and the curated diesel unit size
-check no longer sits on the grid edge (computed, a script compared every fact, gate and table row). The earlier runs
-stay in the gallery. Raw run files are under `docs/site/data/`.
+(see Checks; the curated run then replaces 7 values by hand, the diesel price among them). These two are the
+entry. Earlier builds of the same two studies stay in the gallery with the same numbers, except that "What moves the
+cost" now has 9 inputs and the curated diesel unit size check no longer sits on the grid edge (computed, a script
+compared every fact, gate and table row). Raw run files are under `docs/site/data/`.
 
-## The Karimunjawa answer (study b4a44fc6d4c32339, same numbers as 5ee65dcd3350bec1; computed unless labelled)
+## The Karimunjawa answer (example study b4a44fc6d4c32339; computed unless labelled)
 
 "Computed" says where a number comes from: the code calculated it from the inputs. It is only as good as those
 inputs, and many of them are assumed, among them all battery prices, the discount rate and the diesel fuel curve.
@@ -143,7 +159,7 @@ only 2.4% below diesel only. The load check adds a second caution: if the island
 says, the right design is smaller (5,750 kWp and 15,000 kWh at the load the chart implies), but it still costs
 a third less than diesel only (post hoc, computed).
 
-## Second run with curated inputs (post hoc, study 107477f112e5d92c, same numbers as 4a0c0eedd47b2672)
+## Second run with curated inputs (post hoc, study 107477f112e5d92c)
 
 The study above kept 3 of its 7 sourced inputs at assumed values (battery capex, battery O&M, discount rate), and
 3 more battery inputs were never sourced (power capex, life, efficiency). Its diesel price passed the checks, but
@@ -304,8 +320,8 @@ uv run python tools/resource_screen.py --run <hash>   # sun, wind, rivers, dista
 uv run python tools/make_site.py
 ```
 
-The env file holds `MODEL_API_KEY` (Meta Model API). The demand model covers sites within 30 km of Karimunjawa;
-other sites are refused rather than guessed.
+The env file holds `MODEL_API_KEY` (Meta Model API). The only hourly load the tool has is Karimunjawa's, so it
+answers for sites within 30 km of the island; other sites are refused rather than guessed.
 
 ## Cost (measured ledgers)
 
