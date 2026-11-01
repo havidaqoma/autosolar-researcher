@@ -516,3 +516,21 @@ the values are marked post hoc everywhere and the first study stays as it is.
   read oddly. T24c (spec and tests first, f1b335a; Muse Code 75 s, USD 0.007; 7 of 7 planted faults caught) fixed
   the page; the README and the prep texts were fixed by hand. A run from the cache with no network
   (islands-20261101T005633-17e106) gave the same rows and now carries the new note.
+
+## T24d: island map that shows where each island is (Sun 1 Nov, midday)
+
+- Why: the owner said the dots on the island map looked "very off and wrong" (post hoc). A check of each point on
+  OpenStreetMap tiles (zoom 9 to 13, by hand) found the 11 points right. The map made them look wrong: the 1:50m
+  land outline left out 7 of the 11 islands (Karimunjawa, Sebesi, Raas, Masalembu, Derawan, Serasan, Balai: no
+  land within 2 km, computed with the T24d function on the old file), so their dots sat on open sea; and a filled
+  dot 10 px wide at 20 px a degree is about 55 km across, so dots next to a coast covered it.
+- Land: Natural Earth 1:10m land (public domain), outer rings whose box touches lon 95 to 123, lat -9.5 to 4.5,
+  Douglas-Peucker 0.02 deg on rings over 100 points, rounded to 0.02 deg (265 rings, 22,313 points, 311 KB; made
+  by a script outside the repo and committed with the spec). Derawan and Balai are still too small at this scale;
+  the page names them under the map.
+- T24d (spec and tests first; Muse Code 122 s, USD 0.010): tighter box at 34.3 px a degree, rings instead of
+  filled dots, a note under the map, an OpenStreetMap link per island, footer says 1:10m. Planted faults: 13 of 14
+  caught; the miss (km scale without the cosine of latitude) was closed with a test added after the code,
+  labelled so, then 14 of 14.
+- A run from the cache with no network (islands-20261101T124926-1714b5) gave the same rows. A screenshot checked
+  each ring against the expected place (vision read, post hoc).

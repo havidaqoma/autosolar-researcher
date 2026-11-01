@@ -25,9 +25,16 @@ from autosolar.site import SITE_CSS, esc
 ISLAND_LIST_SCHEMA = "autosolar.island_list/1"
 ISLAND_SCREEN_SCHEMA = "autosolar.island_screen/1"
 LAND_SCHEMA = "autosolar.land_rings/1"
-MAP_BBOX_DEG = (94.0, 142.0, -11.5, 6.5)
+MAP_BBOX_DEG = (95.0, 123.0, -9.5, 4.5)
 MAP_WIDTH_PX = 960
-MAP_HEIGHT_PX = 360
+MAP_HEIGHT_PX = 480
+MARKER_R_PX = 6.0
+LABEL_GAP_PX = 10.0
+UNDRAWN_TOL_KM = 2.0
+MAP_NOTE_HEAD = ("Each ring marks the island point from OpenStreetMap Nominatim; the link under each "
+                 "island name in the table opens that point on OpenStreetMap.")
+MAP_NOTE_SMALL = "Too small for the land outline at this scale, so the ring sits on open sea: "
+OSM_LINK_TEXT = "the point on OpenStreetMap"
 QUOTE_MIN_CHARS = 20
 NOT_COSTED = "no: no hourly load, so no cost; the tool refuses rather than guess"
 NOT_FETCHED = "not fetched"
@@ -61,14 +68,15 @@ _FOOTER = (
     "Sun: Global Solar Atlas (a Solargis model), long-term PV output at the optimum tilt. Wind: NASA POWER hourly "
     "at 50 m, 2016 to 2024 (computed). Rivers and towns: OpenStreetMap, counts of mapped features (measured); town "
     "distance in a straight line from the island point (computed). Coordinates: OpenStreetMap Nominatim. Land "
-    "outline: Natural Earth (public domain). Diesel: press, quote re-checked by the tool."
+    "outline: Natural Earth 1:10m (public domain). Diesel: press, quote re-checked by the tool."
 )
-LABEL_MERGE_PX = 20.0
+LABEL_MERGE_PX = 30.0
 MAP_CSS = ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"
            "path.land{fill:#efe9da;stroke:#b8ad94;stroke-width:0.6}"
-           "circle.island{fill:#1a4f9c;stroke:#ffffff;stroke-width:1.5}"
-           "circle.costed{fill:#d9822b;stroke:#000000;stroke-width:1.5}"
-           "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}")
+           "circle.island{fill:none;stroke:#1a4f9c;stroke-width:2.5}"
+           "circle.costed{fill:none;stroke:#d9822b;stroke-width:3.5}"
+           "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}"
+                         "p.mapnote{font-size:0.9em}")
 _HEADS = ("Island", "Diesel plant named in", "Sun (kWh/kWp a day)", "Wind at 50 m",
           "Rivers and streams within 10 km", "Nearest mapped town", "Costed here?",
           "Screen says")
@@ -471,7 +479,7 @@ def label_groups(rows: list) -> list:
         members[placed].append(i)
     out: list[dict] = []
     for idx_list in members:
-        top_x_px = max(float(dots_px[i][0]) for i in idx_list) + 7.0
+        top_x_px = max(float(dots_px[i][0]) for i in idx_list) + LABEL_GAP_PX
         first_y_px = float(dots_px[idx_list[0]][1]) + 4.0
         out.append({"names": [names[i] for i in idx_list],
                     "x": round(top_x_px, 2), "y": round(first_y_px, 2)})
@@ -499,6 +507,104 @@ def _costed_cell(row: dict) -> str:
         study = costed[len("yes: study "):]
         return '<a href="' + esc(study) + '.html">yes: open the full study</a> (run ' + esc(study) + ")"
     return esc(NOT_COSTED)
+
+
+def _point_in_ring(lon_deg: float, lat_deg: float, ring: list) -> bool:
+    """Even-odd ray test for lon and lat in deg. Returns True when inside."""
+    inside = False
+    n = len(ring)
+    for i in range(n):
+        x1, y1 = float(ring[i][0]), float(ring[i][1])
+        x2, y2 = float(ring[(i + 1) % n][0]), float(ring[(i + 1) % n][1])
+        if (y1 > lat_deg) != (y2 > lat_deg):
+            x_at = (x2 - x1) * (lat_deg - y1) / (y2 - y1) + x1
+            if lon_deg < x_at:
+                inside = not inside
+    return inside
+
+
+def _seg_dist_km(lat_deg: float, lon_deg: float, ax_lon: float, ax_lat: float,
+                 bx_lon: float, by_lat: float) -> float:
+    """Distance in km from a point to a segment. Coords in deg."""
+    kx = 111.32 * math.cos(math.radians(lat_deg))
+    ax = (ax_lon - lon_deg) * kx
+    ay = (ax_lat - lat_deg) * 110.57
+    bx = (bx_lon - lon_deg) * kx
+    by = (by_lat - lat_deg) * 110.57
+    dx = bx - ax
+    dy = by - ay
+    span = dx * dx + dy * dy
+    if span == 0.0:
+        return (ax * ax + ay * ay) ** 0.5
+    t = -(ax * dx + ay * dy) / span
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    px = ax + t * dx
+    py = ay + t * dy
+    return (px * px + py * py) ** 0.5
+
+
+def undrawn_names(rows: list, land: list | None, tol_km: float = UNDRAWN_TOL_KM) -> list:
+    """Names of rows whose point is off the land rings. Tolerance in km."""
+    if not isinstance(rows, list):
+        raise ValueError("rows must be a list: " + repr(rows))
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("rows must hold dicts: " + repr(row))
+    tol = _finite_real("tol_km", tol_km)
+    if not tol >= 0.0:
+        raise ValueError("tol_km must be 0 or more: " + repr(tol_km))
+    if land is None or land == []:
+        return [str(r["name"]) for r in rows]
+    if not isinstance(land, list):
+        raise ValueError("land must be a list or None: " + repr(land))
+    out: list[str] = []
+    for row in rows:
+        lat = _finite_real("lat_deg", row["lat_deg"])
+        lon = _finite_real("lon_deg", row["lon_deg"])
+        drawn = False
+        for ring in land:
+            if _point_in_ring(lon, lat, ring):
+                drawn = True
+                break
+            n = len(ring)
+            for i in range(n):
+                dist = _seg_dist_km(lat, lon, float(ring[i][0]), float(ring[i][1]),
+                                    float(ring[(i + 1) % n][0]), float(ring[(i + 1) % n][1]))
+                if dist <= tol:
+                    drawn = True
+                    break
+            if drawn:
+                break
+        if not drawn:
+            out.append(str(row["name"]))
+    return out
+
+
+def map_note(names: list) -> str:
+    """Line under the map naming rings on open sea. Returns str."""
+    if not isinstance(names, list):
+        raise ValueError("names must be a list of str: " + repr(names))
+    for name in names:
+        if not isinstance(name, str):
+            raise ValueError("names must be a list of str: " + repr(names))
+    if not names:
+        return MAP_NOTE_HEAD
+    return MAP_NOTE_HEAD + " " + MAP_NOTE_SMALL + ", ".join(names) + "."
+
+
+def osm_url(lat_deg: float, lon_deg: float) -> str:
+    """OpenStreetMap link for lat and lon in deg. Returns str."""
+    lat = _finite_real("lat_deg", lat_deg)
+    lon = _finite_real("lon_deg", lon_deg)
+    if not -90.0 <= lat <= 90.0:
+        raise ValueError("lat_deg must be within -90 to 90: " + repr(lat_deg))
+    if not -180.0 <= lon <= 180.0:
+        raise ValueError("lon_deg must be within -180 to 180: " + repr(lon_deg))
+    return ("https://www.openstreetmap.org/?mlat=%.4f&mlon=%.4f#map=12/%.4f/%.4f"
+            % (lat, lon, lat, lon))
 
 
 def render_islands_html(doc: dict, land: list | None = None) -> str:
@@ -532,7 +638,8 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     parts.append('<p class="answer"><b>' + esc(answer_line(rows)) + "</b></p>")
     parts.append("<p>" + esc(SCREEN_RULE) + "</p>")
     parts.append("<p>" + esc(str(doc.get("note", NOTE))) + "</p>")
-    svg = ['<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">']
+    svg = ['<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img">'
+           % (MAP_WIDTH_PX, MAP_HEIGHT_PX)]
     if land:
         for ring in land:
             if not ring:
@@ -548,13 +655,15 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     for row in rows:
         x, y = map_xy(float(row["lat_deg"]), float(row["lon_deg"]))
         cls = "costed" if str(row.get("costed", "")).startswith("yes") else "island"
-        svg.append('<circle class="%s" cx="%.2f" cy="%.2f" r="5"></circle>' % (cls, x, y))
+        svg.append('<circle class="%s" cx="%.2f" cy="%.2f" r="%d"></circle>'
+                   % (cls, x, y, int(MARKER_R_PX)))
     for group in label_groups(rows):
         svg.append('<text x="%.2f" y="%.2f" font-size="11">%s</text>'
                    % (float(group["x"]), float(group["y"]),
                       esc(", ".join(str(n) for n in group["names"]))))
     svg.append("</svg>")
     parts.append("".join(svg))
+    parts.append('<p class="mapnote">' + esc(map_note(undrawn_names(rows, land))) + "</p>")
     table = ["<table><tr>"]
     for head in _HEADS:
         table.append("<th>" + esc(head) + "</th>")
@@ -562,7 +671,9 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     for row in rows:
         diesel = row.get("diesel", {})
         table.append("<tr>")
-        table.append("<td>" + esc(str(row["name"])) + "<br>" + esc(str(row["region"])) + "</td>")
+        table.append("<td>" + esc(str(row["name"])) + "<br>" + esc(str(row["region"])) + '<br><a href="'
+                     + esc(osm_url(float(row["lat_deg"]), float(row["lon_deg"]))) + '">'
+                     + esc(OSM_LINK_TEXT) + "</a></td>")
         table.append("<td>" + '<a href="' + esc(str(diesel.get("url", ""))) + '">'
                      + esc(str(diesel.get("outlet", ""))) + " "
                      + esc(str(diesel.get("year", ""))) + "</a>" + ": "

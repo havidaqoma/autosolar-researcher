@@ -618,3 +618,11 @@ def test_t24d_shipped_land_file_and_points():
         I.map_xy(row["lat_deg"], row["lon_deg"])     # every point is inside the new box
     # measured before the code (post hoc): the two islands too small for the 1:10m outline
     assert I.undrawn_names(rows, land) == ["Derawan", "Balai"]
+
+
+def test_t24d_after_code_km_scale_uses_latitude():
+    # written AFTER the T24d code (planted fault d4 was missed): at 60 deg north 1 deg of longitude is
+    # 111.32 * cos(60 deg) = 55.66 km, so 0.03 deg is 1.67 km (drawn at 2 km) and not 3.34 km
+    ring = [[(10.0, 59.0), (11.0, 59.0), (11.0, 61.0), (10.0, 61.0)]]
+    assert I.undrawn_names([_pt("north", 60.0, 11.03)], ring) == []
+    assert I.undrawn_names([_pt("north", 60.0, 11.05)], ring) == ["north"]
