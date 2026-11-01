@@ -543,7 +543,9 @@ def test_page_otherwise_unchanged_from_committed_page():
     # Changed after consult round 1 (Sat 31 Oct): config/gallery.json now sets a Muse Wonder review for this study,
     # and tools/make_site.py renders the committed page with that review, so this page is rendered with it too.
     new = _page(field_notes=KARI, engineer_files=_files_doc(), review=_load_json("review.json"))
-    for sid in ("confirm", "resources"):
+    # Changed with T26 (Sun 1 Nov, docs/specs/T26_design_change.md): the new design-change section is cut too, so
+    # this test keeps checking that nothing else on the page changes.
+    for sid in ("confirm", "resources", "design-change"):
         committed = _cut(committed, sid)
         new = _cut(new, sid)
     assert new == committed
