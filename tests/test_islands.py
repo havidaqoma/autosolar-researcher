@@ -47,8 +47,8 @@ def test_constants():
     assert I.ISLAND_LIST_SCHEMA == "autosolar.island_list/1"
     assert I.ISLAND_SCREEN_SCHEMA == "autosolar.island_screen/1"
     assert I.LAND_SCHEMA == "autosolar.land_rings/1"
-    assert I.MAP_BBOX_DEG == (94.0, 142.0, -11.5, 6.5)
-    assert (I.MAP_WIDTH_PX, I.MAP_HEIGHT_PX) == (960, 360)
+    assert I.MAP_BBOX_DEG == (95.0, 123.0, -9.5, 4.5)  # T24d
+    assert (I.MAP_WIDTH_PX, I.MAP_HEIGHT_PX) == (960, 480)  # T24d
     assert I.QUOTE_MIN_CHARS == 20
     assert I.NOT_COSTED == "no: no hourly load, so no cost; the tool refuses rather than guess"
     assert I.NOT_FETCHED == "not fetched"
@@ -234,12 +234,12 @@ def test_screen_doc_rejects(kw):
 # ---------- map_xy and parse_land ----------
 
 def test_map_xy():
-    assert I.map_xy(6.5, 94.0) == (0.0, 0.0)
-    assert I.map_xy(-11.5, 142.0) == (960.0, 360.0)
-    assert I.map_xy(-2.5, 118.0) == (480.0, 180.0)
+    assert I.map_xy(4.5, 95.0) == (0.0, 0.0)  # T24d
+    assert I.map_xy(-9.5, 123.0) == (960.0, 480.0)  # T24d
+    assert I.map_xy(-2.5, 109.0) == (480.0, 240.0)  # T24d
     x, y = I.map_xy(-5.879626, 110.432907)
-    assert (x, y) == (round((110.432907 - 94.0) / 48.0 * 960, 2), round((6.5 + 5.879626) / 18.0 * 360, 2))
-    for lat, lon in ((7.0, 100.0), (-12.0, 100.0), (0.0, 93.9), (0.0, 142.1)):
+    assert (x, y) == (round((110.432907 - 95.0) / 28.0 * 960, 2), round((4.5 + 5.879626) / 14.0 * 480, 2))  # T24d
+    for lat, lon in ((4.6, 100.0), (-9.6, 100.0), (0.0, 94.9), (0.0, 123.1)):  # T24d
         with pytest.raises(ValueError):
             I.map_xy(lat, lon)
     with pytest.raises(ValueError):
@@ -279,7 +279,7 @@ def test_page_basics():
             "found the quote in the fetched page for 1. Fully screened: 1. Costed: 1 (Alpha), the only island with an "
             "hourly load.") in html
     assert esc(I.NOTE) in html
-    assert 'viewBox="0 0 960 360"' in html
+    assert 'viewBox="0 0 960 480"' in html  # T24d
 
 
 def test_page_table_and_map():
@@ -302,7 +302,7 @@ def test_page_table_and_map():
     assert I.QUOTE_MISSING in html
     assert '<a href="https://example.org/news/1">Example News 2025</a>' in html
     assert "<q>the island runs on a diesel plant (PLTD)</q>" in html
-    assert "Natural Earth (public domain)" in html and "NASA POWER hourly at 50 m, 2016 to 2024" in html
+    assert "Natural Earth 1:10m (public domain)" in html and "NASA POWER hourly at 50 m, 2016 to 2024" in html  # T24d
 
 
 def test_page_land_paths():
@@ -311,9 +311,9 @@ def test_page_land_paths():
     html = _page(land)
     paths = re.findall(r'<path class="land" d="([^"]*)"', html)
     assert len(paths) == 2
-    assert paths[0].startswith("M 120") and paths[0].rstrip().endswith("Z")
+    assert paths[0].startswith("M 171.43 188.57") and paths[0].rstrip().endswith("Z")  # T24d
     assert paths[0].count("L ") == 3
-    assert "-80" in paths[1]                     # outside the box: still drawn, no error
+    assert "-171.43" in paths[1]                 # outside the box: still drawn, no error  # T24d
     assert '<path class="land"' not in _page()
 
 
@@ -346,12 +346,13 @@ def _isl_at(name, lat, lon):
 
 
 def test_t24b_constants():
-    assert I.LABEL_MERGE_PX == 20.0
-    assert I.MAP_CSS == ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"
+    assert I.LABEL_MERGE_PX == 30.0  # T24d
+    assert I.MAP_CSS == ("svg.map{background:#eaf2fa;border:1px solid #c9d6e3}"  # T24d
                          "path.land{fill:#efe9da;stroke:#b8ad94;stroke-width:0.6}"
-                         "circle.island{fill:#1a4f9c;stroke:#ffffff;stroke-width:1.5}"
-                         "circle.costed{fill:#d9822b;stroke:#000000;stroke-width:1.5}"
-                         "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}")
+                         "circle.island{fill:none;stroke:#1a4f9c;stroke-width:2.5}"
+                         "circle.costed{fill:none;stroke:#d9822b;stroke-width:3.5}"
+                         "svg.map text{fill:#222222;paint-order:stroke;stroke:#ffffff;stroke-width:3px}"
+                         "p.mapnote{font-size:0.9em}")
 
 
 def _verdict_rows():
@@ -399,20 +400,20 @@ def test_t24b_label_groups_madura_cluster():
     groups = I.label_groups(_rows_at(pts))
     xy = {n: I.map_xy(lat, lon) for n, lat, lon in pts}
     assert [g["names"] for g in groups] == [["Raas", "Kangean", "Sapudi"], ["Masalembu"]]
-    assert groups[0]["x"] == round(max(xy["Raas"][0], xy["Kangean"][0], xy["Sapudi"][0]) + 7.0, 2)
+    assert groups[0]["x"] == round(max(xy["Raas"][0], xy["Kangean"][0], xy["Sapudi"][0]) + 10.0, 2)  # T24d
     assert groups[0]["y"] == round(xy["Raas"][1] + 4.0, 2)
-    assert groups[1] == {"names": ["Masalembu"], "x": round(xy["Masalembu"][0] + 7.0, 2),
+    assert groups[1] == {"names": ["Masalembu"], "x": round(xy["Masalembu"][0] + 10.0, 2),  # T24d
                          "y": round(xy["Masalembu"][1] + 4.0, 2)}
 
 
 def test_t24b_label_groups_edges():
-    # exactly 20 px apart (1 deg of longitude is 20 px) counts as within; 21 px does not
-    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.0)]))] == [["P", "Q"]]
-    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.05)]))] == [["P"], ["Q"]]
+    # T24d: exactly 30 px apart (0.875 deg of longitude is 30 px) counts as within; 30.86 px does not
+    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 95.0), ("Q", 0.0, 95.875)]))] == [["P", "Q"]]
+    assert [g["names"] for g in I.label_groups(_rows_at([("P", 0.0, 95.0), ("Q", 0.0, 95.9)]))] == [["P"], ["Q"]]
     # a row joins the group of the FIRST earlier row within reach, and groups keep the order they start in
-    groups = I.label_groups(_rows_at([("P", 0.0, 100.0), ("Q", 0.0, 101.5), ("R", 0.0, 100.75)]))
+    groups = I.label_groups(_rows_at([("P", 0.0, 95.0), ("Q", 0.0, 96.3125), ("R", 0.0, 95.65625)]))  # T24d
     assert [g["names"] for g in groups] == [["P", "R"], ["Q"]]
-    assert groups[0]["x"] == 142.0 and groups[1]["x"] == 157.0
+    assert groups[0]["x"] == 32.5 and groups[1]["x"] == 55.0  # T24d: 22.5 + 10 and 45 + 10
     with pytest.raises(ValueError):
         I.label_groups([])
 
@@ -422,7 +423,7 @@ def test_t24b_page():
     doc = I.island_screen_doc(rows, run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
     html = I.render_islands_html(doc)
     assert '<meta charset="utf-8">' in html and I.MAP_CSS in html
-    assert '<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img">' in html
+    assert '<svg class="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img">' in html  # T24d
     answer = '<p class="answer"><b>' + esc(I.answer_line(rows)) + "</b></p>"
     assert answer in html
     assert html.index("The list names 5 islands") < html.index(answer) < html.index(esc(I.NOTE))  # T24c
@@ -496,3 +497,124 @@ def test_t24c_not_costed_row_unchanged():
     doc = I.island_screen_doc([row], run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
     html = I.render_islands_html(doc)
     assert "<td>" + esc(I.NOT_COSTED) + "</td>" in html and "open the full study" not in html
+
+
+# ---------- T24d (written before the T24d code) ----------
+
+import json  # noqa: E402
+import pathlib  # noqa: E402
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+SQUARE = [[(100.0, -1.0), (101.0, -1.0), (101.0, 0.0), (100.0, 0.0)]]
+
+
+def test_t24d_constants():
+    assert I.MARKER_R_PX == 6.0
+    assert I.LABEL_GAP_PX == 10.0
+    assert I.UNDRAWN_TOL_KM == 2.0
+    assert I.OSM_LINK_TEXT == "the point on OpenStreetMap"
+    assert I.MAP_NOTE_HEAD == ("Each ring marks the island point from OpenStreetMap Nominatim; the link under each "
+                               "island name in the table opens that point on OpenStreetMap.")
+    assert I.MAP_NOTE_SMALL == "Too small for the land outline at this scale, so the ring sits on open sea: "
+    lon_min, lon_max, lat_min, lat_max = I.MAP_BBOX_DEG
+    assert I.MAP_WIDTH_PX / (lon_max - lon_min) == I.MAP_HEIGHT_PX / (lat_max - lat_min)  # same px a degree
+
+
+def test_t24d_osm_url():
+    assert I.osm_url(-5.879626, 110.432907) == (
+        "https://www.openstreetmap.org/?mlat=-5.8796&mlon=110.4329#map=12/-5.8796/110.4329")
+    assert I.osm_url(2.5, 109) == "https://www.openstreetmap.org/?mlat=2.5000&mlon=109.0000#map=12/2.5000/109.0000"
+    for bad in ((True, 100.0), (0.0, False), (float("nan"), 100.0), (0.0, float("inf")), (90.1, 0.0),
+                (-90.1, 0.0), (0.0, 180.1), (0.0, -180.1), ("1", 100.0), (None, 100.0)):
+        with pytest.raises(ValueError):
+            I.osm_url(*bad)
+
+
+def _pt(name, lat, lon):
+    return {"name": name, "lat_deg": lat, "lon_deg": lon}
+
+
+def test_t24d_undrawn_names_inside_and_edge():
+    # 0.01 deg of longitude near the equator is about 1.11 km, 0.05 deg about 5.6 km
+    rows = [_pt("in", -0.5, 100.5), _pt("near", -0.5, 101.01), _pt("far", -0.5, 101.05),
+            _pt("corner", 0.01, 101.01)]
+    assert I.undrawn_names(rows, SQUARE) == ["far"]
+    assert I.undrawn_names(rows, SQUARE, tol_km=0.0) == ["near", "far", "corner"]
+    assert I.undrawn_names(rows, SQUARE, tol_km=10.0) == []
+    assert I.undrawn_names(rows, None) == ["in", "near", "far", "corner"]
+    assert I.undrawn_names(rows, []) == ["in", "near", "far", "corner"]
+
+
+def test_t24d_undrawn_names_closing_edge_and_even_odd():
+    # the edge from the last point back to the first counts
+    assert I.undrawn_names([_pt("left", 0.5, 99.99)], [[(100.0, 0.0), (101.0, 0.0), (101.0, 1.0), (100.0, 1.0)]]) == []
+    # a U shape: the point in the notch is outside the ring and about 33 km from it
+    u_ring = [[(100.0, 0.0), (101.0, 0.0), (101.0, 1.0), (100.8, 1.0), (100.8, 0.2), (100.2, 0.2), (100.2, 1.0),
+               (100.0, 1.0)]]
+    assert I.undrawn_names([_pt("notch", 0.6, 100.5)], u_ring) == ["notch"]
+    assert I.undrawn_names([_pt("arm", 0.6, 100.1)], u_ring) == []
+
+
+def test_t24d_undrawn_names_rejects():
+    for tol in (-0.1, float("nan"), float("inf"), True, "2"):
+        with pytest.raises(ValueError):
+            I.undrawn_names([_pt("a", 0.0, 100.0)], SQUARE, tol_km=tol)
+    with pytest.raises(ValueError):
+        I.undrawn_names("rows", SQUARE)
+    with pytest.raises(ValueError):
+        I.undrawn_names(["row"], SQUARE)
+
+
+def test_t24d_map_note():
+    assert I.map_note([]) == I.MAP_NOTE_HEAD
+    assert I.map_note(["Derawan", "Balai"]) == (
+        I.MAP_NOTE_HEAD + " Too small for the land outline at this scale, so the ring sits on open sea: "
+        "Derawan, Balai.")
+    for bad in ("Derawan", [1], None):
+        with pytest.raises(ValueError):
+            I.map_note(bad)
+
+
+def _t24d_doc():
+    alpha = I.parse_island_list(_doc(_island("Alpha", study=HASH, lat=-0.5, lon=100.5)))[0]
+    rows = [_row(alpha), _row(_isl_at("Beta", -0.5, 105.0))]
+    return rows, I.island_screen_doc(rows, run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
+
+
+def test_t24d_page_rings_note_and_links():
+    rows, doc = _t24d_doc()
+    html = I.render_islands_html(doc, SQUARE)
+    assert 'viewBox="0 0 960 480"' in html and I.MAP_CSS in html
+    assert re.findall(r'<circle class="(\w+)"[^>]*\sr="6"', html) == ["costed", "island"]
+    assert 'r="5"' not in html
+    note = '<p class="mapnote">' + esc(I.map_note(["Beta"])) + "</p>"
+    assert note in html
+    assert html.index("</svg>") < html.index(note) < html.index("<table")
+    link = '<a href="' + esc(I.osm_url(-0.5, 100.5)) + '">the point on OpenStreetMap</a>'
+    assert "<td>Alpha<br>Somewhere, Java<br>" + link + "</td>" in html
+    assert "mlat=-0.5000&amp;mlon=100.5000" in html
+    assert esc(I.osm_url(-0.5, 105.0)) in html
+    assert "Land outline: Natural Earth 1:10m (public domain)." in html
+    assert "<script" not in html.lower()
+    plain = I.render_islands_html(doc)
+    assert '<p class="mapnote">' + esc(I.map_note(["Alpha", "Beta"])) + "</p>" in plain
+
+
+def test_t24d_page_label_gap():
+    rows, doc = _t24d_doc()
+    html = I.render_islands_html(doc, SQUARE)
+    xs = [float(x) for x in re.findall(r'<text x="([0-9.]+)"', html)]
+    dot_x = [I.map_xy(-0.5, 100.5)[0], I.map_xy(-0.5, 105.0)[0]]
+    assert xs == [round(dot_x[0] + 10.0, 2), round(dot_x[1] + 10.0, 2)]
+
+
+def test_t24d_shipped_land_file_and_points():
+    land_doc = json.loads((ROOT / "config" / "land_rings_indonesia.json").read_text(encoding="ascii"))
+    assert land_doc["source"].startswith("Natural Earth 1:10m land, public domain")
+    assert land_doc["bbox_deg"] == list(I.MAP_BBOX_DEG)
+    land = I.parse_land(land_doc)
+    rows = I.parse_island_list(json.loads((ROOT / "config" / "island_screen.json").read_text(encoding="ascii")))
+    for row in rows:
+        I.map_xy(row["lat_deg"], row["lon_deg"])     # every point is inside the new box
+    # measured before the code (post hoc): the two islands too small for the 1:10m outline
+    assert I.undrawn_names(rows, land) == ["Derawan", "Balai"]
