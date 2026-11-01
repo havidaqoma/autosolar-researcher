@@ -548,3 +548,20 @@ the values are marked post hoc everywhere and the first study stays as it is.
   and which prints the same.
 - Output committed in `docs/posthoc/` (the tool's own run). Solar side, all four at once: 0.332 against 0.354
   USD/kWh; all six: 0.344 against 0.425 (computed). Payback of the extra capital: year 6, year 8 discounted.
+
+## T26: which inputs would change the design; literature round (post hoc)
+
+- Asked by the owner: is there research that could improve the project? A literature round (39 queries on
+  OpenAlex and arXiv, 23 papers read in full, every quote checked against the text; notes kept outside this repo)
+  found one gap in how the study is read. "Confirm these first" ranks inputs by cost swing, but a cost swing is not
+  a design change (Langtry and Choudhary, Applied Energy). The study's sensitivity rows already hold the least cost
+  design at each moved value, so the page can show both.
+- T26 (spec and tests first; reference build passed the tests before Muse Code ran; Muse Code 906 s, USD 0.012):
+  `design_change_rows`, `design_change_section` and one line in `render_study_html`, in `autosolar/site.py` only.
+  Planted faults on Muse Code's build: 9 of 9 caught. The T22 page test now also cuts the new section (changed with
+  the spec, labelled in the test). Re-rendered pages differ from the committed ones only by the new section.
+- Example study: only the load changes the design, 8.8% at 20% less load (best design 6,000 kWp and 15,000 kWh);
+  every other input stays under 0.4% (computed).
+- Sourced what-if sizes: `docs/posthoc/sourced_whatifs.py` (hand-written) runs the T25 tool with sizes from papers.
+  Battery 8 years (2,000 cycles at 249 a year): 0.277 against 0.354 USD/kWh (computed). The README gives the range
+  8 to 15 years and keeps the grid-forming premium as assumed (the only paper value is for a 5 kVA home system).

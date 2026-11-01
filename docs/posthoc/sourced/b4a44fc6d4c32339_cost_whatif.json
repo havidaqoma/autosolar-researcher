@@ -1,0 +1,562 @@
+{
+ "schema": "autosolar.cost_whatif/1",
+ "run_hash": "b4a44fc6d4c32339",
+ "note": "Re-costs the study's least cost design with the study's own dispatch and cost functions on its own hourly file. The design is not re-sized, so each row is a ceiling on that design's cost. The six single changes and their sizes were fixed before the first run; the three combined rows were added after it. Every change is assumed; every result is computed. Post hoc: none of this is in the study.",
+ "inputs": {
+  "pv_capex_usd_per_kwp": 1119.0,
+  "pv_om_usd_per_kwp_yr": 24.38,
+  "pv_life_yr": 25,
+  "battery_capex_usd_per_kwh": 300.0,
+  "battery_power_capex_usd_per_kw": 100.0,
+  "battery_om_usd_per_kwh_yr": 5.0,
+  "battery_life_yr": 12,
+  "diesel_om_usd_per_kwh": 0.03,
+  "fuel_price_usd_per_l": 0.848485,
+  "discount_rate_frac": 0.08,
+  "project_life_yr": 20,
+  "currency_year": 2025,
+  "pv_kwp": 7250.0,
+  "battery_kwh": 19000.0,
+  "battery_kw": 4750.0
+ },
+ "cases": [
+  {
+   "key": "study",
+   "label": "As in the study",
+   "main_lcoe_usd_per_kwh": 0.2511304871971075,
+   "diesel_only_lcoe_usd_per_kwh": 0.35398377231631944,
+   "main_npc_usd": 23591477.824773088,
+   "diesel_only_npc_usd": 33253630.04761519,
+   "main_vs_diesel_pct": -29.05593226666401
+  },
+  {
+   "key": "battery_8yr",
+   "label": "Battery lasts 8 years (2000 cycles at 249 a year)",
+   "main_lcoe_usd_per_kwh": 0.2773767233833471,
+   "diesel_only_lcoe_usd_per_kwh": 0.35398377231631944,
+   "main_npc_usd": 26057078.500669684,
+   "diesel_only_npc_usd": 33253630.04761519,
+   "main_vs_diesel_pct": -21.641401364725944
+  },
+  {
+   "key": "battery_10yr",
+   "label": "Battery lasts 10 years (calendar life)",
+   "main_lcoe_usd_per_kwh": 0.2601750260201941,
+   "diesel_only_lcoe_usd_per_kwh": 0.35398377231631944,
+   "main_npc_usd": 24441131.8809637,
+   "diesel_only_npc_usd": 33253630.04761519,
+   "main_vs_diesel_pct": -26.50086067004732
+  },
+  {
+   "key": "pv_055",
+   "label": "PV output falls 0.55% a year (data sheet)",
+   "main_lcoe_usd_per_kwh": 0.25560711713357037,
+   "diesel_only_lcoe_usd_per_kwh": 0.35398377231631944,
+   "main_npc_usd": 24012017.429719135,
+   "diesel_only_npc_usd": 33253630.04761519,
+   "main_vs_diesel_pct": -27.791289566471946
+  },
+  {
+   "key": "overhaul_low",
+   "label": "Diesel overhauls +0.021 USD/kWh (full load)",
+   "main_lcoe_usd_per_kwh": 0.2541072438760833,
+   "diesel_only_lcoe_usd_per_kwh": 0.37498377231631946,
+   "main_npc_usd": 23871117.664466,
+   "diesel_only_npc_usd": 35226393.44981968,
+   "main_vs_diesel_pct": -32.23513585496446
+  },
+  {
+   "key": "overhaul_high",
+   "label": "Diesel overhauls +0.030 USD/kWh (70% load)",
+   "main_lcoe_usd_per_kwh": 0.2553829967385014,
+   "diesel_only_lcoe_usd_per_kwh": 0.38398377231631947,
+   "main_npc_usd": 23990963.31004867,
+   "diesel_only_npc_usd": 36071863.47933588,
+   "main_vs_diesel_pct": -33.491200631228466
+  },
+  {
+   "key": "sourced_solar",
+   "label": "Battery 8 years and PV 0.55% a year",
+   "main_lcoe_usd_per_kwh": 0.28185335331981,
+   "diesel_only_lcoe_usd_per_kwh": 0.35398377231631944,
+   "main_npc_usd": 26477618.105615728,
+   "diesel_only_npc_usd": 33253630.04761519,
+   "main_vs_diesel_pct": -20.376758664533867
+  },
+  {
+   "key": "sourced_both",
+   "label": "Battery 8 years, PV 0.55% a year, overhauls +0.021",
+   "main_lcoe_usd_per_kwh": 0.28508469432062167,
+   "diesel_only_lcoe_usd_per_kwh": 0.37498377231631946,
+   "main_npc_usd": 26781173.880208302,
+   "diesel_only_npc_usd": 35226393.44981968,
+   "main_vs_diesel_pct": -23.974124917561223
+  }
+ ],
+ "cash_flow_main": [
+  {
+   "year": 0,
+   "capital_usd": 14287750.0,
+   "om_usd": 0.0,
+   "fuel_usd": 0.0,
+   "salvage_usd": 0.0,
+   "total_usd": 14287750.0,
+   "discounted_usd": 14287750.0,
+   "served_kwh": 0.0,
+   "discounted_kwh": 0.0
+  },
+  {
+   "year": 1,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 720630.5275978025,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 8859361.11111111
+  },
+  {
+   "year": 2,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 667250.4885164837,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 8203112.139917695
+  },
+  {
+   "year": 3,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 617824.5264041516,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 7595474.203627495
+  },
+  {
+   "year": 4,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 572059.7466705106,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 7032846.484840272
+  },
+  {
+   "year": 5,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 529684.9506208431,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 6511894.893370622
+  },
+  {
+   "year": 6,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 490449.02835263254,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 6029532.308676502
+  },
+  {
+   "year": 7,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 454119.4706968819,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 5582900.285811574
+  },
+  {
+   "year": 8,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 420480.99138600176,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 5169352.116492199
+  },
+  {
+   "year": 9,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 389334.2512833349,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4786437.144900184
+  },
+  {
+   "year": 10,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 360494.677114199,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4431886.245277948
+  },
+  {
+   "year": 11,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 333791.3676983324,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4103598.375257359
+  },
+  {
+   "year": 12,
+   "capital_usd": 6175000.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 6953280.969805627,
+   "discounted_usd": 2761243.540841155,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3799628.1252382947
+  },
+  {
+   "year": 13,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 286172.297409407,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3518174.1900354577
+  },
+  {
+   "year": 14,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 264974.3494531546,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3257568.6944772755
+  },
+  {
+   "year": 15,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 245346.61986403205,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3016267.309701181
+  },
+  {
+   "year": 16,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 227172.79617040002,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2792840.1015751674
+  },
+  {
+   "year": 17,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 210345.18163925924,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2585963.0570140434
+  },
+  {
+   "year": 18,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 194764.0570733882,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2394410.237975966
+  },
+  {
+   "year": 19,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": 0.0,
+   "total_usd": 778280.9698056267,
+   "discounted_usd": 180337.08988276683,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2217046.516644413
+  },
+  {
+   "year": 20,
+   "capital_usd": 0.0,
+   "om_usd": 312443.47906810656,
+   "fuel_usd": 465837.4907375201,
+   "salvage_usd": -3680883.333333333,
+   "total_usd": -2902602.3635277064,
+   "discounted_usd": -622748.1339016468,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2052820.8487448266
+  }
+ ],
+ "cash_flow_diesel_only": [
+  {
+   "year": 0,
+   "capital_usd": 0.0,
+   "om_usd": 0.0,
+   "fuel_usd": 0.0,
+   "salvage_usd": 0.0,
+   "total_usd": 0.0,
+   "discounted_usd": 0.0,
+   "served_kwh": 0.0,
+   "discounted_kwh": 0.0
+  },
+  {
+   "year": 1,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 3136070.066423611,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 8859361.11111111
+  },
+  {
+   "year": 2,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 2903768.580021862,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 8203112.139917695
+  },
+  {
+   "year": 3,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 2688674.6111313533,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 7595474.203627495
+  },
+  {
+   "year": 4,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 2489513.5288253273,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 7032846.484840272
+  },
+  {
+   "year": 5,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 2305105.11928271,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 6511894.893370622
+  },
+  {
+   "year": 6,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 2134356.591928435,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 6029532.308676502
+  },
+  {
+   "year": 7,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1976256.1036374397,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 5582900.285811574
+  },
+  {
+   "year": 8,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1829866.762627259,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 5169352.116492199
+  },
+  {
+   "year": 9,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1694321.076506721,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4786437.144900184
+  },
+  {
+   "year": 10,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1568815.811580297,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4431886.245277948
+  },
+  {
+   "year": 11,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1452607.2329447195,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 4103598.375257359
+  },
+  {
+   "year": 12,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1345006.6971710366,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3799628.1252382947
+  },
+  {
+   "year": 13,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1245376.5714546633,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3518174.1900354577
+  },
+  {
+   "year": 14,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1153126.4550506142,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3257568.6944772755
+  },
+  {
+   "year": 15,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 1067709.6806024204,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 3016267.309701181
+  },
+  {
+   "year": 16,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 988620.0746318707,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2792840.1015751674
+  },
+  {
+   "year": 17,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 915388.9579924728,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2585963.0570140434
+  },
+  {
+   "year": 18,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 847582.3685115488,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2394410.237975966
+  },
+  {
+   "year": 19,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 784798.4893625452,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2217046.516644413
+  },
+  {
+   "year": 20,
+   "capital_usd": 0.0,
+   "om_usd": 287043.3,
+   "fuel_usd": 3099912.3717375,
+   "salvage_usd": 0.0,
+   "total_usd": 3386955.6717375,
+   "discounted_usd": 726665.2679282825,
+   "served_kwh": 9568110.0,
+   "discounted_kwh": 2052820.8487448266
+  }
+ ]
+}

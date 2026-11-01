@@ -103,3 +103,12 @@ the answer". Nothing else on the page changes. ASCII only, no `<script>`.
 `tests/test_design_change.py` passes. `tests/test_engineer_files.py::test_page_otherwise_unchanged_from_committed_page`
 now also cuts the `design-change` section before comparing (changed with this spec, labelled in the test), so it
 keeps checking that nothing else on the page changes. After the site is re-rendered, the full suite passes.
+
+## Record (after the code)
+
+- Before Muse Code ran: a reference build outside the repo passed all 46 tests in `tests/test_design_change.py`,
+  then `autosolar/site.py` was restored from git.
+- Muse Code: one run, 906 s, USD 0.012 (measured, `ledger/build_usage.jsonl`), edited `autosolar/site.py` only.
+- Planted faults on Muse Code's build, one at a time: 9 of 9 caught (tie keeps later row, ascending sort, loose
+  tolerance, factor 1 kept, line exclusive, up and down swapped, negative PV kept, non-bool same_design kept,
+  section not placed). No test was added after the code.

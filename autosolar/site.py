@@ -71,6 +71,9 @@ SENSITIVITY_LABELS = {
     "battery_duration_h": "Battery hours",
 }
 
+DESIGN_CHANGE_MIN_FRAC = 0.01
+DESIGN_CHANGE_TOL = 1e-9
+
 FIELD_ASKS = {
     "pv_capex_usd_per_kwp": "Installed PV prices from recent island tenders, shipping included",
     "battery_capex_usd_per_kwh": "Installed battery prices from recent tenders, shipping included",
@@ -1374,6 +1377,143 @@ def resources_section(report: dict, screen: dict | None) -> str:
     return out
 
 
+def _design_float(value: object) -> float | None:
+    """Finite float from a real input. None when missing or not a finite real."""
+    if isinstance(value, bool) or isinstance(value, (str, bytes, bytearray)):
+        return None
+    try:
+        out = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(out):
+        return None
+    return out
+
+
+def design_change_rows(report: dict) -> list[dict]:
+    """Best worst-move design shift per input. Costs in USD per kWh. Returns list."""
+    if not isinstance(report, dict):
+        raise ValueError("report must be a dict")
+    table = report.get("sensitivity_table", [])
+    if not isinstance(table, list):
+        raise ValueError("sensitivity_table must be a list")
+    best: dict[str, tuple[float, float, float, float, bool]] = {}
+    order: list[str] = []
+    for row in table:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("input")
+        if not isinstance(name, str) or name == "":
+            continue
+        factor = _design_float(row.get("factor"))
+        if factor is None or factor == 1.0:
+            continue
+        base = _design_float(row.get("base_design_lcoe_usd_per_kwh"))
+        if base is None or base <= 0.0:
+            continue
+        least = _design_float(row.get("least_cost_lcoe_usd_per_kwh"))
+        if least is None or least <= 0.0:
+            continue
+        pv = _design_float(row.get("least_cost_pv_kwp"))
+        if pv is None or pv < 0.0:
+            continue
+        bat = _design_float(row.get("least_cost_battery_kwh"))
+        if bat is None or bat < 0.0:
+            continue
+        same = row.get("same_design")
+        if same is not True and same is not False:
+            continue
+        extra = base / least - 1.0
+        if extra < -DESIGN_CHANGE_TOL:
+            raise ValueError("least cost design costs more than the main design")
+        if extra < 0.0:
+            extra = 0.0
+        if name not in best:
+            order.append(name)
+            best[name] = (extra, factor, pv, bat, same)
+        elif extra > best[name][0]:
+            best[name] = (extra, factor, pv, bat, same)
+    ranked = sorted(order, key=lambda n: -best[n][0])
+    out: list[dict] = []
+    for name in ranked:
+        extra, factor, pv, bat, same = best[name]
+        out.append(
+            {
+                "input": name,
+                "factor": float(factor),
+                "extra_frac": float(extra),
+                "pv_kwp": float(pv),
+                "battery_kwh": float(bat),
+                "same_design": same,
+            }
+        )
+    return out
+
+
+def design_change_section(report: dict) -> str:
+    """Which inputs would change the design section. LCOE in USD per kWh. Returns str."""
+    rows = design_change_rows(report)
+    if not rows:
+        return ""
+    head = '<section id="design-change"><h2>Which inputs would change the design?</h2>'
+    thresh = float(DESIGN_CHANGE_MIN_FRAC)
+    stop = thresh
+    mark = fmt(100 * stop, 0)
+    t1 = (
+        "Confirm these first ranks inputs by how far they move the cost. Before building, a second "
+        "question matters more: if an input is wrong, would another design be cheaper? For each input moved "
+        "down and up, the study also found the least cost design at that value. The table shows how much more "
+        "the main design costs than that design, for the worse of the two moves (computed)."
+    )
+    cells: list[list[str]] = []
+    for item in rows:
+        label = str(SENSITIVITY_LABELS.get(str(item["input"]), str(item["input"])))
+        factor = float(item["factor"])
+        if factor < 1.0:
+            moved = "down " + fmt(100 * (1.0 - factor), 0) + "%"
+        else:
+            moved = "up " + fmt(100 * (factor - 1.0), 0) + "%"
+        if bool(item["same_design"]):
+            design = "Same as the main design"
+        else:
+            design = fmt(float(item["pv_kwp"]), 0) + " kWp and " + fmt(float(item["battery_kwh"]), 0) + " kWh"
+        more = fmt(100 * float(item["extra_frac"]), 1) + "%"
+        cells.append([label, moved, design, more])
+    table_html = _table(
+        ["Input", "Moved", "Least cost design at that value", "Main design costs more by"],
+        cells,
+    )
+    big = [
+        str(SENSITIVITY_LABELS.get(str(item["input"]), str(item["input"])))
+        for item in rows
+        if float(item["extra_frac"]) >= float(DESIGN_CHANGE_MIN_FRAC)
+    ]
+    if len(big) == 1:
+        t3 = (
+            "Confirm before sizing the plant: " + big[0] + ". If this input is off by the amount above, the main "
+            "design costs " + mark + "% or more above the best design for that case. The other inputs move the "
+            "price more than the plan (computed; the " + mark + "% line is assumed)."
+        )
+    elif len(big) >= 2:
+        t3 = (
+            "Confirm before sizing the plant: " + ", ".join(big) + ". If these inputs are off by the amounts "
+            "above, the main design costs " + mark + "% or more above the best design for that case. The other "
+            "inputs move the price more than the plan (computed; the " + mark + "% line is assumed)."
+        )
+    else:
+        t3 = (
+            "No input moved this way makes the main design cost " + mark + "% or more above the best design for "
+            "that case: the inputs move the price more than the plan (computed; the " + mark + "% line is "
+            "assumed)."
+        )
+    t4 = (
+        "This is the cost of a wrong input at one point each way, not an expected value: the study puts no odds "
+        "on the inputs. Some inputs, such as the future diesel price, cannot be measured before building; for "
+        "those, read the table as a check that the choice still holds."
+    )
+    return head + "<p>" + esc(t1) + "</p>" + table_html + "<p>" + esc(t3) + "</p>" + "<p>" + esc(t4) + "</p>" + "</section>"
+
+
 def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | None = None,
                       review: dict | None = None, figure_check: dict | None = None,
                       load_followup: dict | None = None, field_notes: list | None = None,
@@ -1418,6 +1558,7 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     out.append("</div></section>")
     out.append(fuel_price_section(report, table))
     out.append(confirm_section(report, field_notes=field_notes, engineer_files=engineer_files))
+    out.append(design_change_section(report))
     if resource_screen is not None:
         out.append(resources_section(report, resource_screen))
     if firm is not None:

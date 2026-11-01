@@ -24,18 +24,19 @@ In short, for Karimunjawa (computed unless labelled):
 So solar plus battery comes out 29% to 46% cheaper than diesel only, and the gap is much smaller if a diesel unit
 must always spin. The load comes from the island's one published study, and our own chart check says it may be
 about 30% too high; at the load the chart implies, solar plus battery is still 33.7% cheaper (post hoc). The
-metered load and the battery price are the first things to confirm. Pages: `docs/site/b4a44fc6d4c32339.html`
+metered load comes first: of the 9 inputs it is the only one whose error would change which plant to build
+(computed, the page's design-change table); then the battery price. Pages: `docs/site/b4a44fc6d4c32339.html`
 (example) and `docs/site/107477f112e5d92c.html` (curated).
 
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
-What it cost (measured ledgers): Muse Code wrote the engine, all 12,499 lines of `autosolar/` (24 files, `wc -l`),
-for USD 0.79. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
+What it cost (measured ledgers): Muse Code wrote the engine, all 12,640 lines of `autosolar/` (24 files, `wc -l`),
+for USD 0.80. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
 and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
 web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
-smoke tests, chart reader tests and reviews included: USD 4.33.
+smoke tests, chart reader tests and reviews included: USD 4.34.
 
 ## For judges
 
@@ -65,6 +66,12 @@ smoke tests, chart reader tests and reviews included: USD 4.33.
   study's yearly numbers from them, a self check that they are the study's own series (it did, to within one part
   in a billion, computed; `docs/specs/T22_confirm_first.md`). An engineer can set up the same case in their own
   tool and compare; we have not run PVsyst or HOMER ourselves.
+- Which inputs would change the design (latest study pages, `docs/specs/T26_design_change.md`): for each input
+  moved 20% down and up, the page shows the least cost design at that value and how much more the main design
+  costs than it (computed from the study's own sensitivity rows; no new simulation). A wide cost swing does not
+  mean the choice changes. In the example only the load changes it: with 20% less load the best design is
+  6,000 kWp and 15,000 kWh, and the main design costs 8.8% more than it. Every other input stays under 0.4%;
+  they move the price, not the plan (computed). So the metered load comes before any price.
 - Which renewable fits this site (post hoc, `docs/specs/T23_resource_screen.md`): sun 4.05 kWh/kWp a day (Global
   Solar Atlas, a Solargis model), the World Bank's favorable middle range; wind 4.44 m/s and 91 W/m2 at 50 m (NASA
   POWER, hourly 2016 to 2024, computed), class 1 (Poor) on the NREL scale, though a coarse grid can miss local
@@ -117,6 +124,8 @@ smoke tests, chart reader tests and reviews included: USD 4.33.
 
 ![Confirm these first: inputs ranked by how far they move the cost, with the field data to ask for](docs/img/confirm.png)
 
+![Which inputs would change the design: only the load changes the plan; the others move the price](docs/img/design_change.png)
+
 ![Which renewable fits this site, and our PV model against two outside models](docs/img/resources.png)
 
 ![Eleven diesel islands: a first screen of sun, wind and rivers, costed only where an hourly load exists](docs/img/islands.png)
@@ -133,13 +142,13 @@ smoke tests, chart reader tests and reviews included: USD 4.33.
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
 | Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks: 10 of 10, 7 of 7, 13 of 14 and 15 of 16; in the last two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
 
-- Checks: 1,801 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,847 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
   `docs/smoke/FRESH_RERUN.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
-- Cost: Muse Code USD 0.79 (52 runs, 5.4 hours; it read 70 million tokens, 93% from cache, and wrote 0.86
-  million). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.33 in all (measured ledgers).
+- Cost: Muse Code USD 0.80 (53 runs, 5.6 hours; it read 71 million tokens, 93% from cache, and wrote 0.87
+  million). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.34 in all (measured ledgers).
 - Limits: see "What it does not cover" (a what-if table there costs six of the left-out items, post hoc) and the
   open review points under "Checks".
 
@@ -184,6 +193,18 @@ only (0.414 against 0.354 USD/kWh), the best design shrinks to 1,500 kWp, and wi
 only 2.4% below diesel only. The load check adds a second caution: if the island uses less power than Table 6
 says, the right design is smaller (5,750 kWp and 15,000 kWh at the load the chart implies), but it still costs
 a third less than diesel only (post hoc, computed).
+
+What published work says about running on inverters alone (literature round, post hoc; papers read in full,
+each quote checked against the text): the nearest case is a simulation. On Pantelleria, an Italian island
+supplied by diesel today (peak 8.1 MW, paper), a model with every diesel unit removed stayed stable when two
+large battery grid-forming units of 4 MVA each held the grid; two units of 1 MVA oscillated (paper, Ippolito
+and others, Energies; runs of seconds, not days). In St. Mary's, Alaska, a 1 MW battery grid-forming unit let
+the running diesels drop from 3 to 1, but one still ran (paper, simulated and checked with hardware in the
+loop); that is our reserve case. St. Eustatius switched its diesels off for up to 11 hours a day (secondary,
+quoted in a Niue study). No source we read shows a full day on inverters alone, so the question stays open.
+The main design's battery inverter is 4,750 kW (computed), 3.3 times the 1,422 kW peak load (paper; ratio
+computed), so it passes the rough size test of the Pantelleria cases if split into a few large units
+(inferred). Whether it can hold the grid through a whole day and through faults needs a grid study.
 
 ## Second run with curated inputs (post hoc, study 107477f112e5d92c)
 
@@ -323,7 +344,15 @@ financing and tariffs, demand growth beyond the growth case, battery ageing beyo
 price risk beyond the sensitivity table, diesel overhaul and engine replacement, and reliability beyond the hourly
 energy balance (forced outages, loss of the largest unit, sub-hourly ramps). Left out against diesel:
 sea transport and taxes on fuel, and the lower heating value of B40 biodiesel. Left out against solar: PV
-degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs). The hourly load comes from the Hiron paper,
+degradation (0.25 to 0.5% a year in the Indonesian catalogue, docs; field studies in tropical Malaysia
+quoted by Hasan and others, IET Renewable Power Generation, report 6.48% over 8 years for monocrystalline
+modules, about 0.8% a year, and 12.76% for polycrystalline, about 1.6% a year (paper; rates computed); their
+own 40.35% over 9 years comes from 4 small modules measured against the nameplate, an outlier, not a rate).
+Field yield can fall short of design tools: a Ugandan island plant measured a PV performance ratio of 65.6%
+over 4 years (paper, Kalangala, Frontiers in Energy Research), where design tools often assume about 80% (the
+PLN Nusa Penida study used 0.804, paper). Design loads can run high: in two Ghana mini-grids the design load
+was 37.4% and 12.8% above the load later logged (paper; the second computed from its figures), and both
+plants were oversized (paper, Energy for Sustainable Development). The hourly load comes from the Hiron paper,
 which our own check flags, and the SAM 3.1 load check finds it 30.4% above the paper's own December 2018 curve; the
 page says so. Wind, hydro and a grid link are screened, not costed. The public field figures are from the press
 (2017 and 2025), not from the operator's records.
@@ -358,6 +387,55 @@ Cash flow, main design (USD, computed): 14,287,750 up front; then 312,443 O&M an
 The yearly savings repay the extra capital in year 6, or in year 8 once discounted at the study's 8% (assumed
 rate; years computed from the committed file). NPC 23,591,478 against 33,253,630 for diesel only.
 
+### Costs left out: sourced sizes (post hoc, literature round)
+
+The T25 sizes above were assumed. A literature round found published sizes for three of them, and a hand-written
+script, `docs/posthoc/sourced_whatifs.py`, runs the T25 tool with those sizes; the tool's reproduction gate still
+applies (output in `docs/posthoc/sourced/`). Battery: 2,000 cycles and 10 years calendar life (paper, Trevizan and
+others, MRS Energy and Sustainability, Table 3, quoting a PNNL figure); the main design does 249 full cycles a year
+(computed), so 2,000 cycles last 8.0 years. Diesel overhaul: 65% of 800 USD/kW every 25,000 hours (paper, same
+study, Table 4, quoting Lazard), 0.021 USD/kWh at full load and 0.030 at 70% load (computed). PV: 0.55% a year
+(data sheet value in the PLN Nusa Penida study, paper).
+
+| Change (sourced) | Solar plus battery (USD/kWh) | Diesel only (USD/kWh) | Solar plus battery against diesel only |
+|---|---|---|---|
+| As in the study | 0.251 | 0.354 | -29.1% |
+| Battery lasts 8 years (2,000 cycles at 249 a year) | 0.277 | 0.354 | -21.6% |
+| Battery lasts 10 years (calendar life) | 0.260 | 0.354 | -26.5% |
+| PV output falls 0.55% a year (data sheet) | 0.256 | 0.354 | -27.8% |
+| Diesel overhauls +0.021 USD/kWh (full load) | 0.254 | 0.375 | -32.2% |
+| Diesel overhauls +0.030 USD/kWh (70% load) | 0.255 | 0.384 | -33.5% |
+| Battery 8 years and PV 0.55% a year | 0.282 | 0.354 | -20.4% |
+| Battery 8 years, PV 0.55% a year, overhauls +0.021 | 0.285 | 0.375 | -24.0% |
+
+Battery life is the largest sourced risk, and the sources disagree: 8 years from the cycle count, 10 from the
+calendar life, 15 in the Indonesian catalogue that the curated run uses (docs). The study's 12 years sits inside
+that range; at the cautious end solar plus battery is still 21.6% cheaper (computed). The grid-forming row above
+stays assumed: the only paper value we found is EUR 1,500 extra on a 5 kVA home system, about EUR 300 per kVA
+(paper, Oprea and others, Journal of Energy Storage; per kVA computed), the authors' own assumption for a house, not
+a utility price.
+
+## Related work (literature round, post hoc)
+
+- AutoEnergyDesign (arXiv 2610.35160) is the closest tool we found. Claude models act as the optimizer that sizes
+  PV, battery and other parts for an office building with a grid connection, against a lifetime cost (NPC with
+  replacement and salvage, like ours), with one measured load, one weather source and one cost catalogue fixed by
+  the authors (paper). The difference is the job given to the model. Here the 925 designs are searched in code, all
+  of them, so the best design on the grid is exact. The models do what code cannot: find each cost with a quote,
+  check that the quote says the number, read the published study's chart, and refuse when the evidence is missing.
+  That paper has no diesel, island, per-value source check or check of a published study (paper).
+- Why refusals live in code: a test of language models on engineering limits (arXiv 2610.38096) found that models
+  which compute a limit correctly can still call an impossible design solved. One model rejected 40 of 40 flaws
+  when asked only whether a design was feasible, yet accepted 21 of 40 in one full-answer format (paper). Here a
+  missing or unquoted value stops the study in code, whatever a model says.
+- The nearest Indonesian study agrees: PLN staff found that PV and batteries cut Nusa Penida's cost from 0.245 to
+  0.186 USD/kWh, 24% (paper), with the diesel kept as backup. Their PV price is 1.31 times ours (computed), close
+  to our island premium what-if; their battery price, 296 USD/kWh (computed), is close to our assumed 300.
+- Value of information: Langtry and Choudhary (Applied Energy) found that load uncertainty moved the cost of a PV
+  and battery system by about 30%, yet knowing the load exactly was worth only 1.27% of lifetime cost (paper). A
+  wide cost swing is not by itself a reason to wait; a swing that changes the design is. That is the idea behind
+  the design-change table (T26).
+
 ## Next
 
 - Many sites at once: the island screen (T24) does the screening part for 11 named islands on one map. Costing
@@ -372,7 +450,7 @@ rate; years computed from the committed file). NPC 23,591,478 against 33,253,630
 
 ```
 uv sync
-uv run pytest                     # 1,801 tests, no network
+uv run pytest                     # 1,847 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -394,10 +472,10 @@ answers for sites within 30 km of the island; other sites are refused rather tha
   smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, six reviews, the two-model re-judge,
   one load check, one smoke search with the judge panel, one refused question and two question parses for the
   fresh re-run (`docs/smoke/FRESH_RERUN.md`).
-- `ledger/build_usage.jsonl`: 52 Muse Code runs (48 that wrote the product, 4 sandbox smoke runs), USD 0.79 and
-  5.4 hours in total. Muse Code read 69.9 million input tokens (93% from cache) and wrote 0.86 million output
+- `ledger/build_usage.jsonl`: 53 Muse Code runs (49 that wrote the product, 4 sandbox smoke runs), USD 0.80 and
+  5.6 hours in total. Muse Code read 71.3 million input tokens (93% from cache) and wrote 0.87 million output
   tokens.
-- All Meta model spending: USD 4.33.
+- All Meta model spending: USD 4.34.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013, a load check USD 0.01 and a review USD 0.22 to 0.33.
 
@@ -421,7 +499,9 @@ T23, T24, T24d and T25 was closed with a test added after the code, labelled so 
 26; T24d: 13 of 14, then 14 of 14; T25: 14 of 16, then 15 of 16, the last one keeping a negative zero that the
 spec does not ask to remove and that prints the same). Five small fixes after the first live runs or reviews (T22b, T23b, T23c, T24b,
 T24c: 10 of 10 and 7 of 7 planted faults caught) kept the same order: spec and failing test first, then Muse Code; so did T22c, the wording fixes
-after an outside review (8 of 8 planted faults caught). Muse Code wrote the code in a
+after an outside review (8 of 8 planted faults caught). T26 (which inputs would change the design) went back to the
+earlier order: its tests passed on a reference build before Muse Code ran, and 9 of 9 planted faults were caught
+on Muse Code's build. Muse Code wrote the code in a
 sandbox and ran the tests itself. It did not write the specs or the tests. Of the run tools in `tools/` it wrote
 `tools/load_followup.py`, `tools/engineer_files.py`, `tools/resource_screen.py`, `tools/island_screen.py` and
 `tools/cost_whatif.py` and edited `tools/make_site.py` (T20 to T25); T19 changed two others, with its own spec and tests first. The log of what
