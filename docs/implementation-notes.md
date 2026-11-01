@@ -565,3 +565,26 @@ the values are marked post hoc everywhere and the first study stays as it is.
 - Sourced what-if sizes: `docs/posthoc/sourced_whatifs.py` (hand-written) runs the T25 tool with sizes from papers.
   Battery 8 years (2,000 cycles at 249 a year): 0.277 against 0.354 USD/kWh (computed). The README gives the range
   8 to 15 years and keeps the grid-forming premium as assumed (the only paper value is for a 5 kVA home system).
+
+## T27: twin test of the checking step; AI judges round 4 (post hoc)
+
+- Asked by the owner (overnight, "do all"): test the checking step itself. If a cited value is a little wrong,
+  which check stops it? The spec, the 41 acceptance tests, the twin sizes (1%, 10% and 30%, down and up), the
+  3 votes per twin and the table to report were committed before any judge call (e03c2e1). A reference build
+  outside the repo passed the tests first; planted faults caught 10 of 12 there, so two tests were tightened before
+  the commit (the full input descriptions, and a cache line written before the next judge call), then 12 of 12.
+- T27 (Muse Code 225 s, USD 0.012): `autosolar/twin_test.py` and `tools/twin_test.py`. All 41 tests passed on its
+  first build; planted faults on its build: 17 of 17 caught.
+- One run with the local judge (Muse Glimmer, 3 votes each, 210 votes in 46 minutes, measured; no Meta model call):
+  the script stopped all 60 wrong copies and none of the 10 true values; the judge alone said no to all 60 wrong
+  copies in 180 of 180 votes, even at 1%, and turned down 2 of the 10 true values under the two-vote rule (3 of 30
+  single votes), both on how the quote describes the input (computed). Limits are in the README: the quote holds the true
+  number; the judge saw the quote, not the source text around it; no Wonder vote; 10 values.
+- The Wonder vote was left out on purpose, to keep Meta model spending for tests at zero.
+- AI judges round 4 (opencode, no Meta credit; notes kept outside this repo): weighted mean 7.68 against 7.30 in
+  round 3, within the spread between judges. Fixed in words: one headline (29.1%, the curated 45.7% named as a post
+  hoc what-if), how the price click works (worked out when the page is built), "wind passes on none" with the
+  coarse grid caveat, the reviewer arithmetic without "it is right", why Muse Code was cheap (Contributor mode
+  prices and 93% cache reads; about USD 7.40 without the cache, computed), the 30 km rule as a fixed rule, and "0
+  kWh not served" as the hourly balance only. The README now opens with a short "For judges" list; the long
+  bullets moved, unchanged apart from these fixes, to "Details for judges".

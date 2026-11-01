@@ -201,3 +201,15 @@ The README gets one short paragraph with the table from `docs/posthoc/twin_test.
 glimmer --votes 3`: how many moved twins the script stops, how many the local judge alone turns down at each size
 (single votes and the two-vote rule), how many true values it turns down, and how many answers gave no verdict. The
 counts are reported as they come out, with the run's judge name, whatever they show.
+
+## Recorded after the code and the run (not part of the spec above)
+
+- Reference build (outside the repo, removed): 41 of 41 tests passed; planted faults 10 of 12 caught at first, so two
+  tests were tightened before this spec was committed (the full `TWIN_DESCRIPTIONS`, and the cache line written
+  before the next judge call), then 12 of 12.
+- Muse Code build: 41 of 41 passed on its first run (225 s, USD 0.012, measured); planted faults on its build: 17 of
+  17 caught.
+- The one run, `--judge glimmer --votes 3` (210 votes, 46 minutes, measured): the table in
+  `docs/posthoc/twin_test.md`. Script: 60 of 60 wrong copies stopped, 0 of 10 true values. Local judge alone: 180 of
+  180 votes said no to the wrong copies; 3 of 30 votes and 2 of 10 true values under the two-vote rule turned down
+  (computed). No vote gave no verdict.

@@ -1,0 +1,2292 @@
+{
+ "schema": "autosolar.twin_test/1",
+ "note": "Post hoc test, written after the studies. Each checked or curated value is given to the checker again with its number moved by 1%, 10% and 30%, down and up. The script check needs the claimed number inside the quote. The local judge (votes 1 and 2 in a study) sees the claimed value, the quote, the source title and URL; here the quote stands in for the source text around it. The Wonder vote (vote 3 in a study) is not run, to keep Meta model spending at zero. In a study a value is used only if every check passes.",
+ "judge": "Muse Glimmer 30B Q4_K_M, local llama.cpp, reasoning low",
+ "votes": 3,
+ "items": [
+  {
+   "id": "i01",
+   "study": "107477f112e5d92c",
+   "input": "pv_capex_usd_per_kwp",
+   "status": "checked",
+   "value": 1119,
+   "unit": "USD/kW",
+   "quote": "The unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW (IEA, ).",
+   "title": "A comparative assessment of policy induced diffusion pathways for utility scale solar PV: case study of Indonesia",
+   "url": "https://www.frontiersin.org/journals/sustainable-energy-policy/articles/10.3389/fsuep.2024.1308441/full",
+   "doi": "10.3389/fsuep.2024.1308441",
+   "currency_year": 2022
+  },
+  {
+   "id": "i02",
+   "study": "107477f112e5d92c",
+   "input": "pv_om_usd_per_kwp_yr",
+   "status": "checked",
+   "value": 24.38,
+   "unit": "US$/kW per year",
+   "quote": "Darghouth et al. estimated that the CAPEX and OPEX for SPP in Indonesia is 1365.76 US$ and 24.38 US$/kW per year.",
+   "title": "Techno-economic analysis of rooftop solar power plant implementation and policy on mosques: an Indonesian case study",
+   "url": "https://www.nature.com/articles/s41598-022-08968-6",
+   "doi": "10.1038/s41598-022-08968-6",
+   "currency_year": null
+  },
+  {
+   "id": "i03",
+   "study": "107477f112e5d92c",
+   "input": "battery_capex_usd_per_kwh",
+   "status": "curated",
+   "value": 0.35,
+   "unit": "MUSD/MWh energy component, before 0.04 other project costs",
+   "quote": "Batteries - Lithium-ion (utility-scale), column 2023: - energy component (MUSD/MWh) 0.35; - other project costs (MUSD/MWh) 0.04; uncertainty (2023) of the energy component 0.26 to 0.38",
+   "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+   "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+   "doi": null,
+   "currency_year": 2022
+  },
+  {
+   "id": "i04",
+   "study": "107477f112e5d92c",
+   "input": "battery_om_usd_per_kwh_yr",
+   "status": "curated",
+   "value": 15000,
+   "unit": "USD/MW/year",
+   "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Fixed O&M (USD/MW/year) 15,000; Discharge time (hours) 4; Variable O&M (USD/MWh) 2.00",
+   "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+   "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+   "doi": null,
+   "currency_year": 2022
+  },
+  {
+   "id": "i05",
+   "study": "107477f112e5d92c",
+   "input": "discount_rate_frac",
+   "status": "curated",
+   "value": 9.4,
+   "unit": "% nominal",
+   "quote": "The median weighted average cost of capital (WACC, nominal, post-tax and in local currency) for solar PV in Indonesia, Viet Nam and the Philippines based on survey responses was 9.4%, 9.0% and 8.0% respectively in 2024",
+   "title": "High cost of capital and limited project pipeline hinder clean energy investment in Southeast Asia (IEA commentary, Teng and Erdogan)",
+   "url": "https://www.iea.org/commentaries/high-cost-of-capital-and-limited-project-pipeline-hinder-clean-energy-investment-in-southeast-asia",
+   "doi": null,
+   "currency_year": null
+  },
+  {
+   "id": "i06",
+   "study": "107477f112e5d92c",
+   "input": "diesel_min_load_frac",
+   "status": "checked",
+   "value": 25,
+   "unit": "% of their rated power",
+   "quote": "When RES generation is greater than the load demand, online diesel generators operate at their minimum loading condition, which is typically 25% of their rated power.",
+   "title": "Design Framework of a Stand-Alone Microgrid Considering Power System Performance and Economic Efficiency",
+   "url": "https://mdpi-res.com/d_attachment/energies/energies-14-00457/article_deploy/energies-14-00457-v2.pdf?version=1611114955",
+   "doi": "10.3390/en14020457",
+   "currency_year": null
+  },
+  {
+   "id": "i07",
+   "study": "107477f112e5d92c",
+   "input": "battery_power_capex_usd_per_kw",
+   "status": "curated",
+   "value": 0.33,
+   "unit": "MUSD/MW",
+   "quote": "Batteries - Lithium-ion (utility-scale), column 2023: - power component (MUSD/MW) 0.33; uncertainty (2023) 0.24 to 0.35",
+   "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+   "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+   "doi": null,
+   "currency_year": 2022
+  },
+  {
+   "id": "i08",
+   "study": "107477f112e5d92c",
+   "input": "battery_life_yr",
+   "status": "curated",
+   "value": 15,
+   "unit": "years",
+   "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Technical lifetime (years) 15; Technical lifetime (cycles) 7,500",
+   "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+   "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+   "doi": null,
+   "currency_year": null
+  },
+  {
+   "id": "i09",
+   "study": "107477f112e5d92c",
+   "input": "battery_round_trip_eff_frac",
+   "status": "curated",
+   "value": 90,
+   "unit": "%",
+   "quote": "Batteries - Lithium-ion (utility-scale), column 2023: Round-trip efficiency (%) AC 90",
+   "title": "Technology Data for the Indonesian Power Sector 2024 (Danish Energy Agency and EA Energy Analyses), data sheet Batteries - Lithium-ion (utility-scale)",
+   "url": "https://www.ea-energianalyse.dk/wp-content/uploads/2025/05/technology-data-for-the-indonesian-power-sector-2024.pdf",
+   "doi": null,
+   "currency_year": null
+  },
+  {
+   "id": "i10",
+   "study": "5ee65dcd3350bec1",
+   "input": "fuel_price_usd_per_l",
+   "status": "checked",
+   "value": 14000,
+   "unit": "IDR per liter",
+   "quote": "Assuming the current industrial diesel price is around IDR 14,000 (US$ 0.84) per liter, the potential financial savings could exceed IDR 4 billion (US$ 238.73 million) per year per installation unit.",
+   "title": "National Strategy for Climate Mitigation: Private Sector Circular Use of Palm Oil Mill Waste",
+   "url": "https://ap.fftc.org.tw/article/3866",
+   "doi": null,
+   "currency_year": null
+  }
+ ],
+ "skipped": [
+  {
+   "study": "107477f112e5d92c",
+   "input": "fuel_price_usd_per_l",
+   "status": "curated",
+   "value": 1.26,
+   "unit": "USD/L",
+   "reason": "value not in quote"
+  }
+ ],
+ "twins": [
+  {
+   "key": "i01:-0.30",
+   "item": "i01",
+   "shift_frac": -0.3,
+   "value": 783.3,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 783.3 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 783.3 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 783.3 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 783.3 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 783.3 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 783.3 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:-0.10",
+   "item": "i01",
+   "shift_frac": -0.1,
+   "value": 1007,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,007 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,007 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,007 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,007 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1007 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1007 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:-0.01",
+   "item": "i01",
+   "shift_frac": -0.01,
+   "value": 1108,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.\"}"
+    },
+    {
+     "key": "i01:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,108 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:+0.00",
+   "item": "i01",
+   "shift_frac": 0.0,
+   "value": 1119,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i01:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states the unsubsidised initial CAPEX is 1,119 USD/kW, which matches the claimed installed capital cost per kW value.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the unsubsidised initial CAPEX is 1,119 USD/kW, which matches the claimed installed capital cost per kW value.\"}"
+    },
+    {
+     "key": "i01:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states the unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the unsubsidised initial CAPEX in 2022 value is set at 1,119 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly states the unsubsidised initial CAPEX in 2022 is set at 1,119 USD/kW.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the unsubsidised initial CAPEX in 2022 is set at 1,119 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:+0.01",
+   "item": "i01",
+   "shift_frac": 0.01,
+   "value": 1130,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,130 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,130 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,130 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,130 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,130 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not the claimed 1,130 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:+0.10",
+   "item": "i01",
+   "shift_frac": 0.1,
+   "value": 1231,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,231 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,231 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,231 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,231 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,231 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,231 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i01:+0.30",
+   "item": "i01",
+   "shift_frac": 0.3,
+   "value": 1455,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i01:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,455 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,455 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,455 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX is 1,119 USD/kW, not 1,455 USD/kW.\"}"
+    },
+    {
+     "key": "i01:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,455 USD/kW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the unsubsidised initial CAPEX in 2022 is 1,119 USD/kW, not 1,455 USD/kW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:-0.30",
+   "item": "i02",
+   "shift_frac": -0.3,
+   "value": 17.07,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 17.07 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:-0.10",
+   "item": "i02",
+   "shift_frac": -0.1,
+   "value": 21.94,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states OPEX is 24.38 US$/kW per year, not 21.94 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:-0.01",
+   "item": "i02",
+   "shift_frac": -0.01,
+   "value": 24.14,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 24.14 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 24.14 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.14 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.14 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.14 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.14 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:+0.00",
+   "item": "i02",
+   "shift_frac": 0.0,
+   "value": 24.38,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i02:+0.00",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the OPEX for SPP is 24.38 US$/kW per year, not specifically the annual fixed operation and maintenance cost.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX for SPP is 24.38 US$/kW per year, not specifically the annual fixed operation and maintenance cost.\"}"
+    },
+    {
+     "key": "i02:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states OPEX for SPP in Indonesia is 24.38 US$/kW per year.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states OPEX for SPP in Indonesia is 24.38 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly states OPEX for SPP in Indonesia is 24.38 US$/kW per year, matching the claimed annual cost.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states OPEX for SPP in Indonesia is 24.38 US$/kW per year, matching the claimed annual cost.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:+0.01",
+   "item": "i02",
+   "shift_frac": 0.01,
+   "value": 24.62,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not the claimed 24.62 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:+0.10",
+   "item": "i02",
+   "shift_frac": 0.1,
+   "value": 26.82,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states OPEX is 24.38 US$/kW per year, not 26.82 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i02:+0.30",
+   "item": "i02",
+   "shift_frac": 0.3,
+   "value": 31.69,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i02:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state the OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.\"}"
+    },
+    {
+     "key": "i02:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the OPEX is 24.38 US$/kW per year, not 31.69 US$/kW per year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:-0.30",
+   "item": "i03",
+   "shift_frac": -0.3,
+   "value": 0.245,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.245 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.245 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.245 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.245 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.245 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.245 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:-0.10",
+   "item": "i03",
+   "shift_frac": -0.1,
+   "value": 0.315,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.315 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.315 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.315 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.315 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.315 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the 2023 energy component is 0.35 MUSD/MWh, not 0.315 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:-0.01",
+   "item": "i03",
+   "shift_frac": -0.01,
+   "value": 0.3465,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component as 0.35 MUSD/MWh, not 0.3465 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:+0.00",
+   "item": "i03",
+   "shift_frac": 0.0,
+   "value": 0.35,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i03:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states the energy component is 0.35 MUSD/MWh and other project costs are 0.04 MUSD/MWh for 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the energy component is 0.35 MUSD/MWh and other project costs are 0.04 MUSD/MWh for 2023.\"}"
+    },
+    {
+     "key": "i03:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly lists the energy component as 0.35 MUSD/MWh and other project costs as 0.04 MUSD/MWh for 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly lists the energy component as 0.35 MUSD/MWh and other project costs as 0.04 MUSD/MWh for 2023.\"}"
+    },
+    {
+     "key": "i03:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly lists the energy component as 0.35 MUSD/MWh and other project costs as 0.04 MUSD/MWh for 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly lists the energy component as 0.35 MUSD/MWh and other project costs as 0.04 MUSD/MWh for 2023.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:+0.01",
+   "item": "i03",
+   "shift_frac": 0.01,
+   "value": 0.3535,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component as 0.35 MUSD/MWh, not 0.3535 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:+0.10",
+   "item": "i03",
+   "shift_frac": 0.1,
+   "value": 0.385,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.385 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.385 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the 2023 energy component is 0.35 MUSD/MWh with uncertainty 0.26 to 0.38, not 0.385 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the 2023 energy component is 0.35 MUSD/MWh with uncertainty 0.26 to 0.38, not 0.385 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh for 2023, not 0.385 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh for 2023, not 0.385 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i03:+0.30",
+   "item": "i03",
+   "shift_frac": 0.3,
+   "value": 0.455,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i03:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.455 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.455 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.455 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the energy component is 0.35 MUSD/MWh in 2023, not 0.455 MUSD/MWh.\"}"
+    },
+    {
+     "key": "i03:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the 2023 energy component as 0.35 MUSD/MWh, not 0.455 MUSD/MWh.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the 2023 energy component as 0.35 MUSD/MWh, not 0.455 MUSD/MWh.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:-0.30",
+   "item": "i04",
+   "shift_frac": -0.3,
+   "value": 10500,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states Fixed O&M is 15,000 USD/MW/year, not 10,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M is 15,000 USD/MW/year, not 10,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states Fixed O&M is 15,000 USD/MW/year, not 10,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M is 15,000 USD/MW/year, not 10,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the fixed O&M as 15,000 USD/MW/year, not 10,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the fixed O&M as 15,000 USD/MW/year, not 10,500 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:-0.10",
+   "item": "i04",
+   "shift_frac": -0.1,
+   "value": 13500,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states Fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states fixed O&M is 15,000 USD/MW/year, not 13,500 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:-0.01",
+   "item": "i04",
+   "shift_frac": -0.01,
+   "value": 14850,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote lists Fixed O&M as 15,000 USD/MW/year, not 14,850 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote lists Fixed O&M as 15,000 USD/MW/year, not 14,850 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states Fixed O&M is 15,000 USD/MW/year, not 14,850 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M is 15,000 USD/MW/year, not 14,850 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote lists Fixed O&M as 15,000 USD/MW/year, not 14,850 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote lists Fixed O&M as 15,000 USD/MW/year, not 14,850 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:+0.00",
+   "item": "i04",
+   "shift_frac": 0.0,
+   "value": 15000,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i04:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly lists Fixed O&M (USD/MW/year) 15,000 for Batteries - Lithium-ion (utility-scale) in column 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly lists Fixed O&M (USD/MW/year) 15,000 for Batteries - Lithium-ion (utility-scale) in column 2023.\"}"
+    },
+    {
+     "key": "i04:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly lists Fixed O&M (USD/MW/year) as 15,000 for the lithium-ion battery storage system.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly lists Fixed O&M (USD/MW/year) as 15,000 for the lithium-ion battery storage system.\"}"
+    },
+    {
+     "key": "i04:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote lists Fixed O&M for utility-scale lithium-ion batteries as 15,000 USD/MW/year for 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote lists Fixed O&M for utility-scale lithium-ion batteries as 15,000 USD/MW/year for 2023.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:+0.01",
+   "item": "i04",
+   "shift_frac": 0.01,
+   "value": 15150,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states Fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states Fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states fixed O&M as 15,000 USD/MW/year, not 15,150 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:+0.10",
+   "item": "i04",
+   "shift_frac": 0.1,
+   "value": 16500,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state Fixed O&M as 15,000 USD/MW/year, not 16,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state Fixed O&M as 15,000 USD/MW/year, not 16,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state fixed O&M as 15,000 USD/MW/year, not 16,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state fixed O&M as 15,000 USD/MW/year, not 16,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states Fixed O&M is 15,000 USD/MW/year, not 16,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states Fixed O&M is 15,000 USD/MW/year, not 16,500 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i04:+0.30",
+   "item": "i04",
+   "shift_frac": 0.3,
+   "value": 19500,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i04:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context list Fixed O&M as 15,000 USD/MW/year, not 19,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list Fixed O&M as 15,000 USD/MW/year, not 19,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states fixed O&M is 15,000 USD/MW/year, not 19,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states fixed O&M is 15,000 USD/MW/year, not 19,500 USD/MW/year.\"}"
+    },
+    {
+     "key": "i04:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context list Fixed O&M as 15,000 USD/MW/year, not 19,500 USD/MW/year.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list Fixed O&M as 15,000 USD/MW/year, not 19,500 USD/MW/year.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:-0.30",
+   "item": "i05",
+   "shift_frac": -0.3,
+   "value": 6.58,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 6.58% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 6.58% nominal.\"}"
+    },
+    {
+     "key": "i05:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 6.58% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 6.58% nominal.\"}"
+    },
+    {
+     "key": "i05:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 6.58% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 6.58% nominal.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:-0.10",
+   "item": "i05",
+   "shift_frac": -0.1,
+   "value": 8.46,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for the three countries and do not state 8.46% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for the three countries and do not state 8.46% nominal.\"}"
+    },
+    {
+     "key": "i05:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context list median WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 8.46% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list median WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 8.46% nominal.\"}"
+    },
+    {
+     "key": "i05:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote provides WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 8.46% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote provides WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 8.46% nominal.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:-0.01",
+   "item": "i05",
+   "shift_frac": -0.01,
+   "value": 9.306,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote provides median WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, and does not state 9.306% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote provides median WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, and does not state 9.306% nominal.\"}"
+    },
+    {
+     "key": "i05:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context provide median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.306% nominal for renewable energy projects generally.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context provide median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.306% nominal for renewable energy projects generally.\"}"
+    },
+    {
+     "key": "i05:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote provides median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.306% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote provides median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.306% nominal.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:+0.00",
+   "item": "i05",
+   "shift_frac": 0.0,
+   "value": 9.4,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i05:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote states the median nominal WACC for solar PV in Indonesia was 9.4% in 2024, which is a cost of capital for a renewable energy project.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote states the median nominal WACC for solar PV in Indonesia was 9.4% in 2024, which is a cost of capital for a renewable energy project.\"}"
+    },
+    {
+     "key": "i05:+0.00",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states 9.4% nominal WACC specifically for solar PV in Indonesia in 2024, not for renewable energy projects generally.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states 9.4% nominal WACC specifically for solar PV in Indonesia in 2024, not for renewable energy projects generally.\"}"
+    },
+    {
+     "key": "i05:+0.00",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote specifies 9.4% nominal WACC for solar PV in Indonesia in 2024, not a general discount rate or cost of capital for renewable energy projects overall.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote specifies 9.4% nominal WACC for solar PV in Indonesia in 2024, not a general discount rate or cost of capital for renewable energy projects overall.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:+0.01",
+   "item": "i05",
+   "shift_frac": 0.01,
+   "value": 9.494,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.494% nominal for renewable energy projects generally.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states median WACC values of 9.4%, 9.0% and 8.0% for specific countries, not 9.494% nominal for renewable energy projects generally.\"}"
+    },
+    {
+     "key": "i05:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states median WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 9.494% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states median WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 9.494% nominal.\"}"
+    },
+    {
+     "key": "i05:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote provides median WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, with no 9.494% nominal figure stated.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote provides median WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, with no 9.494% nominal figure stated.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:+0.10",
+   "item": "i05",
+   "shift_frac": 0.1,
+   "value": 10.34,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, with no mention of 10.34% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, with no mention of 10.34% nominal.\"}"
+    },
+    {
+     "key": "i05:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 10.34% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 10.34% nominal.\"}"
+    },
+    {
+     "key": "i05:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 10.34% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in Indonesia, Viet Nam and the Philippines, not 10.34% nominal.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i05:+0.30",
+   "item": "i05",
+   "shift_frac": 0.3,
+   "value": 12.22,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i05:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 12.22% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in 2024, with no mention of 12.22% nominal.\"}"
+    },
+    {
+     "key": "i05:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context list WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 12.22% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context list WACC values of 9.4%, 9.0% and 8.0% for Indonesia, Viet Nam and the Philippines, with no mention of 12.22% nominal.\"}"
+    },
+    {
+     "key": "i05:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in specific countries, not 12.22% nominal.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context provide WACC values of 9.4%, 9.0% and 8.0% for solar PV in specific countries, not 12.22% nominal.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:-0.30",
+   "item": "i06",
+   "shift_frac": -0.3,
+   "value": 17.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 17.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 17.5%.\"}"
+    },
+    {
+     "key": "i06:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state the minimum loading condition is typically 25% of rated power, not 17.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the minimum loading condition is typically 25% of rated power, not 17.5%.\"}"
+    },
+    {
+     "key": "i06:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 17.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 17.5%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:-0.10",
+   "item": "i06",
+   "shift_frac": -0.1,
+   "value": 22.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.\"}"
+    },
+    {
+     "key": "i06:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.\"}"
+    },
+    {
+     "key": "i06:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 22.5%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:-0.01",
+   "item": "i06",
+   "shift_frac": -0.01,
+   "value": 24.75,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 24.75%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 24.75%.\"}"
+    },
+    {
+     "key": "i06:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the minimum loading is typically 25% of rated power, not 24.75%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading is typically 25% of rated power, not 24.75%.\"}"
+    },
+    {
+     "key": "i06:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 24.75%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 24.75%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:+0.00",
+   "item": "i06",
+   "shift_frac": 0.0,
+   "value": 25,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i06:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.\"}"
+    },
+    {
+     "key": "i06:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.\"}"
+    },
+    {
+     "key": "i06:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states diesel generators operate at minimum loading condition which is typically 25% of their rated power.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:+0.01",
+   "item": "i06",
+   "shift_frac": 0.01,
+   "value": 25.25,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.\"}"
+    },
+    {
+     "key": "i06:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.\"}"
+    },
+    {
+     "key": "i06:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 25.25%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:+0.10",
+   "item": "i06",
+   "shift_frac": 0.1,
+   "value": 27.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.\"}"
+    },
+    {
+     "key": "i06:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.\"}"
+    },
+    {
+     "key": "i06:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 27.5%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i06:+0.30",
+   "item": "i06",
+   "shift_frac": 0.3,
+   "value": 32.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i06:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state the minimum loading condition is typically 25% of rated power, not 32.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the minimum loading condition is typically 25% of rated power, not 32.5%.\"}"
+    },
+    {
+     "key": "i06:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the minimum loading condition is typically 25% of rated power, not 32.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the minimum loading condition is typically 25% of rated power, not 32.5%.\"}"
+    },
+    {
+     "key": "i06:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the minimum loading condition is typically 25% of rated power, not 32.5%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the minimum loading condition is typically 25% of rated power, not 32.5%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:-0.30",
+   "item": "i07",
+   "shift_frac": -0.3,
+   "value": 0.231,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.231 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:-0.10",
+   "item": "i07",
+   "shift_frac": -0.1,
+   "value": 0.297,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component capital cost is 0.33 MUSD/MW for 2023, not 0.297 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost is 0.33 MUSD/MW for 2023, not 0.297 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.297 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.297 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.297 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.297 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:-0.01",
+   "item": "i07",
+   "shift_frac": -0.01,
+   "value": 0.3267,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW for 2023, not 0.3267 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW for 2023, not 0.3267 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.3267 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.3267 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.3267 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.3267 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:+0.00",
+   "item": "i07",
+   "shift_frac": 0.0,
+   "value": 0.33,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i07:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states the power component for lithium-ion utility-scale batteries in 2023 is 0.33 MUSD/MW.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the power component for lithium-ion utility-scale batteries in 2023 is 0.33 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly lists the power component for lithium-ion utility-scale batteries in 2023 as 0.33 MUSD/MW.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly lists the power component for lithium-ion utility-scale batteries in 2023 as 0.33 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly states the power component for 2023 is 0.33 MUSD/MW.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the power component for 2023 is 0.33 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:+0.01",
+   "item": "i07",
+   "shift_frac": 0.01,
+   "value": 0.3333,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component cost as 0.33 MUSD/MW for 2023, not 0.3333 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component cost as 0.33 MUSD/MW for 2023, not 0.3333 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW for 2023, not 0.3333 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW for 2023, not 0.3333 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component cost as 0.33 MUSD/MW, not 0.3333 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component cost as 0.33 MUSD/MW, not 0.3333 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:+0.10",
+   "item": "i07",
+   "shift_frac": 0.1,
+   "value": 0.363,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.363 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i07:+0.30",
+   "item": "i07",
+   "shift_frac": 0.3,
+   "value": 0.429,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i07:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the power component is 0.33 MUSD/MW for 2023, not 0.429 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component is 0.33 MUSD/MW for 2023, not 0.429 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.429 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component is 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.429 MUSD/MW.\"}"
+    },
+    {
+     "key": "i07:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.429 MUSD/MW.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the power component capital cost as 0.33 MUSD/MW with uncertainty 0.24 to 0.35, not 0.429 MUSD/MW.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:-0.30",
+   "item": "i08",
+   "shift_frac": -0.3,
+   "value": 10.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state technical lifetime as 15 years, not 10.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state technical lifetime as 15 years, not 10.5 years.\"}"
+    },
+    {
+     "key": "i08:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states technical lifetime is 15 years, not 10.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states technical lifetime is 15 years, not 10.5 years.\"}"
+    },
+    {
+     "key": "i08:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states technical lifetime is 15 years, not 10.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states technical lifetime is 15 years, not 10.5 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:-0.10",
+   "item": "i08",
+   "shift_frac": -0.1,
+   "value": 13.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the technical lifetime is 15 years, not 13.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the technical lifetime is 15 years, not 13.5 years.\"}"
+    },
+    {
+     "key": "i08:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 13.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 13.5 years.\"}"
+    },
+    {
+     "key": "i08:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 13.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 13.5 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:-0.01",
+   "item": "i08",
+   "shift_frac": -0.01,
+   "value": 14.85,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state technical lifetime as 15 years, not 14.85 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state technical lifetime as 15 years, not 14.85 years.\"}"
+    },
+    {
+     "key": "i08:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state technical lifetime as 15 years, not 14.85 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state technical lifetime as 15 years, not 14.85 years.\"}"
+    },
+    {
+     "key": "i08:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states technical lifetime is 15 years, not 14.85 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states technical lifetime is 15 years, not 14.85 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:+0.00",
+   "item": "i08",
+   "shift_frac": 0.0,
+   "value": 15,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i08:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.\"}"
+    },
+    {
+     "key": "i08:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.\"}"
+    },
+    {
+     "key": "i08:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states Technical lifetime (years) 15 for Batteries - Lithium-ion (utility-scale) in column 2023.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:+0.01",
+   "item": "i08",
+   "shift_frac": 0.01,
+   "value": 15.15,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 15.15 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 15.15 years.\"}"
+    },
+    {
+     "key": "i08:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 15.15 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 15.15 years.\"}"
+    },
+    {
+     "key": "i08:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state technical lifetime as 15 years, not 15.15 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state technical lifetime as 15 years, not 15.15 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:+0.10",
+   "item": "i08",
+   "shift_frac": 0.1,
+   "value": 16.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 16.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 16.5 years.\"}"
+    },
+    {
+     "key": "i08:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state a technical lifetime of 15 years, not 16.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state a technical lifetime of 15 years, not 16.5 years.\"}"
+    },
+    {
+     "key": "i08:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 16.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 16.5 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i08:+0.30",
+   "item": "i08",
+   "shift_frac": 0.3,
+   "value": 19.5,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i08:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 19.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 19.5 years.\"}"
+    },
+    {
+     "key": "i08:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state technical lifetime as 15 years, not 19.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state technical lifetime as 15 years, not 19.5 years.\"}"
+    },
+    {
+     "key": "i08:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state the technical lifetime as 15 years, not 19.5 years.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state the technical lifetime as 15 years, not 19.5 years.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:-0.30",
+   "item": "i09",
+   "shift_frac": -0.3,
+   "value": 63,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency is 90% for 2023, not 63%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency is 90% for 2023, not 63%.\"}"
+    },
+    {
+     "key": "i09:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency AC as 90%, not 63%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency AC as 90%, not 63%.\"}"
+    },
+    {
+     "key": "i09:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency AC as 90%, not 63%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency AC as 90%, not 63%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:-0.10",
+   "item": "i09",
+   "shift_frac": -0.1,
+   "value": 81,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency AC 90 for 2023, not 81%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency AC 90 for 2023, not 81%.\"}"
+    },
+    {
+     "key": "i09:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency AC is 90%, not the claimed 81%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency AC is 90%, not the claimed 81%.\"}"
+    },
+    {
+     "key": "i09:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency AC is 90%, not 81%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency AC is 90%, not 81%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:-0.01",
+   "item": "i09",
+   "shift_frac": -0.01,
+   "value": 89.1,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 89.1%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 89.1%.\"}"
+    },
+    {
+     "key": "i09:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency AC as 90%, not 89.1%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency AC as 90%, not 89.1%.\"}"
+    },
+    {
+     "key": "i09:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 89.1%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 89.1%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:+0.00",
+   "item": "i09",
+   "shift_frac": 0.0,
+   "value": 90,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i09:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states round-trip efficiency (%) AC is 90 for the lithium-ion battery storage system in 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states round-trip efficiency (%) AC is 90 for the lithium-ion battery storage system in 2023.\"}"
+    },
+    {
+     "key": "i09:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states round-trip efficiency (%) AC 90 for lithium-ion utility-scale batteries in 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states round-trip efficiency (%) AC 90 for lithium-ion utility-scale batteries in 2023.\"}"
+    },
+    {
+     "key": "i09:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The source context explicitly states Round-trip efficiency (%) AC 90 for the lithium-ion battery storage system in 2023.",
+     "raw": "{\"supports\": true, \"reason\": \"The source context explicitly states Round-trip efficiency (%) AC 90 for the lithium-ion battery storage system in 2023.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:+0.01",
+   "item": "i09",
+   "shift_frac": 0.01,
+   "value": 90.9,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 90.9%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 90.9%.\"}"
+    },
+    {
+     "key": "i09:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90 %, not 90.9 %.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90 %, not 90.9 %.\"}"
+    },
+    {
+     "key": "i09:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90 %, not 90.9 %.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90 %, not 90.9 %.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:+0.10",
+   "item": "i09",
+   "shift_frac": 0.1,
+   "value": 99,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 99%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 99%.\"}"
+    },
+    {
+     "key": "i09:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency AC is 90% for 2023, not 99%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency AC is 90% for 2023, not 99%.\"}"
+    },
+    {
+     "key": "i09:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states round-trip efficiency is 90%, not 99%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states round-trip efficiency is 90%, not 99%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i09:+0.30",
+   "item": "i09",
+   "shift_frac": 0.3,
+   "value": 117,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i09:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 117%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 117%.\"}"
+    },
+    {
+     "key": "i09:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 117%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 117%.\"}"
+    },
+    {
+     "key": "i09:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote and context state round-trip efficiency as 90%, not 117%.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote and context state round-trip efficiency as 90%, not 117%.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:-0.30",
+   "item": "i10",
+   "shift_frac": -0.3,
+   "value": 9800,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:-0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:-0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:-0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 9,800 IDR per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:-0.10",
+   "item": "i10",
+   "shift_frac": -0.1,
+   "value": 12600,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:-0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 12,600 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 12,600 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:-0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 12,600 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 12,600 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:-0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 12,600 per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 12,600 per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:-0.01",
+   "item": "i10",
+   "shift_frac": -0.01,
+   "value": 13860,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:-0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not 13,860 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not 13,860 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:-0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 13,860 per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 13,860 per liter.\"}"
+    },
+    {
+     "key": "i10:-0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not 13,860 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not 13,860 IDR per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:+0.00",
+   "item": "i10",
+   "shift_frac": 0.0,
+   "value": 14000,
+   "script_caught": false,
+   "votes": [
+    {
+     "key": "i10:+0.00",
+     "vote": 1,
+     "supports": true,
+     "reason": "The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+    },
+    {
+     "key": "i10:+0.00",
+     "vote": 2,
+     "supports": true,
+     "reason": "The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote explicitly states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+    },
+    {
+     "key": "i10:+0.00",
+     "vote": 3,
+     "supports": true,
+     "reason": "The quote states the current industrial diesel price is around IDR 14,000 per liter.",
+     "raw": "{\"supports\": true, \"reason\": \"The quote states the current industrial diesel price is around IDR 14,000 per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:+0.01",
+   "item": "i10",
+   "shift_frac": 0.01,
+   "value": 14140,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:+0.01",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not 14,140 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not 14,140 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:+0.01",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not the claimed 14,140 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not the claimed 14,140 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:+0.01",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not 14,140 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not 14,140 IDR per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:+0.10",
+   "item": "i10",
+   "shift_frac": 0.1,
+   "value": 15400,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:+0.10",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the price is around IDR 14,000 per liter, not 15,400 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the price is around IDR 14,000 per liter, not 15,400 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:+0.10",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 15,400 per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 15,400 per liter.\"}"
+    },
+    {
+     "key": "i10:+0.10",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 15,400 per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 15,400 per liter.\"}"
+    }
+   ]
+  },
+  {
+   "key": "i10:+0.30",
+   "item": "i10",
+   "shift_frac": 0.3,
+   "value": 18200,
+   "script_caught": true,
+   "votes": [
+    {
+     "key": "i10:+0.30",
+     "vote": 1,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 18,200 per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not IDR 18,200 per liter.\"}"
+    },
+    {
+     "key": "i10:+0.30",
+     "vote": 2,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 18,200 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 18,200 IDR per liter.\"}"
+    },
+    {
+     "key": "i10:+0.30",
+     "vote": 3,
+     "supports": false,
+     "reason": "The quote states the industrial diesel price is around IDR 14,000 per liter, not 18,200 IDR per liter.",
+     "raw": "{\"supports\": false, \"reason\": \"The quote states the industrial diesel price is around IDR 14,000 per liter, not 18,200 IDR per liter.\"}"
+    }
+   ]
+  }
+ ],
+ "summary": [
+  {
+   "level_frac": 0.0,
+   "n_twins": 10,
+   "script_caught": 0,
+   "votes_total": 30,
+   "votes_not_yes": 3,
+   "votes_no_verdict": 0,
+   "panel_runs": 10,
+   "panel_caught": 2
+  },
+  {
+   "level_frac": 0.01,
+   "n_twins": 20,
+   "script_caught": 20,
+   "votes_total": 60,
+   "votes_not_yes": 60,
+   "votes_no_verdict": 0,
+   "panel_runs": 20,
+   "panel_caught": 20
+  },
+  {
+   "level_frac": 0.1,
+   "n_twins": 20,
+   "script_caught": 20,
+   "votes_total": 60,
+   "votes_not_yes": 60,
+   "votes_no_verdict": 0,
+   "panel_runs": 20,
+   "panel_caught": 20
+  },
+  {
+   "level_frac": 0.3,
+   "n_twins": 20,
+   "script_caught": 20,
+   "votes_total": 60,
+   "votes_not_yes": 60,
+   "votes_no_verdict": 0,
+   "panel_runs": 20,
+   "panel_caught": 20
+  }
+ ]
+}
