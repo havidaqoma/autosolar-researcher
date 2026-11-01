@@ -534,3 +534,17 @@ the values are marked post hoc everywhere and the first study stays as it is.
   labelled so, then 14 of 14.
 - A run from the cache with no network (islands-20261101T124926-1714b5) gave the same rows. A screenshot checked
   each ring against the expected place (vision read, post hoc).
+
+## T25: costs the study leaves out, as what-ifs, and a year by year cash flow (post hoc)
+
+- Asked by the owner: does the cost analysis cover every cost? The study's own list of what it leaves out has
+  items on both sides. A scratch script outside the repo first re-costed the published design with the product's
+  own dispatch and cost functions and gave back the study's 0.2511 USD/kWh exactly; the six single changes and
+  their sizes were fixed in it before its first run, the three combined rows after.
+- T25 (spec and tests first; Muse Code 255 s, USD 0.016): `autosolar/cost_whatif.py` and `tools/cost_whatif.py`.
+  The tool refuses to write unless the study case gives back the study's main cost, diesel only cost and NPC to
+  1e-9. Planted faults: 14 of 16 caught; JSON written with indent 2 was closed with a test added after the code,
+  labelled so, then 15 of 16. The last change removes the negative zero clean-up, which the spec does not ask for
+  and which prints the same.
+- Output committed in `docs/posthoc/` (the tool's own run). Solar side, all four at once: 0.332 against 0.354
+  USD/kWh; all six: 0.344 against 0.425 (computed). Payback of the extra capital: year 6, year 8 discounted.

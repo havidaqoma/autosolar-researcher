@@ -376,6 +376,13 @@ def test_tool_example_study_reproduces_and_writes(example_out):
     assert b"\r" not in md and md.decode("ascii") == render_md(doc)
 
 
+def test_t25_after_code_json_layout_is_indent_1(example_out):
+    # written AFTER the code: the planted fault "json indent 2" passed every test above
+    _, out = example_out
+    raw = (out / (EXAMPLE + "_cost_whatif.json")).read_bytes()
+    assert raw == (json.dumps(json.loads(raw.decode("ascii")), indent=1) + "\n").encode("ascii")
+
+
 def test_tool_example_study_values_from_the_scratch_run(example_out):
     # measured before the code with a scratch script (post hoc), which used the same six sizes; 3 places
     _, out = example_out

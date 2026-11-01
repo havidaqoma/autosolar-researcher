@@ -30,12 +30,12 @@ metered load and the battery price are the first things to confirm. Pages: `docs
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
-What it cost (measured ledgers): Muse Code wrote the engine, all 12,092 lines of `autosolar/` (23 files, `wc -l`),
-for USD 0.77. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
+What it cost (measured ledgers): Muse Code wrote the engine, all 12,499 lines of `autosolar/` (24 files, `wc -l`),
+for USD 0.79. It did not write the specs or the tests: each task's spec and acceptance tests were written first,
 and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
 web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
-smoke tests, chart reader tests and reviews included: USD 4.31.
+smoke tests, chart reader tests and reviews included: USD 4.33.
 
 ## For judges
 
@@ -103,7 +103,8 @@ smoke tests, chart reader tests and reviews included: USD 4.31.
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
-- Without cloning: the first six pictures below are from the example study, the last is the island screen. With a
+- Without cloning: the first six pictures below are from the example study, the seventh is the island screen and the
+  last shows the five Meta models. With a
   clone, open `docs/site/index.html`.
 
 ![Answer section of the example study](docs/img/answer.png)
@@ -120,6 +121,8 @@ smoke tests, chart reader tests and reviews included: USD 4.31.
 
 ![Eleven diesel islands: a first screen of sun, wind and rivers, costed only where an hourly load exists](docs/img/islands.png)
 
+![Five Meta models, one job each, each output checked before it is used, with the spend from the ledgers](docs/img/meta_models.png)
+
 - Meta tools, when each runs and how its output is checked:
 
 | Tool | Job | When it runs | How its output is checked |
@@ -128,16 +131,17 @@ smoke tests, chart reader tests and reviews included: USD 4.31.
 | Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
 | Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (71 of 72 in the latest review, of the example study; the other is the reviewer's own product of two of them, 249 cycles a year x 12 years, and it is right, computed) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
-| Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks: 25 of 26, 10 of 10, 7 of 7 and 13 of 14; in the first and the last, one test was added after the code, then all caught; computed) |
+| Muse Code (contributor model) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks: 10 of 10, 7 of 7, 13 of 14 and 15 of 16; in the last two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
 
-- Checks: 1,776 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,801 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
   `docs/smoke/FRESH_RERUN.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
-- Cost: Muse Code USD 0.77 (51 runs, 5.3 hours; it read 69 million tokens, 93% from cache, and wrote 0.84
-  million). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.31 in all (measured ledgers).
-- Limits: see "What it does not cover" and the open review points under "Checks".
+- Cost: Muse Code USD 0.79 (52 runs, 5.4 hours; it read 70 million tokens, 93% from cache, and wrote 0.86
+  million). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.33 in all (measured ledgers).
+- Limits: see "What it does not cover" (a what-if table there costs six of the left-out items, post hoc) and the
+  open review points under "Checks".
 
 ## See it
 
@@ -324,6 +328,36 @@ which our own check flags, and the SAM 3.1 load check finds it 30.4% above the p
 page says so. Wind, hydro and a grid link are screened, not costed. The public field figures are from the press
 (2017 and 2025), not from the operator's records.
 
+### Costs left out: what if? (post hoc, T25)
+
+`tools/cost_whatif.py` re-costs the example study's least cost design (7,250 kWp, 19,000 kWh) with the study's
+own dispatch and cost functions on its own hourly file. Before it writes anything it must give back the study's
+cost and NPC to 1 part in a billion. The design is not re-sized, so each row is a ceiling on that design's cost.
+The six single changes and their sizes were fixed in a scratch script before its first run; the combined rows were
+added after it. Every change is assumed; every result is computed. Both year by year cash flows are in
+`docs/posthoc/b4a44fc6d4c32339_cost_whatif.md`.
+
+| Change (assumed) | Solar plus battery (USD/kWh) | Diesel only (USD/kWh) | Solar plus battery against diesel only |
+|---|---|---|---|
+| As in the study | 0.251 | 0.354 | -29.1% |
+| PV output falls 0.5% a year | 0.255 | 0.354 | -27.9% |
+| Battery lasts 2 years less | 0.260 | 0.354 | -26.5% |
+| Grid-forming inverters: battery power price +150 USD/kW | 0.261 | 0.354 | -26.2% |
+| Island premium: PV and battery prices +30% | 0.302 | 0.354 | -14.7% |
+| The four above at once | 0.332 | 0.354 | -6.1% |
+| Diesel overhauls: diesel O&M +0.02 USD/kWh | 0.254 | 0.374 | -32.1% |
+| Fuel price rises 2% a year (real) | 0.259 | 0.405 | -36.1% |
+| The two diesel items at once | 0.262 | 0.425 | -38.4% |
+| All six at once | 0.344 | 0.425 | -19.0% |
+
+With the four solar-side items at once, solar plus battery is still 6.1% cheaper than diesel only; with all six,
+19.0% (computed).
+
+Cash flow, main design (USD, computed): 14,287,750 up front; then 312,443 O&M and 465,837 fuel each year; a new battery for
+6,175,000 in year 12; 3,680,883 back as salvage at the end of year 20. Diesel only spends 3,386,956 a year, 3,099,912 of it on fuel.
+The yearly savings repay the extra capital in year 6, or in year 8 once discounted at the study's 8% (assumed
+rate; years computed from the committed file). NPC 23,591,478 against 33,253,630 for diesel only.
+
 ## Next
 
 - Many sites at once: the island screen (T24) does the screening part for 11 named islands on one map. Costing
@@ -338,7 +372,7 @@ page says so. Wind, hydro and a grid link are screened, not costed. The public f
 
 ```
 uv sync
-uv run pytest                     # 1,776 tests, no network
+uv run pytest                     # 1,801 tests, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
@@ -360,10 +394,10 @@ answers for sites within 30 km of the island; other sites are refused rather tha
   smoke tests, chart reader tests, three sourcing runs, 15 paper check runs, six reviews, the two-model re-judge,
   one load check, one smoke search with the judge panel, one refused question and two question parses for the
   fresh re-run (`docs/smoke/FRESH_RERUN.md`).
-- `ledger/build_usage.jsonl`: 51 Muse Code runs (47 that wrote the product, 4 sandbox smoke runs), USD 0.77 and
-  5.3 hours in total. Muse Code read 68.8 million input tokens (93% from cache) and wrote 0.84 million output
+- `ledger/build_usage.jsonl`: 52 Muse Code runs (48 that wrote the product, 4 sandbox smoke runs), USD 0.79 and
+  5.4 hours in total. Muse Code read 69.9 million input tokens (93% from cache) and wrote 0.86 million output
   tokens.
-- All Meta model spending: USD 4.31.
+- All Meta model spending: USD 4.33.
 - A live study costs USD 0.0001 to parse the question plus whatever new sourcing it needs; a paper check costs
   about USD 0.013, a load check USD 0.01 and a review USD 0.22 to 0.33.
 
@@ -382,14 +416,15 @@ above.
 
 Every task has a spec in `docs/specs/` and acceptance tests written before the code. Up to T19, each test file
 was checked against a reference build and against planted faults before Muse Code ran (recorded at the end of
-each spec). For T20 to T24 the planted faults ran on Muse Code's build after it passed; one gap each in T21, T22,
-T23, T24 and T24d was closed with a test added after the code, labelled so (T24: 25 of 26 caught, then 26 of 26;
-T24d: 13 of 14, then 14 of 14). Five small fixes after the first live runs or reviews (T22b, T23b, T23c, T24b,
+each spec). For T20 to T25 the planted faults ran on Muse Code's build after it passed; one gap each in T21, T22,
+T23, T24, T24d and T25 was closed with a test added after the code, labelled so (T24: 25 of 26 caught, then 26 of
+26; T24d: 13 of 14, then 14 of 14; T25: 14 of 16, then 15 of 16, the last one keeping a negative zero that the
+spec does not ask to remove and that prints the same). Five small fixes after the first live runs or reviews (T22b, T23b, T23c, T24b,
 T24c: 10 of 10 and 7 of 7 planted faults caught) kept the same order: spec and failing test first, then Muse Code; so did T22c, the wording fixes
 after an outside review (8 of 8 planted faults caught). Muse Code wrote the code in a
 sandbox and ran the tests itself. It did not write the specs or the tests. Of the run tools in `tools/` it wrote
-`tools/load_followup.py`, `tools/engineer_files.py`, `tools/resource_screen.py` and `tools/island_screen.py` and
-edited `tools/make_site.py` (T20 to T24); T19 changed two others, with its own spec and tests first. The log of what
+`tools/load_followup.py`, `tools/engineer_files.py`, `tools/resource_screen.py`, `tools/island_screen.py` and
+`tools/cost_whatif.py` and edited `tools/make_site.py` (T20 to T25); T19 changed two others, with its own spec and tests first. The log of what
 was decided and why is
 `docs/implementation-notes.md`.
 
