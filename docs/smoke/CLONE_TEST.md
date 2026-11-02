@@ -2,7 +2,8 @@
 
 Question: does the repo install and pass its tests from a clean clone, with nothing from the build machine?
 
-Commit tested: `97abf69` (main, T27). Earlier runs: `be510e9` passed 1847 of 1847, `a5d74d3` passed 1776 of 1776, `d792e4b` passed 1766 of 1766, `37104e5` FAILED 1 of 1762 (see
+Commit tested: `88bb087` (main, progress lines in `tools/ask.py`). Earlier runs: `97abf69` passed 1888 of 1888 in
+614.91 s, `be510e9` passed 1847 of 1847, `a5d74d3` passed 1776 of 1776, `d792e4b` passed 1766 of 1766, `37104e5` FAILED 1 of 1762 (see
 below), `780dc19` passed 1688 of 1688, `1d39af4` passed 1686 of 1686, `f3d0ab9` passed 1563 of 1563,
 `2eac8e7` passed 1455 of 1455, `7db7b23` passed 1425 of 1425,
 `35f29ea` passed 1316 of 1316.
@@ -16,9 +17,11 @@ uv sync
 uv run pytest -q -p no:cacheprovider -o addopts=""
 ```
 
-Result (measured): `uv sync` made a new environment with Python 3.12.13, and pytest reported
-`1888 passed, 322 warnings in 614.91s`, exit code 0. All 322 warnings come from pvlib calling a pandas function that
-pandas plans to remove (`DatetimeIndex.dayofyear`); none comes from this repo's code.
+Result (measured): `uv sync` made a new environment, pytest collected 1902 tests and exited with code 0 (all
+passed), 14 min 21 s of wall time for `uv run pytest` while the build PC was also rendering video. The pytest
+summary line was not kept this time. At `97abf69` it read `1888 passed, 322 warnings in 614.91s`; all 322
+warnings come from pvlib calling a pandas function that pandas plans to remove (`DatetimeIndex.dayofyear`), none
+from this repo's code.
 
 The tests use no network. A live study needs the Meta Model API key and a CAMS account, as the README says.
 

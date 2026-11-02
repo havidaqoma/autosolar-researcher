@@ -81,7 +81,7 @@ The short version (computed unless labelled):
   and Muse Wonder judge each cited value; Muse Wonder also reviews the report; SAM 3.1 reads the paper's load
   chart; Muse Code wrote the engine to specs and tests written first. All Meta model spending: USD 4.35
   (measured ledgers).
-- Check us without an API key: `uv sync`, then `uv run pytest` (1,888 tests, no network), then
+- Check us without an API key: `uv sync`, then `uv run pytest` (1,902 tests, no network), then
   `uv run python tools/twin_test.py --out runs/twin_check` (the twin test without the judge, no network), and
   open `docs/site/index.html`. A fresh clone passed every test (measured, `docs/smoke/CLONE_TEST.md`), and a
   re-run from an empty folder gave the same run hash (measured, `docs/smoke/FRESH_RERUN.md`).
@@ -204,7 +204,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
 | Muse Code (Meta's coding agent, Contributor mode, model muse-spark-1.3-contributor) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks, final counts: 14 of 14, 15 of 16, 9 of 9 and 17 of 17; in the first two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
 
-- Checks: 1,888 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
+- Checks: 1,902 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
   `docs/smoke/FRESH_RERUN.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
@@ -545,7 +545,7 @@ a utility price.
 
 ```
 uv sync
-uv run pytest                     # 1,888 tests, no network
+uv run pytest                     # 1,902 tests, no network
 uv run python tools/twin_test.py --out runs/twin_check   # the twin test without the judge, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
