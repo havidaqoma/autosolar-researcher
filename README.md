@@ -2,18 +2,23 @@
 
 Ask one question about an island that runs on diesel. Get back a checked solar plus battery pre-feasibility study:
 weather from four sources, an hourly simulation of PV, battery and diesel for every design on a grid, the cost of
-electricity, the fuel and CO2 saved, cited cost inputs, a check of the published study for the same island, a
+electricity (levelized, LCOE), the fuel and CO2 saved, cited cost inputs, a check of the published study for the same island, a
 second model's review, and a plain list of what the study does not cover.
 
-Indonesia's state utility PLN plans to replace diesel generators at 741 sites with solar and batteries (press,
+Indonesia's state utility PLN plans to replace 2,396 diesel generators at 741 sites with solar and batteries (press,
 [Bloomberg Technoz](https://www.bloombergtechnoz.com/detail-news/105965/pln-bakal-ganti-2-396-pltd-dengan-plts-3-21-gwp-bess-9-03-gwh)).
 Each site needs a first study like this before anyone spends money on a detailed one. It is a first screen, not
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
 and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
-In short, for Karimunjawa (computed unless labelled):
+Problem statement: Push the Frontier (energy). Built during the Meta Global AI Developer Hackathon; what was
+prepared before kickoff is listed in `PRE_EVENT.md`. "Post hoc" below means added after the first study's results,
+still during the hackathon.
 
-| | Example study (inputs fixed before the run) | Same study, 7 inputs curated by hand (post hoc) |
+In short, for Karimunjawa (computed unless labelled; percentages come from unrounded costs, so they can differ by
+0.1 from the rounded prices shown):
+
+| | The answer: example study (inputs fixed before the run) | What-if, not the answer: 7 inputs curated by hand (post hoc) |
 |---|---|---|
 | Diesel only | 0.354 USD/kWh | 0.511 USD/kWh |
 | Least cost solar plus battery | 7,250 kWp and 19,000 kWh at 0.251 USD/kWh, 29.1% less | 8,500 kWp and 19,000 kWh at 0.277 USD/kWh, 45.7% less |
@@ -50,19 +55,6 @@ What we built after these talks (post hoc): "Confirm these first" on the latest 
 first, the field data to ask for, the hourly series and a HOMER load file), and "Which renewable fits this
 site?" (sun, wind, rivers and distance), also run as a screen of 11 islands.
 
-Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
-`PRE_EVENT.md`.
-
-What it cost (measured ledgers): Muse Code wrote the engine, all 12,881 lines of `autosolar/` (25 files, `wc -l`),
-for USD 0.81. There are two reasons it was that cheap. It ran in Contributor mode, which Meta prices lower in
-exchange for permission to use what is sent to train future Meta models (docs, Meta pricing page). And 93% of the
-72 million tokens it read were cache hits, which cost 2% of a fresh token (docs). Without the cache it would
-have cost about USD 7.40 at the same prices (computed). It did not write the specs or the tests: each task's spec and acceptance tests were written first,
-and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
-search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
-web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
-smoke tests, chart reader tests and reviews included: USD 4.35.
-
 ## For judges
 
 The short version (computed unless labelled):
@@ -78,14 +70,14 @@ The short version (computed unless labelled):
   at most 0.4% above the best design at that value (the page draws the line at 1%, assumed). So the metered load
   comes before any price.
 - What the checks turned down: a battery price whose quote does not support it (192 USD/kWh), a battery upkeep
-  cost outside the allowed range (50 USD/kWh/yr against 0.5 to 30), and any site more than 30 km from Karimunjawa (Bawean, 247 km away: "No
+  cost outside the allowed range (50 USD/kWh/yr against 0.5 to 30), and any site more than 30 km from Karimunjawa, a fixed cut-off (assumed) (Bawean, 247 km away: "No
   study").
 - What a small error does (post hoc twin test, "Twin test" under Checks): 10 cited values were given to the
-  checker again with the number moved by 1%, 10% and 30%. The script stopped all 60 wrong copies, and the local
+  checker again with the number moved by 1%, 10% and 30%, down and up. The script stopped all 60 wrong copies, and the local
   judge alone said no to all 60 too, even at 1%. It also turned down 2 of the 10 true values, on how the quote
   describes the input, not on the number (computed).
 - Meta models, each with a fixed job, and a check on every output before it is used: Muse Spark turns the question
-  into a site, searches the web for cost inputs and reads the paper; Muse Glimmer (open weights, on our own GPU)
+  into a site, searches the web for cost inputs and reads the paper; Muse Glimmer (open weights, on our own PC)
   and Muse Wonder judge each cited value; Muse Wonder also reviews the report; SAM 3.1 reads the paper's load
   chart; Muse Code wrote the engine to specs and tests written first. All Meta model spending: USD 4.35
   (measured ledgers).
@@ -93,6 +85,16 @@ The short version (computed unless labelled):
   `uv run python tools/twin_test.py --out runs/twin_check` (the twin test without the judge, no network), and
   open `docs/site/index.html`. A fresh clone passed every test (measured, `docs/smoke/CLONE_TEST.md`), and a
   re-run from an empty folder gave the same run hash (measured, `docs/smoke/FRESH_RERUN.md`).
+
+What it cost (measured ledgers): Muse Code wrote the engine, all 12,881 lines of `autosolar/` (25 files, `wc -l`),
+for USD 0.81. There are two reasons it was that cheap. It ran in Contributor mode, which Meta prices lower in
+exchange for permission to use what is sent to train future Meta models (docs, Meta pricing page). And 93% of the
+72 million tokens it read were cache hits, which cost 2% of a fresh token (docs). Without the cache it would
+have cost about USD 7.40 at the same prices (computed). It did not write the specs or the tests: each task's spec and acceptance tests were written first,
+and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
+search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
+web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
+smoke tests, chart reader tests and reviews included: USD 4.35.
 
 ## Details for judges
 
@@ -170,8 +172,8 @@ The short version (computed unless labelled):
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
   and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
   Glimmer speed test), with commit times.
-- Without cloning: the first six pictures below are from the example study, the seventh is the island screen and the
-  last shows the five Meta models. With a
+- Without cloning: the first seven pictures below are from the example study, the eighth is the island screen and
+  the last shows the five Meta models. With a
   clone, open `docs/site/index.html`.
 
 ![Answer section of the example study](docs/img/answer.png)
@@ -197,10 +199,10 @@ The short version (computed unless labelled):
 | Tool | Job | When it runs | How its output is checked |
 |---|---|---|---|
 | Muse Spark (Meta Model API, model muse-spark-1.3-contributor) | Turns the question into a site; searches the web for cost inputs and cites them; reads the whole source paper as a PDF and returns its numbers as JSON bound by a schema | Every study | A quote must be found in the fetched page or PDF text, a DOI must resolve, then 15 frozen paper checks run on the numbers |
-| Muse Glimmer (open weights, 30B, on our own 16 GB GPU with llama.cpp) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
+| Muse Glimmer (open weights, 30B Q4_K_M, 15.6 GiB, with llama.cpp on our own PC: a 16 GB GPU holds most of it and llama.cpp keeps the rest in system memory, measured) | Judge: does the quote support the value? | Every new search and every re-check: votes 1 and 2 | A value is "checked" only with 3 yes votes; otherwise it stays assumed and the report says why |
 | Muse Wonder (Meta Model API) | Judge vote 3, and a second model review of the finished report | Vote 3 in every new search (`tools/source.py`, the default since T19) and in the re-check (`tools/rejudge.py --panel`), only after Glimmer said yes twice; the review runs after a study. Every checked input in the example study b4a44fc6d4c32339 passed this panel; the curated run starts from the same file | Every number the review quotes is looked up in the study files (71 of 72 in the latest review, of the example study; the 72nd is the reviewer's product of two numbers that are in the files, 249 cycles a year x 12 years) |
 | SAM 3.1 (Meta Model API) | Reads values off chart images: here, Figure 7 of the source paper (three measured days of load), as a second read of the load the study uses | Once per figure (4 SAM calls and 1 Muse Spark label call, USD 0.01, measured); the latest study pages show the result | Rules fixed before each run. The reader test failed first, then passed (see "Chart reader"). The load check found the study's load 30.4% above the paper's own December 2018 curve (computed) |
-| Muse Code (Meta's coding agent, Contributor mode, model muse-spark-1.3-contributor) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks: 13 of 14, 15 of 16, 9 of 9 and 17 of 17; in the first two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
+| Muse Code (Meta's coding agent, Contributor mode, model muse-spark-1.3-contributor) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks, final counts: 14 of 14, 15 of 16, 9 of 9 and 17 of 17; in the first two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
 
 - Checks: 1,888 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
   Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
@@ -236,7 +238,7 @@ The "Inputs" table on each page labels every one, and "What moves the cost" show
 | Near tie | 8 designs are within 1% (assumed threshold) of the least cost, from 6,750 to 8,250 kWp |
 | Diesel price where PV starts to pay | 0.27 USD/L |
 | Reserve case | If one diesel unit must run in every hour, the least cost design shrinks to 1,500 kWp and 1,000 kWh at 0.336 USD/kWh, and the main design would cost 0.414 USD/kWh, more than diesel only |
-| Diesel unit size | Hiron 2021 prints 2 x 1.8 MW (p7, used above) and 2 x 2.7 MW (p1 and Table 1) (paper). With 2.7 MW units the least cost design is 7,500 kWp and 19,000 kWh at 0.260 USD/kWh. If one 2.7 MW unit must run in every hour, the main design would cost 0.519 USD/kWh and the best design is 750 kWp with no battery at 0.400 USD/kWh, only 2.4% below diesel only |
+| Diesel unit size | Hiron 2021 prints 2 x 1.8 MW (p7, used above) and 2 x 2.7 MW (p1 and Table 1) (paper). With 2.7 MW units the least cost design is 7,500 kWp and 19,000 kWh at 0.260 USD/kWh. If one 2.7 MW unit must run in every hour, that 7,500 kWp design would cost 0.519 USD/kWh and the best design is 750 kWp with no battery at 0.400 USD/kWh, only 2.4% below diesel only |
 | Battery power | The battery's power rating (4,750 kW) comes from an assumed 4 h duration. The main design uses up to 96% of it, for charging (4,555 kW); discharge never needs more than the 1,422 kW peak load. With an 8 h battery (assumed, so half the power rating) the least cost design is 7,500 kWp and 19,000 kWh at 0.255 USD/kWh, 1.4% more |
 | Island prices | PV and battery capital prices could rise 189% together (to 3,239 USD/kWp and 868 USD/kWh) before diesel only is cheaper. Shipping and labour, which the study leaves out, would have to nearly triple them to change the answer |
 | Reliability and wear | The least cost design leaves 0 kWh of load not served in the simulated year (hourly energy balance only, not a
@@ -404,7 +406,7 @@ each value are kept with the build files.
 
 Spec and tests: `docs/specs/T27_twin_test.md`, committed before the first vote. Results: `docs/posthoc/twin_test.md`;
 every vote: `docs/posthoc/twin_test_votes.jsonl`. Judge: Muse Glimmer 30B (Q4_K_M, local llama.cpp, reasoning low),
-3 votes per copy; 210 votes in 46 minutes on our own GPU, no Meta API call (measured).
+3 votes per copy; 210 votes in 46 minutes on our own PC, no Meta API call (measured).
 
 The test uses 10 distinct cited values: the example study's 4 checked values (each passed three yes votes in a real
 run) and 6 values curated by hand for the post hoc run (never judged in a study). One curated value, the diesel
@@ -513,8 +515,9 @@ a utility price.
   PV, battery and other parts for an office building with a grid connection, against a lifetime cost (NPC with
   replacement and salvage, like ours), with one measured load, one weather source and one cost catalogue fixed by
   the authors (paper). The difference is the job given to the model. Here the 925 designs are searched in code, all
-  of them, so the best design on the grid is exact. The models do what code cannot: find each cost with a quote,
-  check that the quote says the number, read the published study's chart, and refuse when the evidence is missing.
+  of them, so the best design on the grid is exact. The models do the open-ended parts: find each cost with a quote,
+  judge whether the quote says the number, and read the published study's chart; code does the checking and refuses
+  when the evidence is missing.
   That paper has no diesel, island, per-value source check or check of a published study (paper).
 - Why refusals live in code: a test of language models on engineering limits (arXiv 2610.38096) found that models
   which compute a limit correctly can still call an impossible design solved. One model rejected 40 of 40 flaws
@@ -590,9 +593,9 @@ above.
 Every task has a spec in `docs/specs/` and acceptance tests written before the code. Up to T19, each test file
 was checked against a reference build and against planted faults before Muse Code ran (recorded at the end of
 each spec). For T20 to T25 the planted faults ran on Muse Code's build after it passed; one gap each in T21, T22,
-T23, T24, T24d and T25 was closed with a test added after the code, labelled so (T24: 25 of 26 caught, then 26 of
-26; T24d: 13 of 14, then 14 of 14; T25: 14 of 16, then 15 of 16, the last one keeping a negative zero that the
-spec does not ask to remove and that prints the same). Five small fixes after the first live runs or reviews (T22b, T23b, T23c, T24b,
+T23, T24 and T24d was closed with a test added after the code, labelled so (T24: 25 of 26 caught, then 26 of
+26; T24d: 13 of 14, then 14 of 14); T25 went from 14 of 16 to 15 of 16 the same way, and the last one stays open:
+it keeps a negative zero that the spec does not ask to remove and that prints the same. Five small fixes after the first live runs or reviews (T22b, T23b, T23c, T24b,
 T24c: 10 of 10 and 7 of 7 planted faults caught) kept the same order: spec and failing test first, then Muse Code; so did T22c, the wording fixes
 after an outside review (8 of 8 planted faults caught). T26 (which inputs would change the design) went back to the
 earlier order: its tests passed on a reference build before Muse Code ran, and 9 of 9 planted faults were caught
