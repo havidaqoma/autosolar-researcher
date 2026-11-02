@@ -6,15 +6,19 @@
 The model key (MODEL_API_KEY) and the CAMS address are read from the environment or from the env file; neither is
 printed or written. The CAMS address is read only when weather is fetched, so a reused study or a refusal needs only
 the model key (T19). Service data are cached under runs/weather_cache/, studies land in runs/studies/<run_hash>/.
+While the study runs (about 10 minutes), one line is printed when it reaches a new stage and a still-working line
+after 30 s of quiet (tests/test_ask_progress.py). The lines only report: the study code and its results are unchanged.
 A question the tool cannot study (a site more than 30 km from Karimunjawa, outside Indonesia, or not found) ends
 with a plain answer and exit code 2.
 """
 import argparse
+import functools
 import hashlib
 import json
 import os
 import pathlib
 import sys
+import threading
 import time
 import uuid
 
@@ -22,12 +26,13 @@ import requests
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+import autosolar.study as study_module  # noqa: E402
 from autosolar.ledger import Ledger  # noqa: E402
 from autosolar.meta_client import MetaClient  # noqa: E402
 from autosolar.request import SiteNotFound, UnsupportedQuestion  # noqa: E402
 from autosolar.study import (DEMAND_RADIUS_KM, KARIMUNJAWA_DEG, UnsupportedSite, haversine_km,  # noqa: E402
                              run_study)
-from autosolar.weather import build_weather_cases, cached_fetchers, default_fetchers  # noqa: E402
+from autosolar.weather import CASE_NAMES, build_weather_cases, cached_fetchers, default_fetchers  # noqa: E402
 
 
 def env_value(name):
@@ -42,6 +47,113 @@ def env_value(name):
 
 
 REFUSALS = (UnsupportedSite, UnsupportedQuestion, SiteNotFound)
+
+# Functions run_study calls by name in autosolar.study, and what the terminal says when the study reaches them.
+STAGES = (
+    ("parse_question", "Muse Spark reads the question"),
+    ("geocode", "OpenStreetMap finds the place"),
+    ("simulate_pv", "pvlib: hourly solar output for each weather case"),
+    ("build_demand_cases", "hourly load from the published Karimunjawa study"),
+    ("dispatch_grid", "hour-by-hour run of every solar and battery size on the grid"),
+    ("cost_table", "cost of electricity for every design"),
+    ("sensitivity_table", "sensitivity: costs and load moved down and up"),
+    ("reserve_case", "firmness: diesel units kept running as a reserve"),
+    ("diesel_size_case", "firmness: the design search with another diesel unit size"),
+    ("duration_case", "firmness: the design search with another battery duration"),
+)
+WEATHER_LABEL = "weather: %d hourly cases (%s); files saved before are reused" % (len(CASE_NAMES), ", ".join(CASE_NAMES))
+
+
+class Progress:
+    """Prints one line when the study reaches a new stage, and a still-working line after heartbeat_s of quiet.
+    Only fixed labels and the elapsed time are printed: no URL, key or address."""
+
+    def __init__(self, out=None, heartbeat_s=30.0, clock=time.perf_counter):
+        self.out = out
+        self.heartbeat_s = float(heartbeat_s)
+        self.clock = clock
+        self.t0 = clock()
+        self.last = self.t0
+        self.label = None
+        self._lock = threading.Lock()
+        self._stop = threading.Event()
+        self._thread = None
+
+    def _say(self, text):
+        e = int(self.clock() - self.t0)
+        print("[%d:%02d] %s" % (e // 60, e % 60, text), file=self.out or sys.stdout, flush=True)
+        self.last = self.clock()
+
+    def stage(self, label):
+        with self._lock:
+            if label != self.label:
+                self.label = label
+                self._say(label)
+
+    def wrap(self, fn, label):
+        @functools.wraps(fn)
+        def reported(*args, **kwargs):
+            self.stage(label)
+            return fn(*args, **kwargs)
+        return reported
+
+    def tick(self):
+        with self._lock:
+            if self.label is not None and self.clock() - self.last >= self.heartbeat_s:
+                self._say("still working, last step: " + self.label)
+
+    def _loop(self):
+        while not self._stop.wait(min(1.0, self.heartbeat_s)):
+            self.tick()
+
+    def start(self):
+        self._stop.clear()
+        self._thread = threading.Thread(target=self._loop, name="ask-progress", daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=5.0)
+
+    def running(self):
+        return self._thread is not None and self._thread.is_alive()
+
+
+SUMMARY_KEYS = ("best_pv_kwp", "best_battery_kwh", "best_lcoe_usd_per_kwh", "diesel_only_lcoe_usd_per_kwh")
+
+
+def summary_lines(report, run_hash, reused, elapsed_s):
+    """The last three lines: the answer, the checks and the run hash, short enough to stay on screen."""
+    facts = [report["facts"][key] for key in SUMMARY_KEYS]
+    labels = {f["label"] for f in facts}
+
+    def value(f):
+        return f["text"] + " " + f["unit"] + ("" if len(labels) == 1 else " (" + f["label"] + ")")
+
+    answer = "Answer: %s solar and %s battery at %s; diesel only %s" % tuple(value(f) for f in facts)
+    if len(labels) == 1:
+        answer += " (" + labels.pop() + ")"
+    gates = report["gates"]
+    return [answer, "Checks: %d of %d passed" % (sum(1 for g in gates if g["passed"]), len(gates)),
+            "run %s %s %s s" % (run_hash, "reused" if reused else "new", elapsed_s)]
+
+
+def instrument(module, progress, stages=STAGES):
+    """Swap each named function in module for a wrapper that reports its stage; returns the originals."""
+    missing = [name for name, _ in stages if not callable(getattr(module, name, None))]
+    if missing:
+        raise ValueError("no such function to report: " + ", ".join(missing))
+    saved = {}
+    for name, label in stages:
+        saved[name] = getattr(module, name)
+        setattr(module, name, progress.wrap(saved[name], label))
+    return saved
+
+
+def restore(module, saved):
+    for name, fn in saved.items():
+        setattr(module, name, fn)
 LOAD_LINE = "The hourly load comes from one published study of Karimunjawa. A new site needs its own hourly load."
 
 
@@ -89,7 +201,10 @@ def main():
     os.environ["MODEL_API_KEY"] = env_value("MODEL_API_KEY")
     fetchers = cached_fetchers(default_fetchers(), ROOT / "runs" / "weather_cache")
 
+    progress = Progress()
+
     def weather_fn(lat_deg, lon_deg):
+        progress.stage(WEATHER_LABEL)
         return build_weather_cases(lat_deg, lon_deg, env_value("AUTOSOLAR_CAMS_EMAIL"), fetchers)
 
     run_id = "study-" + time.strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:6]
@@ -97,15 +212,23 @@ def main():
     if args.live:
         client = LiveClient(client)
     t = time.perf_counter()
+    saved = instrument(study_module, progress)
+    progress.start()
     try:
         out = run_study(args.question, client=client, http_get=requests.get, weather_fn=weather_fn,
                         inputs_path=args.inputs, runs_dir=args.runs, run_id=run_id, sourcing_path=args.sourcing,
                         checks_path=checks)
     except REFUSALS as exc:
+        progress.stop()
+        restore(study_module, saved)
         for line in refusal_lines(exc, args.question, args.runs):
             print(line)
         sys.exit(2)
-    print("run", out.run_hash, "reused" if out.reused else "new", round(time.perf_counter() - t, 1), "s")
+    finally:
+        progress.stop()
+        restore(study_module, saved)
+    elapsed_s = round(time.perf_counter() - t, 1)
+    print("run", out.run_hash, "reused" if out.reused else "new", elapsed_s, "s")
     print("folder", out.run_dir)
     for key in ("best_pv_kwp", "best_battery_kwh", "best_lcoe_usd_per_kwh", "diesel_only_lcoe_usd_per_kwh",
                 "best_renewable_pct", "fuel_saved_l_yr", "co2_saved_t_yr", "break_even_fuel_usd_per_l"):
@@ -115,6 +238,9 @@ def main():
     if out.report.get("firmness") is not None:
         for item in out.report["firmness"]["items"]:
             print(" ", item["key"], item["text"], item["unit"], "(" + item["label"] + ")")
+    print()
+    for line in summary_lines(out.report, out.run_hash, out.reused, elapsed_s):
+        print(line)
 
 
 if __name__ == "__main__":
