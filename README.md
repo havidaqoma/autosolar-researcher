@@ -91,7 +91,7 @@ for USD 0.81. There are two reasons it was that cheap. It ran in Contributor mod
 exchange for permission to use what is sent to train future Meta models (docs, Meta pricing page). And 93% of the
 72 million tokens it read were cache hits, which cost 2% of a fresh token (docs). Without the cache it would
 have cost about USD 7.40 at the same prices (computed). It did not write the specs or the tests: each task's spec and acceptance tests were written first,
-and Muse Code wrote code until they passed (the git history shows the order). One full study, with a fresh web
+and Muse Code wrote code until they passed (the git history shows the order). Specs, tests, the other run tools and the 7 hand-picked values were written with a general AI coding assistant (not a Meta model), directed and checked by Havid. One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
 web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
 smoke tests, chart reader tests and reviews included: USD 4.35.
@@ -604,7 +604,9 @@ tightened before the commit, the tests caught 12 of 12 planted faults there and 
 Code wrote the code in a
 sandbox and ran the tests itself. It did not write the specs or the tests. Of the run tools in `tools/` it wrote
 `tools/load_followup.py`, `tools/engineer_files.py`, `tools/resource_screen.py`, `tools/island_screen.py` and
-`tools/cost_whatif.py` and edited `tools/make_site.py` (T20 to T25), and wrote `tools/twin_test.py` (T27); T19 changed two others, with its own spec and tests first. The log of what
+`tools/cost_whatif.py` and edited `tools/make_site.py` (T20 to T25), and wrote `tools/twin_test.py` (T27); T19 changed two others, with its own spec and tests first.
+Specs, tests, the other run tools and the 7 hand-picked values were written with a general AI coding assistant
+(not a Meta model), directed and checked by Havid. The log of what
 was decided and why is
 `docs/implementation-notes.md`.
 
