@@ -11,6 +11,8 @@ Each site needs a first study like this before anyone spends money on a detailed
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
 and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
+Demo video (2 min 55 s; press CC for subtitles): https://www.youtube.com/watch?v=9glke040PuE
+
 Problem statement: Push the Frontier (energy). Built during the Meta Global AI Developer Hackathon; what was
 prepared before kickoff is listed in `PRE_EVENT.md`. "Post hoc" below means added after the first study's results,
 still during the hackathon.
@@ -216,6 +218,8 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   open review points under "Checks".
 
 ## See it
+
+Demo video (2 min 55 s): https://www.youtube.com/watch?v=9glke040PuE
 
 Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
 `docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`. Each
