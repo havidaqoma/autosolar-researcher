@@ -7,7 +7,8 @@ second model's review, and a plain list of what the study does not cover.
 
 Indonesia's state utility PLN plans to replace 2,396 diesel generators at 741 sites with solar and batteries (press,
 [Bloomberg Technoz](https://www.bloombergtechnoz.com/detail-news/105965/pln-bakal-ganti-2-396-pltd-dengan-plts-3-21-gwp-bess-9-03-gwh)).
-Each site needs a first study like this before anyone spends money on a detailed one. It is a first screen, not
+Each site needs a first study like this before anyone spends money on a detailed one. Today the tool costs one
+island, Karimunjawa, the only one with an hourly load, and screens 11. It is a first screen, not
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
 and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
@@ -67,26 +68,30 @@ The short version (computed unless labelled):
   more than diesel only; a smaller design (1,500 kWp and 1,000 kWh) still beats diesel only, 0.336 against 0.354
   USD/kWh, 5.1% less. Our own read of the paper's load chart puts the load about 30% above the paper's December
   2018 curve; at the load that curve implies, solar plus battery is still 33.7% cheaper (post hoc).
-- What to measure first: only the load moves the best plant enough to matter. With 20% less load a smaller plant
-  is best and our design would cost 8.8% more than it; for every other input, moved 20% either way, our design is
-  at most 0.4% above the best design at that value (the page draws the line at 1%, assumed). So the metered load
-  comes before any price.
-- What the checks turned down: a battery price whose quote does not support it (192 USD/kWh), a battery upkeep
+- What to measure first: the load. With 20% less load a smaller plant is best (6,000 kWp and 15,000 kWh) and our
+  design would cost 8.8% more than it. Other inputs, moved 20% either way, can change the cheapest design too
+  (with 20% cheaper diesel it is 5,000 kWp and 11,000 kWh), but ours then costs at most 0.4% more than it, because
+  the cost changes little between those designs (the page draws the line at 1%, assumed; computed). So the metered
+  load comes before any price, and the plant size stays provisional until the load is measured.
+- What the checks turned down: a battery price of 192 USD/kWh (the number is in its quote, so the script let it
+  through; the judges said no, because the quote gives a whole storage system's cost, not the battery price), a battery upkeep
   cost outside the allowed range (50 USD/kWh/yr against 0.5 to 30), and any site more than 30 km from Karimunjawa, a fixed cut-off (assumed) (Bawean, 247 km away: "No
   study").
 - What a small error does (post hoc twin test, "Twin test" under Checks): 10 cited values were given to the
   checker again with the number moved by 1%, 10% and 30%, down and up. The script stopped all 60 wrong copies, and the local
   judge alone said no to all 60 too, even at 1%. It also turned down 2 of the 10 true values, on how the quote
-  describes the input, not on the number (computed).
+  describes the input, not on the number (computed). Here the quote still holds the true number, so a moved number
+  is easy to spot; the 192 USD/kWh case above is the kind only the judges catch.
 - Meta models, each with a fixed job, and a check on every output before it is used: Muse Spark turns the question
   into a site, searches the web for cost inputs and reads the paper; Muse Glimmer (open weights, on our own PC)
   and Muse Wonder judge each cited value; Muse Wonder also reviews the report; SAM 3.1 reads the paper's load
   chart; Muse Code wrote the engine to specs and tests written first. All Meta model spending: USD 4.35
   (measured ledgers).
 - Check us without an API key: `uv sync`, then `uv run pytest` (1,902 tests, no network), then
-  `uv run python tools/twin_test.py --out runs/twin_check` (the twin test without the judge, no network), and
+  `uv run python tools/twin_test.py --out runs/twin_check` (the quote check half of the twin test: no model call, no network), and
   open `docs/site/index.html`. A fresh clone passed every test (measured, `docs/smoke/CLONE_TEST.md`), and a
-  re-run from an empty folder gave the same run hash (measured, `docs/smoke/FRESH_RERUN.md`).
+  re-run into an empty folder, reusing the saved weather and web search, gave the same run hash (measured,
+  `docs/smoke/FRESH_RERUN.md`).
 
 What it cost (measured ledgers): Muse Code wrote the engine, all 12,881 lines of `autosolar/` (25 files, `wc -l`),
 for USD 0.81. There are two reasons it was that cheap. It ran in Contributor mode, which Meta prices lower in
@@ -95,7 +100,8 @@ exchange for permission to use what is sent to train future Meta models (docs, M
 have cost about USD 7.40 at the same prices (computed). It did not write the specs or the tests: each task's spec and acceptance tests were written first,
 and Muse Code wrote code until they passed (the git history shows the order). Specs, tests, the other run tools and the 7 hand-picked values were written with a general AI coding assistant (not a Meta model), directed and checked by Havid. One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
-web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). All Meta model spending for the whole hackathon,
+web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). The paper
+check, load check and second model review add about USD 0.25 to 0.35 (measured). All Meta model spending for the whole hackathon,
 smoke tests, chart reader tests and reviews included: USD 4.35.
 
 ## Details for judges
@@ -113,7 +119,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   is an exact re-cost within the model, not a guess between points: a design's fuel
   use does not depend on the price, and at 20% below and above the study price it gives the same numbers as
   the sensitivity table.
-- Confirm these first (latest study pages): the 9 inputs ranked by how far each moves the cost of the main design,
+- Confirm these first (latest study pages): the 9 main inputs ranked by how far each moves the cost of the main design,
   each with the field data to ask for (in the example the discount rate comes first). Next to them, public field
   figures from the press, each with its quote: in 2017, less than a year after 24 hour power began (May 2016, same
   article), the island's plant produced 8,000 kWh a day on 4,000 L of diesel (press, Kompas; it may be the main
@@ -133,16 +139,16 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   moved 20% down and up, the page shows the least cost design at that value and how much more the main design
   costs than it (computed from the study's own sensitivity rows; no new simulation). A wide cost swing does not
   mean the choice changes. In the example only the load moves it past the page's 1% line (assumed): with 20% less
-  load the best design is 6,000 kWp and 15,000 kWh, and the main design costs 8.8% more than it. For every other
-  input the best design at that value differs a little, but the main design is at most 0.4% above it; those
-  inputs move the price far more than the plan (computed). So the metered load comes before any price.
+  load the best design is 6,000 kWp and 15,000 kWh, and the main design costs 8.8% more than it. For other inputs
+  the best design at that value can differ a lot (with 20% cheaper diesel it is 5,000 kWp and 11,000 kWh), but the
+  cost changes little between those designs, so the main design is at most 0.4% above it (computed). So the metered load comes before any price.
 - Which renewable fits this site (post hoc, `docs/specs/T23_resource_screen.md`): sun 4.05 kWh/kWp a day (Global
   Solar Atlas, a Solargis model), the World Bank's favorable middle range; wind 4.44 m/s and 91 W/m2 at 50 m (NASA
   POWER, hourly 2016 to 2024, computed), class 1 (Poor) on the NREL scale, though a coarse grid can miss local
   wind; 1 river and 2 streams mapped within 10 km, nearby islands included (OpenStreetMap); the nearest town on the
   map is 78 km away. Only solar, battery and
   diesel are costed. The same section has a sanity check of our PV model (one site, post hoc, not a validation):
-  +1.4% against PVGIS and -3.3% against Global Solar Atlas (Solargis), computed. No Meta model call (the API ledger stayed at 179 lines,
+  +1.4% against PVGIS and -3.3% against Global Solar Atlas (Solargis), computed. No Meta model call (the API ledger stayed at 179 lines during the run,
   measured).
 - Eleven diesel islands at once (post hoc, `docs/specs/T24_island_screen.md`, page `docs/site/islands.html`): the
   same screen for 11 islands, each named in a news article as having a diesel plant (PLTD). The tool fetches each
@@ -172,8 +178,9 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   diesel only, 33.7% less (computed). Before it reports, the tool must give back the study's own numbers; the
   rules for this re-run were committed before it ran (`docs/smoke/T20_T21_SMOKE_RULES.md`).
 - Built during the event: all code in `autosolar/`, `tools/` and `tests/`, every spec in `docs/specs/`, every study
-  and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, paper audit, weather cross check,
-  Glimmer speed test), with commit times.
+  and the static site. `PRE_EVENT.md` lists what was prepared before kickoff (plan, literature sweep, hand audit of the
+  paper, the 15 paper check rules as text, the second test paper, a weather cross check, satellite test images,
+  Glimmer speed test), with commit times. The code that runs the paper checks was written during the event.
 - Without cloning: the first seven pictures below are from the example study, the eighth is the island screen and
   the last shows the five Meta models. With a
   clone, open `docs/site/index.html`.
@@ -188,7 +195,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
 
 ![Confirm these first: inputs ranked by how far they move the cost, with the field data to ask for](docs/img/confirm.png)
 
-![Which inputs would change the design: only the load changes the plan; the others move the price](docs/img/design_change.png)
+![Which inputs would change the design: only the load puts our design more than 1% above the cheapest one](docs/img/design_change.png)
 
 ![Which renewable fits this site, and our PV model against two outside models](docs/img/resources.png)
 
@@ -207,7 +214,8 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
 | Muse Code (Meta's coding agent, Contributor mode, model muse-spark-1.3-contributor) | Wrote the engine (`autosolar/`) and some run tools from short specs | Build time | Each spec and its acceptance tests are written before the code, and the tests are checked to catch planted faults (last four tasks, final counts: 14 of 14, 15 of 16, 9 of 9 and 17 of 17; in the first two, one test was added after the code; T25's one remaining change keeps a negative zero, which the spec does not ask to remove and which prints the same; computed) |
 
 - Checks: 1,902 unit tests with no network, and a fresh clone passes all of them (measured, `docs/smoke/CLONE_TEST.md`).
-  Re-run in an empty folder, the example study gives the same run hash and byte-identical tables (measured,
+  Re-run into an empty folder (weather and web search read from disk), the example study gives the same run hash
+  and byte-identical tables (measured,
   `docs/smoke/FRESH_RERUN.md`).
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
@@ -257,8 +265,8 @@ reliability study; see "What it does not cover") and cycles the battery 249 time
 What this means for PLN: solar plus battery pays if the batteries and inverters can carry the grid on their own.
 That is one engineering question the study cannot answer: can the island grid run on inverters alone for 7,302
 hours a year (computed), or must a diesel unit always spin? If one must, the main design costs more than diesel
-only (0.414 against 0.354 USD/kWh), the best design shrinks to 1,500 kWp, and with the larger diesel units it is
-only 2.4% below diesel only. The load check adds a second caution: if the island uses less power than Table 6
+only (0.414 against 0.354 USD/kWh), the best design shrinks to 1,500 kWp (with the larger diesel units, to 750 kWp and no battery,
+only 2.4% below diesel only). The load check adds a second caution: if the island uses less power than Table 6
 says, the right design is smaller (5,750 kWp and 15,000 kWh at the load the chart implies), but it still costs
 a third less than diesel only (post hoc, computed).
 
@@ -272,7 +280,7 @@ loop); that is our reserve case. St. Eustatius switched its diesels off for up t
 quoted in a Niue study). No source we read shows a full day on inverters alone, so the question stays open.
 The main design's battery inverter is 4,750 kW (computed), 3.3 times the 1,422 kW peak load (paper; ratio
 computed), so it passes the rough size test of the Pantelleria cases if split into a few large units
-(inferred). Whether it can hold the grid through a whole day and through faults needs a grid study.
+(inferred; a size test only: it must also take up to 4,555 kW of charging, computed). Whether it can hold the grid through a whole day and through faults needs a grid study.
 
 ## Second run with curated inputs (post hoc, study 107477f112e5d92c)
 
@@ -328,7 +336,7 @@ each value are kept with the build files.
 | S2 weather | CAMS, NASA POWER, PVGIS-ERA5 and Global Solar Atlas; the spread between them becomes a range | |
 | S3 inputs | web search with citations for 7 cost inputs; each quote must be found in the fetched source, the DOI must resolve, and the judges must say the quote supports the value 3 times in a row | Muse Spark web search; Muse Glimmer (open weights, local) votes 1 and 2, Muse Wonder vote 3 |
 | S4 to S6 | pvlib PV model, hourly dispatch with diesel minimum load, LCOE two ways, a grid of 925 designs, sensitivity and range tables | |
-| S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks | Muse Spark native PDF input and structured output |
+| S7 paper check | Muse Spark reads the whole PDF and returns its numbers as JSON constrained by a schema; scripts keep a number only if its quote is in the PDF text, then run 15 frozen checks (rules written before kickoff, `PRE_EVENT.md`; code written during the event) | Muse Spark native PDF input and structured output |
 | S7b load check | SAM 3.1 finds each load curve in a chart of the same paper, Muse Spark reads the axis labels, and a script compares the read curves with the load the study uses | SAM 3.1, Muse Spark |
 | S8 report | Markdown, JSON and a static HTML page with charts; every number in the text must appear in the report data | |
 | S9 review | a second model lists what it would question and where the report answers it | Muse Wonder |
@@ -550,7 +558,7 @@ a utility price.
 ```
 uv sync
 uv run pytest                     # 1,902 tests, no network
-uv run python tools/twin_test.py --out runs/twin_check   # the twin test without the judge, no network
+uv run python tools/twin_test.py --out runs/twin_check   # quote check half of the twin test: no model call, no network
 AUTOSOLAR_ENV_FILE=path/to/.env AUTOSOLAR_CAMS_EMAIL=<address registered at soda-pro.com> \
   uv run python tools/ask.py "Is solar plus battery worth it for Karimunjawa? The island runs on diesel."
 uv run python tools/paper_check.py <paper.pdf> --study runs/studies/<hash>
