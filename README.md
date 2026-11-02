@@ -30,6 +30,26 @@ inputs it is the only one whose error would move the best plant enough to matter
 (computed; the line is assumed). Pages: `docs/site/b4a44fc6d4c32339.html`
 (example) and `docs/site/107477f112e5d92c.html` (curated).
 
+What two people in the field told us (wording approved by each of them; they speak for themselves, not for
+their employers):
+
+> "Planning PV plus battery for a site usually takes one to six months, with PVsyst and other tools, so that nothing
+> fails. An AI study in minutes is impressive, but every number must be double checked against references or field
+> data, and the report must be easy to read and the data trustworthy."
+>
+> A senior engineer at PLN (Perusahaan Listrik Negara, Indonesia's state-owned electricity company), speaking for
+> himself, not for PLN
+
+> "A model that does this study in minutes is very impressive. A solar plus battery against diesel study can be done
+> by a person, only slower. Screening every resource for a site, sun, wind, hydro and distance, is harder for a
+> person, so that is where a tool like this adds most."
+>
+> Dr. Andy Tirta, Head of Corporate Affairs, ASEAN Centre for Energy, speaking for himself
+
+What we built after these talks (post hoc): "Confirm these first" on the latest study pages (the inputs to check
+first, the field data to ask for, the hourly series and a HOMER load file), and "Which renewable fits this
+site?" (sun, wind, rivers and distance), also run as a screen of 11 islands.
+
 Built during the Meta Global AI Developer Hackathon. What was prepared before the event is listed in
 `PRE_EVENT.md`.
 
