@@ -2,8 +2,9 @@
 
 Question: does the repo install and pass its tests from a clean clone, with nothing from the build machine?
 
-Commit tested: `ca9cf26` (main, the feature freeze on Tuesday 3 Nov; since `88bb087` only the README, one README
-picture, the API ledger and this file changed). Earlier runs: `88bb087` passed 1902 (exit code 0, summary line not
+Commit tested: `413b537` (main, T28: less repetition on the gallery and island pages, made after the freeze at
+the owner's request). Earlier runs: `ca9cf26` (the feature freeze) passed 1902 of 1902 in 731.53 s, `88bb087`
+passed 1902 (exit code 0, summary line not
 kept), `97abf69` passed 1888 of 1888 in 614.91 s, `be510e9` passed 1847 of 1847, `a5d74d3` passed 1776 of 1776, `d792e4b` passed 1766 of 1766, `37104e5` FAILED 1 of 1762 (see
 below), `780dc19` passed 1688 of 1688, `1d39af4` passed 1686 of 1686, `f3d0ab9` passed 1563 of 1563,
 `2eac8e7` passed 1455 of 1455, `7db7b23` passed 1425 of 1425,
@@ -18,8 +19,7 @@ uv sync
 uv run pytest -q -p no:cacheprovider -o addopts=""
 ```
 
-Result (measured): `uv sync` made a new environment and pytest printed `1902 passed, 322 warnings in 731.53s
-(0:12:11)`, exit code 0. All 322 warnings come from pvlib calling a pandas function that pandas plans to remove
+Result (measured): `uv sync` made a new environment and pytest printed `1907 passed, 322 warnings in 655.65s (0:10:55)`, exit code 0. All 322 warnings come from pvlib calling a pandas function that pandas plans to remove
 (`DatetimeIndex.dayofyear`), none from this repo's code.
 
 The tests use no network. A live study needs the Meta Model API key and a CAMS account, as the README says.
