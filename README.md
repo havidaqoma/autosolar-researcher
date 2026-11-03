@@ -16,7 +16,7 @@ Live study pages: https://havidaqoma.github.io/autosolar-researcher/site/
 
 Demo video (2 min 55 s; press CC for subtitles): https://www.youtube.com/watch?v=8xA9nRxLLtA
 
-Problem statement: Push the Frontier (energy). Built during the Meta Global AI Developer Hackathon; what was
+Problem statement: Build for Your World. Built during the Meta Global AI Developer Hackathon; what was
 prepared before kickoff is listed in `PRE_EVENT.md`. "Post hoc" below means added after the first study's results,
 still during the hackathon.
 
