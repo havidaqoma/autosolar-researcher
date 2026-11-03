@@ -8,6 +8,7 @@ import pandas as pd
 import pytest
 
 import test_study as ts
+from autosolar import site as S
 from autosolar.site import (CARD_TITLES, SITE_CSS, esc, headline, heatmap_svg, render_index_html,
                             render_study_html, tornado_svg, weather_svg)
 from autosolar.study import run_study
@@ -227,9 +228,55 @@ def test_index():
     page = render_index_html(cards)
     ascii_ok(page)
     assert "<title>AutoSolar Researcher: study gallery</title>" in page
-    links = re.findall(r'<a class="study" href="([^"]+)"', page)
+    links = re.findall(r'<h2><a href="([^"]+)">', page)                      # T28: only the title is a link
     assert links == ["abc.html", "def.html"]
-    assert "<h2>Karimunjawa</h2>" in page and "Is &lt;solar&gt; worth it?" in page
-    assert "No studies yet." not in page
+    assert '<h2><a href="abc.html">Karimunjawa</a></h2>' in page and "Is &lt;solar&gt; worth it?" in page
+    assert '<a class="study"' not in page and page.count('<div class="study">') == 2
+    assert "No studies yet." not in page and "Earlier builds" not in page
     empty = render_index_html([])
     assert "No studies yet." in empty and '<a class="study"' not in empty
+
+
+# ---------- T28: less repetition on the gallery (written before the code) ----------
+
+def _card(href, question="Is solar worth it?", headline="Yes. Cheaper.", **kw):
+    card = {"href": href, "site": "Karimunjawa", "question": question, "headline": headline,
+            "run_hash": href.split(".")[0]}
+    card.update(kw)
+    return card
+
+
+def test_t28_index_question_once_title_and_note():
+    cards = [_card("a.html", title="Karimunjawa: the entry", note="Start <here>."),
+             _card("b.html", headline="Yes. Even cheaper.", title="Karimunjawa: second run"),
+             _card("c.html", question="Which islands?", headline="A screen.", title="11 islands")]
+    page = render_index_html(cards)
+    ascii_ok(page)
+    assert page.count("Is solar worth it?") == 1                             # same question as the card before
+    assert page.count("Which islands?") == 1
+    assert '<h2><a href="a.html">Karimunjawa: the entry</a></h2>' in page
+    assert '<h2><a href="b.html">Karimunjawa: second run</a></h2>' in page
+    assert "<p>Yes. Cheaper.</p>" in page and "<p>Start &lt;here&gt;.</p>" in page   # note in its own paragraph
+    assert " | " not in page
+    assert "<p>Run a</p>" in page and "<p>Run c</p>" in page
+
+
+def test_t28_index_earlier_builds_table():
+    cards = [_card("main.html", title="Main study"),
+             _card("old1.html", note="Pre-registered inputs.", earlier=True, same_as="Main study"),
+             _card("old2.html", headline="No. Dearer.", note=None, earlier=True, same_as=None),
+             _card("late.html", question="Other?", headline="Late main.", title="Late")]
+    page = render_index_html(cards)
+    ascii_ok(page)
+    head = "<h2>Earlier builds, kept for the record</h2>"
+    assert page.count(head) == 1
+    assert page.index('<h2><a href="late.html">Late</a></h2>') < page.index(head)   # main cards first
+    assert "<p>" + S.EARLIER_NOTE + "</p>" in page
+    assert S.EARLIER_NOTE == "Earlier pages of the studies above, built before some sections were added."
+    table = page[page.index(head):]
+    assert re.findall(r"<th>(.*?)</th>", table) == ["Run", "Inputs and judge", "Answer"]
+    rows = re.findall(r"<tr><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td></tr>", table)
+    assert rows == [('<a href="old1.html">old1</a>', "Pre-registered inputs.", "same as: Main study"),
+                    ('<a href="old2.html">old2</a>', "", "No. Dearer.")]
+    assert page.count("Yes. Cheaper.") == 1                                 # the matched answer is not repeated
+    assert page.count("Is solar worth it?") == 1                            # earlier rows print no question

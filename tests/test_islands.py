@@ -293,7 +293,9 @@ def test_page_table_and_map():
     assert len(re.findall(r'<circle[^>]*class="costed"', html)) == 1
     assert len(re.findall(r'<circle[^>]*class="island"', html)) == 1
     assert '<a href="' + HASH + '.html">yes: open the full study</a> (run ' + HASH + ")" in html  # T24c
-    assert I.NOT_COSTED in html
+    assert "<td>" + I.NOT_COSTED_CELL + "</td>" in html                   # T28: short cell
+    assert I.NOT_COSTED not in html                                         # T28: the long sentence is said once
+    assert "<p>" + esc(I.TABLE_NOTE) + "</p><table>" in html and html.count(esc(I.TABLE_NOTE)) == 1
     assert "4.05, " in html                      # 1478.25 / 365 = 4.05
     assert "4.44 m/s, 91 W/m2, class 1 (Poor)" in html
     assert "1 river, 2 streams" in html            # T24b: was "1 rivers"
@@ -386,8 +388,26 @@ def test_t24b_answer_line():
 
 def test_t24b_verdict_text():
     rows = _verdict_rows()
-    assert I.verdict_text(rows[0]) == "solar: " + LOOK + "; wind: " + NOT_ON_SCREEN + "; hydro: " + HYDRO_CHECK
+    # T28: parts that are not on this screen are left out; nothing left says so
+    assert I.verdict_text(rows[0]) == "solar: " + LOOK + "; hydro: " + HYDRO_CHECK
+    assert I.verdict_text(rows[1]) == "solar: " + LOOK + "; wind: " + LOOK
+    assert I.verdict_text(rows[2]) == I.NOTHING_PASSES
     assert I.verdict_text(rows[3]) == I.NOT_FETCHED
+
+
+def test_t28_constants():
+    assert I.NOT_COSTED == "no: no hourly load, so no cost; the tool refuses rather than guess"   # stored value
+    assert I.NOT_COSTED_CELL == "no: no hourly load"
+    assert I.NOTHING_PASSES == "nothing passes this screen"
+    assert I.TABLE_NOTE == ("Costed here: the tool costs an island only when it has an hourly load; without one it "
+                            "refuses rather than guess. Screen says: only what passes the screen rule above.")
+
+
+def test_t28_page_says_not_on_screen_nowhere():
+    html = I.render_islands_html(I.island_screen_doc(_verdict_rows(), run_id="islands-1", list_sha256=SHA,
+                                                     files={}, wall_s=1.0))
+    assert NOT_ON_SCREEN not in html
+    assert "<td>" + I.NOTHING_PASSES + "</td>" in html                       # island C passes nothing
 
 
 def _rows_at(points):
@@ -493,10 +513,12 @@ def test_t24c_town_cell_zero_km():
 
 def test_t24c_not_costed_row_unchanged():
     row = _row(_isl_at("Q", -5.0, 112.0))
-    assert row["costed"] == I.NOT_COSTED
+    assert row["costed"] == I.NOT_COSTED                                     # the stored value is unchanged
     doc = I.island_screen_doc([row], run_id="islands-1", list_sha256=SHA, files={}, wall_s=1.0)
     html = I.render_islands_html(doc)
-    assert "<td>" + esc(I.NOT_COSTED) + "</td>" in html and "open the full study" not in html
+    # T28: the cell is now the short NOT_COSTED_CELL (this line was missed when the T28 tests were written and was
+    # found by the first run after the T28 code)
+    assert "<td>" + esc(I.NOT_COSTED_CELL) + "</td>" in html and "open the full study" not in html
 
 
 # ---------- T24d (written before the T24d code) ----------

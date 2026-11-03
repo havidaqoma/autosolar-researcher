@@ -12,6 +12,7 @@ from autosolar.cite_check import find_quote
 from autosolar.resources import (
     HYDRO_CHECK,
     LOOK,
+    NOT_ON_SCREEN,
     PLACE_RADIUS_KM,
     SOURCES as RESOURCE_SOURCES,
     WATER_RADIUS_KM,
@@ -37,6 +38,10 @@ MAP_NOTE_SMALL = "Too small for the land outline at this scale, so the ring sits
 OSM_LINK_TEXT = "the point on OpenStreetMap"
 QUOTE_MIN_CHARS = 20
 NOT_COSTED = "no: no hourly load, so no cost; the tool refuses rather than guess"
+NOT_COSTED_CELL = "no: no hourly load"  # T28: the table cell; NOT_COSTED stays the stored value
+NOTHING_PASSES = "nothing passes this screen"
+TABLE_NOTE = ("Costed here: the tool costs an island only when it has an hourly load; without one it refuses rather "
+              "than guess. Screen says: only what passes the screen rule above.")
 NOT_FETCHED = "not fetched"
 NO_TOWN = "none within 150 km"
 QUOTE_FOUND = "quote found in the fetched page"
@@ -446,8 +451,10 @@ def verdict_text(row: dict) -> str:
     verdicts = row.get("verdicts")
     if verdicts is None:
         return NOT_FETCHED
-    return ("solar: " + str(verdicts["solar"]) + "; wind: " + str(verdicts["wind"])
-            + "; hydro: " + str(verdicts["hydro"]))
+    # T28: leave out what is not on this screen; the Wind and Rivers columns still show the numbers
+    parts = [name + ": " + str(verdicts[name]) for name in ("solar", "wind", "hydro")
+             if verdicts[name] != NOT_ON_SCREEN]
+    return "; ".join(parts) if parts else NOTHING_PASSES
 
 
 def label_groups(rows: list) -> list:
@@ -506,7 +513,7 @@ def _costed_cell(row: dict) -> str:
     if costed.startswith("yes"):
         study = costed[len("yes: study "):]
         return '<a href="' + esc(study) + '.html">yes: open the full study</a> (run ' + esc(study) + ")"
-    return esc(NOT_COSTED)
+    return esc(NOT_COSTED_CELL)
 
 
 def _point_in_ring(lon_deg: float, lat_deg: float, ring: list) -> bool:
@@ -664,6 +671,7 @@ def render_islands_html(doc: dict, land: list | None = None) -> str:
     svg.append("</svg>")
     parts.append("".join(svg))
     parts.append('<p class="mapnote">' + esc(map_note(undrawn_names(rows, land))) + "</p>")
+    parts.append("<p>" + esc(TABLE_NOTE) + "</p>")
     table = ["<table><tr>"]
     for head in _HEADS:
         table.append("<th>" + esc(head) + "</th>")

@@ -40,7 +40,8 @@ def main():
         if "page" in entry:
             cards.append({"href": entry["page"], "site": entry["title"],
                           "question": entry["question"], "headline": entry["text"],
-                          "run_hash": entry["run"]})
+                          "run_hash": entry["run"], "title": entry["title"], "note": entry.get("note"),
+                          "earlier": False, "same_as": None})
             print("card " + entry["page"])
             continue
         run_dir = ROOT / "runs" / "studies" / entry["run"]
@@ -89,9 +90,16 @@ def main():
         page = render_study_html(report, table, paper_check=paper, review=review, **kw)
         name = entry["run"] + ".html"
         (OUT / name).write_text(page, encoding="ascii")
-        cards.append({"href": name, "site": report["site"]["name"], "question": report["question"],
-                      "headline": headline(report) + (" | " + entry["note"] if entry.get("note") else ""),
-                      "run_hash": report["run_hash"]})
+        site_name = report["site"]["name"]
+        line = headline(report)
+        earlier = bool(entry.get("earlier", False))
+        same_as = None
+        if earlier:  # T28: computed, so the page never claims a match the reports do not show
+            same_as = next((c["title"] for c in cards if not c["earlier"] and c["headline"] == line), None)
+        cards.append({"href": name, "site": site_name, "question": report["question"],
+                      "headline": line, "run_hash": report["run_hash"],
+                      "title": entry.get("title") or site_name, "note": entry.get("note"),
+                      "earlier": earlier, "same_as": same_as})
         print("page", name, len(page), "chars")
     (OUT / "index.html").write_text(render_index_html(cards), encoding="ascii")
     print("index", len(cards), "studies")

@@ -2,23 +2,25 @@
   "studies": [
     {
       "run": "b4a44fc6d4c32339",
+      "title": "Karimunjawa: the entry (inputs fixed before the run)",
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261031T153256-bf16d0",
       "figure_check": "figure-20261029T053942-12137f",
       "load_followup": "followup-20261030T110813-24e132",
       "engineer_files": "files-20261030T180443-e175b8",
       "resource_screen": "resources-20261030T181336-ce8426",
-      "note": "Start here. The entry: inputs fixed before the run (pre-registered). Confirm these first, hourly files to check us in your own tool, which renewable fits this site, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
+      "note": "Start here. Inputs fixed before the run (pre-registered). Confirm these first, hourly files to check us in your own tool, which renewable fits this site, SAM 3.1 reads the paper's load chart. Judge: local model twice, then Muse Wonder."
     },
     {
       "run": "107477f112e5d92c",
+      "title": "Karimunjawa: second run, 7 inputs curated by hand (post hoc)",
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261029T060800-acbbb2",
       "figure_check": "figure-20261029T053942-12137f",
       "load_followup": "followup-20261030T111050-ee43ba",
       "engineer_files": "files-20261030T180446-5c4500",
       "resource_screen": "resources-20261030T181345-2ee18f",
-      "note": "The entry, second run: same engine, 7 inputs curated by hand after seeing results (post hoc). Same sections as the first. Judge: local model twice, then Muse Wonder."
+      "note": "Same engine and sections as the entry; 7 inputs curated by hand after seeing results (post hoc). Judge: local model twice, then Muse Wonder."
     },
     {
       "page": "islands.html",
@@ -29,27 +31,31 @@
     },
     {
       "run": "5ee65dcd3350bec1",
+      "earlier": true,
       "paper": "paper-20261028T035325-b646fb",
       "review": null,
-      "note": "Earlier build, kept for the record. Pre-registered inputs. Judge: local model twice, then Muse Wonder."
+      "note": "Pre-registered inputs. Judge: local model twice, then Muse Wonder."
     },
     {
       "run": "4a0c0eedd47b2672",
+      "earlier": true,
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261028T151531-231e0b",
-      "note": "Earlier build, kept for the record. Curated inputs (post hoc). Judge: local model twice, then Muse Wonder."
+      "note": "Curated inputs (post hoc). Judge: local model twice, then Muse Wonder."
     },
     {
       "run": "f86df9819fa150a7",
+      "earlier": true,
       "paper": "paper-20261028T035325-b646fb",
       "review": "review-20261028T110232-c01b38",
-      "note": "Earlier build, kept for the record. Pre-registered inputs. Judge: local model only (earlier run, same numbers as run 5ee65dcd3350bec1)."
+      "note": "Pre-registered inputs. Judge: local model only (earlier run, same numbers as run 5ee65dcd3350bec1)."
     },
     {
       "run": "579f414386fe2d58",
+      "earlier": true,
       "paper": "paper-20261028T035325-b646fb",
       "review": null,
-      "note": "Earlier build, kept for the record. Curated inputs (post hoc). Judge: local model only (earlier run, same numbers as run 4a0c0eedd47b2672)."
+      "note": "Curated inputs (post hoc). Judge: local model only (earlier run, same numbers as run 4a0c0eedd47b2672)."
     }
   ]
 }

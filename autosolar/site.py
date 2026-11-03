@@ -1666,22 +1666,42 @@ def render_study_html(report: dict, table: pd.DataFrame, *, paper_check: dict | 
     return "".join(out)
 
 
+EARLIER_NOTE = "Earlier pages of the studies above, built before some sections were added."
+INDEX_CSS = "div.study{border-bottom:1px solid #ddd;padding:0 0 10px}div.study p{margin:0.35em 0}"
+
+
 def render_index_html(cards: list[dict]) -> str:
-    """Gallery page listing study runs. Returns ASCII str."""
+    """Gallery page listing study runs (T13, T28). Returns ASCII str."""
     out: list[str] = ["<!DOCTYPE html>"]
     out.append('<html><head><meta charset="utf-8">')
     out.append("<title>AutoSolar Researcher: study gallery</title>")
-    out.append("<style>" + SITE_CSS + "</style></head><body>")
+    out.append("<style>" + SITE_CSS + INDEX_CSS + "</style></head><body>")
     out.append('<header class="main-head"><h1>AutoSolar Researcher: study gallery</h1></header><main>')
     if not cards:
         out.append("<p>No studies yet.</p>")
-    for card in cards:
-        out.append('<a class="study" href="' + esc(card["href"]) + '">')
-        out.append("<h2>" + esc(card["site"]) + "</h2>")
-        out.append("<p>" + esc(card["question"]) + "</p>")
+    main = [c for c in cards if not c.get("earlier")]
+    earlier = [c for c in cards if c.get("earlier")]
+    last_question = None
+    for card in main:
+        out.append('<div class="study">')
+        out.append('<h2><a href="' + esc(card["href"]) + '">' + esc(card.get("title") or card["site"]) + "</a></h2>")
+        if card["question"] != last_question:
+            out.append("<p>" + esc(card["question"]) + "</p>")
+        last_question = card["question"]
         out.append("<p>" + esc(card["headline"]) + "</p>")
+        if card.get("note"):
+            out.append("<p>" + esc(card["note"]) + "</p>")
         out.append("<p>Run " + esc(card["run_hash"]) + "</p>")
-        out.append("</a>")
+        out.append("</div>")
+    if earlier:
+        out.append("<h2>Earlier builds, kept for the record</h2>")
+        out.append("<p>" + esc(EARLIER_NOTE) + "</p>")
+        out.append("<table><tr><th>Run</th><th>Inputs and judge</th><th>Answer</th></tr>")
+        for card in earlier:
+            answer = "same as: " + card["same_as"] if card.get("same_as") else card["headline"]
+            out.append('<tr><td><a href="' + esc(card["href"]) + '">' + esc(card["run_hash"]) + "</a></td><td>"
+                       + esc(card.get("note") or "") + "</td><td>" + esc(answer) + "</td></tr>")
+        out.append("</table>")
     out.append("</main>")
     out.append(
         "<footer class=\"page-foot\"><p>Labels: measured, computed, assumed, press, paper, docs.</p></footer>"

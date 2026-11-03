@@ -96,8 +96,33 @@ def test_t24_page_card_keeps_its_place(tmp_path, monkeypatch, capsys):
                                            {"run": RUN, "paper": None, "review": None, "note": "again"}])
     assert [c["href"] for c in cards] == [RUN + ".html", "islands.html", RUN + ".html"]
     assert cards[1] == {"href": "islands.html", "site": "11 diesel islands", "question": "Which islands could use solar?",
-                        "headline": "First screen, post hoc", "run_hash": "islands-20261101T000000-abcdef"}
+                        "headline": "First screen, post hoc", "run_hash": "islands-20261101T000000-abcdef",
+                        "title": "11 diesel islands", "note": None, "earlier": False, "same_as": None}   # T28
     assert "card islands.html" in capsys.readouterr().out
+
+
+def test_t28_cards_title_note_earlier_same_as(tmp_path, monkeypatch):
+    """T28 (written before the code): the note is its own field, not joined to the headline; an earlier card names
+    the first main card before it with the identical headline, and only that."""
+    heads = iter(["h-main", "h-main", "h-other", "h-main"])
+    monkeypatch.setattr(make_site, "headline", lambda report: next(heads))
+    _tree(tmp_path, {"run": RUN, "paper": None, "review": None})
+    _write(tmp_path / "config" / "gallery.json", json.dumps({"studies": [
+        {"run": RUN, "paper": None, "review": None, "title": "Main", "note": "n1"},
+        {"run": RUN, "paper": None, "review": None, "note": "old", "earlier": True},
+        {"run": RUN, "paper": None, "review": None, "earlier": True},
+        {"run": RUN, "paper": None, "review": None}]}))
+    got = []
+    monkeypatch.setattr(make_site, "ROOT", tmp_path)
+    monkeypatch.setattr(make_site, "OUT", tmp_path / "site")
+    monkeypatch.setattr(make_site, "render_study_html", lambda *a, **k: "<html>page</html>")
+    monkeypatch.setattr(make_site, "render_index_html", lambda cards: got.extend(cards) or "<html>index</html>")
+    make_site.main()
+    assert [c["title"] for c in got] == ["Main", "Test Island", "Test Island", "Test Island"]
+    assert [c["headline"] for c in got] == ["h-main", "h-main", "h-other", "h-main"]
+    assert [c["note"] for c in got] == ["n1", "old", None, None]
+    assert [c["earlier"] for c in got] == [False, True, True, False]
+    assert [c["same_as"] for c in got] == [None, "Main", None, None]   # main cards never get same_as
 
 
 def test_t24_page_card_reads_no_run_folder(tmp_path, monkeypatch):
