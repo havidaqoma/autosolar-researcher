@@ -33,10 +33,10 @@ In short, for Karimunjawa (computed unless labelled; percentages come from unrou
 
 So with every input fixed before the run, solar plus battery is 29.1% cheaper than diesel only. The 45.7% in the
 second column is a post hoc what-if (7 inputs curated by hand after the run), not the answer. The gap is much
-smaller if a diesel unit must always spin. The load comes from the island's one published study, and our own chart check puts it
+smaller if a diesel unit must always spin. The load comes from the island's published power study (Hiron 2021), and our own chart check puts it
 about 30% above the paper's December 2018 curve (18% above the mean of the three days it plots); at the load that
 curve implies, solar plus battery is still 33.7% cheaper (post hoc). The metered load comes first: of the 9
-inputs it is the only one whose error would move the best plant enough to matter, past the page's 1% line
+inputs, each moved 20% down or up, it is the only one that moves the best plant enough to matter, past the page's 1% line
 (computed; the line is assumed). Pages: `docs/site/b4a44fc6d4c32339.html`
 (example) and `docs/site/107477f112e5d92c.html` (curated).
 
@@ -129,7 +129,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   article), the island's plant produced 8,000 kWh a day on 4,000 L of diesel (press, Kompas; it may be the main
   plant only, as the article also names two small rented units). The study's load is 3.28 times that, or 2.76
   times once the 2017 figure is grown at the paper's 3.48% a year to the study year (computed). The paper's own
-  three days of 2018, as SAM 3.1 reads them, are 2.2 to 2.6 times the press figure (computed), so the public
+  three days of 2018, as SAM 3.1 reads them, are 2.2 to 2.6 times the press figure (scaled to a full day, computed), so the public
   sources disagree with each other too. The study's diesel uses 0.382 L/kWh, idle fuel included, against 0.50 in
   the press, at a different load and plant mix (computed). The study does not use these figures; a load that much
   lower is outside what it tested (the sensitivity table goes to 20% lower, the post hoc chart case to 23.3%
@@ -142,7 +142,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
 - Which inputs would change the design (latest study pages, `docs/specs/T26_design_change.md`): for each input
   moved 20% down and up, the page shows the least cost design at that value and how much more the main design
   costs than it (computed from the study's own sensitivity rows; no new simulation). A wide cost swing does not
-  mean the choice changes. In the example only the load moves it past the page's 1% line (assumed): with 20% less
+  mean the choice changes. In the example, with each input moved 20%, only the load moves it past the page's 1% line (assumed): with 20% less
   load the best design is 6,000 kWp and 15,000 kWh, and the main design costs 8.8% more than it. For other inputs
   the best design at that value can differ a lot (with 20% cheaper diesel it is 5,000 kWp and 11,000 kWh), but the
   cost changes little between those designs, so the main design is at most 0.4% above it (computed). So the metered load comes before any price.
@@ -224,7 +224,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
   Eleven gates run on every study (G3 runs once for each of the 4 weather sources). What the study cannot source stays
   "assumed", and the page says so.
 - Cost: Muse Code USD 0.81 (54 runs, 5.7 hours; it read 72 million tokens, 93% from cache, and wrote 0.89
-  million; Contributor mode prices, docs). Meta Model API USD 3.54 (182 calls, 451 web searches). USD 4.35 in
+  million; Contributor mode prices, docs). Meta Model API USD 3.54 (184 calls, 451 web searches). USD 4.35 in
   all (measured ledgers).
 - Limits: see "What it does not cover" (a what-if table there costs six of the left-out items, post hoc) and the
   open review points under "Checks".
