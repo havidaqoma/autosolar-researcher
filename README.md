@@ -12,6 +12,8 @@ island, Karimunjawa, the only one with an hourly load, and screens 11. It is a f
 a replacement for a detailed design in PVsyst or HOMER: each latest study page says which inputs to confirm first
 and gives the hourly series behind the answer, so an engineer can set up the same case in such a tool and compare.
 
+Live study pages: https://havidaqoma.github.io/autosolar-researcher/site/
+
 Demo video (2 min 55 s; press CC for subtitles): https://www.youtube.com/watch?v=8xA9nRxLLtA
 
 Problem statement: Push the Frontier (energy). Built during the Meta Global AI Developer Hackathon; what was
@@ -229,7 +231,7 @@ smoke tests, chart reader tests and reviews included: USD 4.35.
 
 Demo video (2 min 55 s): https://www.youtube.com/watch?v=8xA9nRxLLtA
 
-Open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
+The same pages are live at https://havidaqoma.github.io/autosolar-researcher/site/ (GitHub Pages). Or open `docs/site/index.html` in a browser (no server, no script, no internet needed). The example study is
 `docs/site/b4a44fc6d4c32339.html`; the run with curated inputs (post hoc) is `docs/site/107477f112e5d92c.html`. Each
 has a Muse Wonder review, and the gallery lists these two first. Both start from the input file whose 4 checked values were re-judged by two models
 (see Checks; the curated run then replaces 7 values by hand, the diesel price among them). These two are the
