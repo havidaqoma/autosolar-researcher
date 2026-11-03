@@ -95,12 +95,14 @@ The short version (computed unless labelled):
   re-run into an empty folder, reusing the saved weather and web search, gave the same run hash (measured,
   `docs/smoke/FRESH_RERUN.md`).
 
-What it cost (measured ledgers): Muse Code wrote the engine, all 12,881 lines of `autosolar/` (25 files, `wc -l`),
+What it cost (measured ledgers): Muse Code wrote the engine, all 12,881 lines of `autosolar/` at the feature freeze (25 files, `wc -l`),
 for USD 0.81. There are two reasons it was that cheap. It ran in Contributor mode, which Meta prices lower in
 exchange for permission to use what is sent to train future Meta models (docs, Meta pricing page). And 93% of the
 72 million tokens it read were cache hits, which cost 2% of a fresh token (docs). Without the cache it would
 have cost about USD 7.40 at the same prices (computed). It did not write the specs or the tests: each task's spec and acceptance tests were written first,
-and Muse Code wrote code until they passed (the git history shows the order). Specs, tests, the other run tools and the 7 hand-picked values were written with a general AI coding assistant (not a Meta model), directed and checked by Havid. One full study, with a fresh web
+and Muse Code wrote code until they passed (the git history shows the order). Specs, tests, the other run tools and the 7 hand-picked values were written with a general AI coding assistant (not a Meta model), directed and checked by Havid. One later change is not Muse Code's: T28 (page layout only, after the freeze, at
+the owner's request) added 38 lines and removed 10 in `autosolar/site.py` and `autosolar/islands.py` (git, measured),
+written with the same general AI coding assistant. One full study, with a fresh web
 search for its prices, costs about USD 0.50 in Meta model calls (the example study: USD 0.43, almost all of it the
 web search, plus USD 0.085 for the two-model re-check; a run that reuses a search costs much less). The paper
 check, load check and second model review add about USD 0.25 to 0.35 (measured). All Meta model spending for the whole hackathon,

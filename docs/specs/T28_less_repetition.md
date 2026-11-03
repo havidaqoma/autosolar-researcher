@@ -1,6 +1,8 @@
 # T28: less repetition on the gallery and island pages (post hoc)
 
-Status: spec and test changes written first, by hand, on Tuesday 3 Nov after the feature freeze (commit `3b8a59d`),
+Status: spec and test changes written first, with the general AI coding assistant (not Muse Code), on Tuesday 3 Nov
+after the feature freeze (commit `3b8a59d`); the code change that follows them was written the same way, not by
+Muse Code. Made
 at the owner's request after he read the live pages ("so many repetitions"). Page layout only: no number, no input,
 no study and no check changes. Every study page stays byte-identical; only `docs/site/index.html` and
 `docs/site/islands.html` change.
